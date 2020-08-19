@@ -3,9 +3,9 @@ import functools
 import sys
 import unittest
 
-from mwr.cinnibar.reflection.types import ReflectedObject, ReflectedType
+from pydiesel.reflection.types import ReflectedObject, ReflectedType
 
-from mwr.droidhg.modules import Module
+from drozer.modules import Module
 from mwr_test.mocks.session import MockSession
 
 class ModuleTestCase(unittest.TestCase):
@@ -117,7 +117,7 @@ class ModuleTestCase(unittest.TestCase):
 
         ModuleTestCase.MockModule(MockSession(reflector)).getContext()
 
-        assert reflector.resolved == "com.mwr.droidhg.Agent"
+        assert reflector.resolved == "com.mwr.dz.Agent"
         assert reflector.invoked[1] == "getContext"
 
     def testItShouldResolveAKlass(self):

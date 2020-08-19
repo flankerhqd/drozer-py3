@@ -1,4 +1,4 @@
-from drozer.modules import collection, loader
+from ..modules import collection, loader
 
 Formats = ["R", "U", "X"]
 

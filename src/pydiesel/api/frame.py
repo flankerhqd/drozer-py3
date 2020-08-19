@@ -1,6 +1,6 @@
 from struct import pack, unpack
 
-from pydiesel.api.protobuf_pb2 import Message
+from .protobuf_pb2 import Message
 
 class Frame:
     """
@@ -97,7 +97,7 @@ class Frame:
 
         if len(header) == 8:
             version, length = unpack(">II", header)
-            payload = ""
+            payload = b""
 
             while len(payload) != length:
                 # TODO: add a timeout in here!
@@ -113,6 +113,5 @@ class Frame:
             self.version, self.length, self.isValid() and 'VALID' or 'INVALID',
             self.messageType())
         
-    def __str__(self):
+    def bytes(self) -> bytes:
         return pack(">II", self.version, self.length) + self.payload
-        

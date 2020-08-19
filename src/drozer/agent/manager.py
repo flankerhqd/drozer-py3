@@ -1,8 +1,9 @@
 import itertools
-from mwr.common import cli
 import yaml
-from drozer import android, meta
-from drozer.agent import builder, manifest
+from mwr.common import cli, fs
+from .. import android, meta
+from . import builder, manifest
+
 
 class AgentManager(cli.Base):
     """
@@ -46,7 +47,7 @@ class AgentManager(cli.Base):
 
         defined_permissions = {}
         if arguments.define_permission != None:
-            defined_permissions = dict(itertools.izip_longest(*[iter(arguments.define_permission)] * 2, fillvalue=""))
+            defined_permissions = dict(itertools.zip_longest(*[iter(arguments.define_permission)] * 2, fillvalue=""))
 
         # add extra permissions to the Manifest file
         m = manifest.Manifest(packager.manifest_path()) 
@@ -54,24 +55,24 @@ class AgentManager(cli.Base):
         # Apktool v2.2.4 generates a malformed YAML file when unpacking apks
         # See https://github.com/iBotPeaches/Apktool/issues/1610
         # This workaround generates a valid YAML document and prevents agent building from failing
-        yaml_doc = yaml.load(file(packager.apktool_yml_path()).read().replace('!!brut.androlib.meta.MetaInfo',''))
+        yaml_doc = yaml.load(fs.read(packager.apktool_yml_path()).decode().replace('!!brut.androlib.meta.MetaInfo',''))
         m_ver = yaml_doc['versionInfo']['versionName']
         #m_ver = m.version()
         c_ver = meta.version.__str__()
         
         if m_ver != c_ver:
-            print "Version Mismatch: Consider updating your build(s)"
-            print "Agent Version: %s" % m_ver
-            print "drozer Version: %s" % c_ver
+            print("Version Mismatch: Consider updating your build(s)")
+            print("Agent Version: %s" % m_ver)
+            print("drozer Version: %s" % c_ver)
 
         for p in permissions:
             m.add_permission(p)
 
-        for name, protectionLevel in defined_permissions.iteritems():
+        for name, protectionLevel in defined_permissions.items():
             m.define_permission(name, protectionLevel)
 
         m.write()
 
         built = packager.package()
         
-        print "Done:", built
+        print("Done:", built)

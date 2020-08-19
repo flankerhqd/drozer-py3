@@ -52,11 +52,11 @@ class Traversal(Module, common.FileSystem, common.PackageManager, common.Provide
         try:
             data = self.contentResolver().read(uri + "/../../../../../../../../../../../../../../../../etc/hosts")
         except ReflectionException as e:
-            if e.message.find("java.io.FileNotFoundException") >= 0 or \
-                e.message.find("java.lang.IllegalArgumentException") >= 0 or \
-                e.message.find("java.lang.SecurityException") >= 0 or \
-                e.message.find("No content provider") >= 0 or \
-                e.message.find("RuntimeException"):
+            if str(e).find("java.io.FileNotFoundException") >= 0 or \
+                str(e).find("java.lang.IllegalArgumentException") >= 0 or \
+                str(e).find("java.lang.SecurityException") >= 0 or \
+                str(e).find("No content provider") >= 0 or \
+                str(e).find("RuntimeException"):
                 data = ""
             else:
                 raise

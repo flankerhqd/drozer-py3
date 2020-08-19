@@ -1,5 +1,7 @@
-from pydiesel.api.protobuf_pb2 import Message
-from pydiesel.reflection.exceptions import ReflectionException
+import sys
+
+from ...api.protobuf_pb2 import Message
+from ..exceptions import ReflectionException
 
 class ReflectedType(object):
     """
@@ -15,12 +17,6 @@ class ReflectedType(object):
     a native object.
     """
     
-    reflected_array = None
-    reflected_binary = None
-    reflected_null = None
-    reflected_object = None
-    reflected_primitive = None
-    reflected_string = None
 
     def __init__(self, reflector=None):
         self._reflector = reflector
@@ -32,20 +28,27 @@ class ReflectedType(object):
         the drozer protocol.
         """
 
+        from .reflected_array import ReflectedArray
+        from .reflected_binary import ReflectedBinary
+        from .reflected_null import ReflectedNull
+        from .reflected_object import ReflectedObject
+        from .reflected_primitive import ReflectedPrimitive
+        from .reflected_string import ReflectedString
+
         if isinstance(argument, ReflectedType):
             return argument
         elif argument.type == Message.Argument.ARRAY:
-            return cls.reflected_array.fromArgument(argument, reflector=reflector)
+            return ReflectedArray.fromArgument(argument, reflector=reflector)
         elif argument.type == Message.Argument.DATA:
-            return cls.reflected_binary(argument.data, reflector=reflector)
+            return ReflectedBinary(argument.data, reflector=reflector)
         elif argument.type == Message.Argument.NULL:
-            return cls.reflected_null(reflector=reflector)
+            return ReflectedNull(reflector=reflector)
         elif argument.type == Message.Argument.OBJECT:
-            return cls.reflected_object(argument.object.reference, reflector=reflector)
+            return ReflectedObject(argument.object.reference, reflector=reflector)
         elif argument.type == Message.Argument.PRIMITIVE:
-            return cls.reflected_primitive.fromArgument(argument, reflector)
+            return ReflectedPrimitive.fromArgument(argument, reflector)
         elif argument.type == Message.Argument.STRING:
-            return cls.reflected_string(argument.string, reflector=reflector)
+            return ReflectedString(argument.string, reflector=reflector)
         else:
             return None
 
@@ -56,51 +59,38 @@ class ReflectedType(object):
         can be specified to indicate which Java data type should be used, where
         it cannot be inferred from the Python type.
         """
+        from .reflected_array import ReflectedArray
+        from .reflected_binary import ReflectedBinary
+        from .reflected_null import ReflectedNull
+        from .reflected_object import ReflectedObject
+        from .reflected_primitive import ReflectedPrimitive
+        from .reflected_string import ReflectedString
 
         if obj_type == None and isinstance(obj, ReflectedType) or obj_type == "object":
             return obj
-        elif obj_type == None and isinstance(obj, long) or obj_type == "long":
-            return cls.reflected_primitive("long", obj, reflector=reflector)
-        elif obj_type == None and isinstance(obj, int) or obj_type == "int":
-            return cls.reflected_primitive("int", obj, reflector=reflector)
+        elif obj_type == None and isinstance(obj, int) and -sys.maxsize - 1 < obj < sys.maxsize or obj_type == "int":
+            return ReflectedPrimitive("int", obj, reflector=reflector)
+        elif obj_type == None and isinstance(obj, int) or obj_type == "long":
+            return ReflectedPrimitive("long", obj, reflector=reflector)
         elif obj_type == "byte" and isinstance(obj, int):
-            return cls.reflected_primitive("byte", obj, reflector=reflector)
+            return ReflectedPrimitive("byte", obj, reflector=reflector)
         elif obj_type == "char" and isinstance(obj, int):
-            return cls.reflected_primitive("char", obj, reflector=reflector)
+            return ReflectedPrimitive("char", obj, reflector=reflector)
         elif obj_type == "short":
-            return cls.reflected_primitive("short", obj, reflector=reflector)
+            return ReflectedPrimitive("short", obj, reflector=reflector)
         elif obj_type == None and isinstance(obj, float) or obj_type == "float":
-            return cls.reflected_primitive("float", obj, reflector=reflector)
+            return ReflectedPrimitive("float", obj, reflector=reflector)
         elif obj_type == None and isinstance(obj, bool) or obj_type == "boolean":
-            return cls.reflected_primitive("boolean", obj, reflector=reflector)
-        elif obj_type == "data":
-            return cls.reflected_binary(obj, reflector=reflector)
-        elif obj_type == None and (isinstance(obj, str) or isinstance(obj, unicode)) or obj_type == "string":
-            return cls.reflected_string(obj, reflector=reflector)
+            return ReflectedPrimitive("boolean", obj, reflector=reflector)
+        elif obj_type == None and isinstance(obj, bytes) or obj_type == "data":
+            return ReflectedBinary(obj, reflector=reflector)
+        elif obj_type == None and isinstance(obj, str) or obj_type == "string":
+            return ReflectedString(obj, reflector=reflector)
         elif obj_type == "double":
-            return cls.reflected_primitive("double", obj, reflector=reflector)
+            return ReflectedPrimitive("double", obj, reflector=reflector)
         elif obj is None:
-            return cls.reflected_null(reflector=reflector)
+            return ReflectedNull(reflector=reflector)
         elif hasattr(obj, '__iter__'):
-            return cls.reflected_array(obj, reflector=reflector)
+            return ReflectedArray(obj, reflector=reflector)
         else:
             return None
-
-    def _gettype(self, obj):
-        """
-        Returns a string, indicating the type of a ReflectedType.
-        """
-
-        if isinstance(obj, ReflectedPrimitive):
-            return obj.primitive_type
-        elif isinstance(obj, ReflectedArray):
-            return 'array'
-        elif isinstance(obj, ReflectedString):
-            return 'string'
-        elif isinstance(obj, ReflectedObject):
-            return 'object'
-        elif obj == None:
-            return 'null'
-        else:
-            return 'unknown'
-            

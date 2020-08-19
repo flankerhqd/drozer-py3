@@ -1,7 +1,7 @@
 import unittest
 
-from mwr.droidhg.modules.import_conflict_resolver import ImportConflictResolver
-from mwr.droidhg.modules.app import package
+from drozer.modules.import_conflict_resolver import ImportConflictResolver
+from drozer.modules.app import package
 
 class ImportConflictResolverTestCase(unittest.TestCase):
     

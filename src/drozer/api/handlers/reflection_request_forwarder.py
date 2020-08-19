@@ -1,8 +1,8 @@
 from pydiesel.api.builders import ReflectionResponseFactory
 from pydiesel.api.protobuf_pb2 import Message
 
-from drozer.session import Sessions
-from drozer.device import DeviceGoneAway
+from ...session import Sessions
+from ...device import DeviceGoneAway
 
 class ReflectionRequestForwarder:
     """
@@ -38,5 +38,5 @@ class ReflectionRequestForwarder:
 
                 session.console.transport.loseConnection()
         else:
-            print "no session:", message.reflection_request.session_id
+            print("no session:", message.reflection_request.session_id)
             

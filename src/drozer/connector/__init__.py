@@ -1,4 +1,4 @@
 
 __all__ = [ "ServerConnector" ]
 
-from drozer.connector.server_connector import ServerConnector
+from .server_connector import ServerConnector

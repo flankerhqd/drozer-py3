@@ -1,7 +1,7 @@
 import unittest
 
-from mwr.cinnibar import reflection
-from mwr.cinnibar.api.protobuf_pb2 import Message
+from pydiesel import reflection
+from pydiesel.api.protobuf_pb2 import Message
 
 from mwr_test.mocks.reflection import MockReflector
 
@@ -30,10 +30,10 @@ class ReflectedIntegerPrimitiveTestCase(unittest.TestCase):
     #'__class__', '__coerce__'
 
     def testItShouldDivideAReflectedPrimitiveByAnother(self):
-        assert self.rp3 / self.rp2 == 1     # Integer division
+        assert self.rp3 // self.rp2 == 1     # Integer division
 
     def testItShouldDeviceAReflectedPrimitiveByANative(self):
-        assert self.rp3 / self.np2 == 1     # Integer division
+        assert self.rp3 // self.np2 == 1     # Integer division
 
     def testItShouldGetTheIntegerAndModulusOfAReflectedPrimitiveByAnother(self):
         assert divmod(self.rp3, self.rp2) == (1, 1)
@@ -57,10 +57,10 @@ class ReflectedIntegerPrimitiveTestCase(unittest.TestCase):
         assert type(float(self.rp2)) == type(3.14)
 
     def testItShouldIntegerDivideAReflectedPrimitiveByAnother(self):
-        assert self.rp3 / self.rp2 == 1     # Integer division
+        assert self.rp3 // self.rp2 == 1     # Integer division
 
     def testItShouldIntegerDivideAReflectedPrimitiveByANative(self):
-        assert self.rp3 / self.np2 == 1     # Integer division
+        assert self.rp3 // self.np2 == 1     # Integer division
 
     def testItShouldShowAReflectedPrimitiveIsGreaterThanOrEqualToAnother(self):
         assert self.rp3 >= self.rp2
@@ -108,7 +108,7 @@ class ReflectedIntegerPrimitiveTestCase(unittest.TestCase):
         assert not self.rp3 <= self.np2
 
     def testItShouldForceAReflectedPrimitiveToALong(self):
-        assert type(long(self.rp2)) == type(long(42))
+        assert type(int(self.rp2)) == type(int(42))
 
     def testItShouldShowAReflectedPrimitiveIsLessThanAnother(self):
         assert self.rp1 < self.rp2
@@ -152,10 +152,10 @@ class ReflectedIntegerPrimitiveTestCase(unittest.TestCase):
         assert -self.rp2 == -2
 
     def testItShouldShowAReflectedPrimitiveIsNonZero(self):
-        assert self.rp2.__nonzero__()
+        assert self.rp2.__bool__()
 
     def testItShouldNotShowAReflectedPrimitiveIsNonZero(self):
-        assert not self.rp0.__nonzero__()
+        assert not self.rp0.__bool__()
 
     def testItShouldSupportUnaryPositive(self):
         assert +self.rp2 == 2
@@ -176,13 +176,13 @@ class ReflectedIntegerPrimitiveTestCase(unittest.TestCase):
         assert self.np2 + self.rp2 == 4
 
     def testItShouldDivideANativeByAReflectedPrimitive(self):
-        assert self.np3 / self.rp2 == 1
+        assert self.rp3 // self.np2 == 1
 
     def testItShouldIntegerAndModulusOfDividingANativeByAReflectedPrimitive(self):
         assert divmod(self.np3, self.rp2) == (1, 1)
 
     def testItShouldIntegerDivideANativeByAReflectedPrimitive(self):
-        assert self.np3 / self.rp2 == 1
+        assert self.np3 // self.rp2 == 1
 
     def testItShouldGetTheModulusOfDividingANativeByAReflectedPrimitive(self):
         assert self.np3 % self.rp2 == 1

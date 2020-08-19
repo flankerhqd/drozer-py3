@@ -1,6 +1,6 @@
-from pydiesel.api.protobuf_pb2 import Message
-from pydiesel.reflection.exceptions import ReflectionException
-from pydiesel.reflection.types.reflected_type import ReflectedType
+from ...api.protobuf_pb2 import Message
+from ..exceptions import ReflectionException
+from .reflected_type import ReflectedType
 
 class ReflectedPrimitive(ReflectedType):
     """
@@ -107,6 +107,30 @@ class ReflectedPrimitive(ReflectedType):
         else:
             return self._native / other
 
+    def __truediv__(self, other):
+        if isinstance(other, ReflectedPrimitive):
+            return self._native / other._native
+        else:
+            return self._native / other
+
+    def __rtruediv__(self, other):
+        if isinstance(other, ReflectedPrimitive):
+            return other._native / self._native
+        else:
+            return other / self._native
+
+    def __floordiv__(self, other):
+        if isinstance(other, ReflectedPrimitive):
+            return self._native // other._native
+        else:
+            return self._native // other
+
+    def __rfloordiv__(self, other):
+        if isinstance(other, ReflectedPrimitive):
+            return other._native // self._native
+        else:
+            return other // self._native
+
     def __divmod__(self, other):
         if isinstance(other, ReflectedPrimitive):
             return divmod(self._native, other._native)
@@ -128,11 +152,14 @@ class ReflectedPrimitive(ReflectedType):
     def __int__(self):
         return int(self._native)
 
+    def __index__(self):
+        return int(self._native)
+
     def __le__(self, other):
         return isinstance(other, ReflectedPrimitive) and self._native <= other._native or self._native <= other
 
     def __long__(self):
-        return long(self._native)
+        return int(self._native)
 
     def __lt__(self, other):
         return isinstance(other, ReflectedPrimitive) and self._native < other._native or self._native < other
@@ -155,8 +182,8 @@ class ReflectedPrimitive(ReflectedType):
     def __neg__(self):
         return -self._native
 
-    def __nonzero__(self):
-        return self._native.__nonzero__()
+    def __bool__(self):
+        return self._native.__bool__()
 
     def __or__(self, other):
         return ReflectedPrimitive(self._type, self._native | other._native)
@@ -229,4 +256,9 @@ class ReflectedPrimitive(ReflectedType):
 
     def __str__(self):
         return "{}".format(self._native)
-        
+
+    def __format__(self, format_spec):
+        return "{}".format(self._native)
+
+    def __hash__(self):
+        return self._native.__hash__()

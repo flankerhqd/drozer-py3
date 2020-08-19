@@ -1,8 +1,8 @@
 import unittest
 
-from mwr.cinnibar.api import builders
-from mwr.cinnibar.api.protobuf_pb2 import Message
-from mwr.cinnibar.reflection.types import ReflectedType
+from pydiesel.api import builders
+from pydiesel.api.protobuf_pb2 import Message
+from pydiesel.reflection.types import ReflectedType
 
 class ReflectionResponseFactoryTestCase(unittest.TestCase):
 

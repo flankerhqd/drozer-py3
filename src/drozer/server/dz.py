@@ -6,27 +6,27 @@ try:
     from twisted.internet import reactor, ssl, task
     from twisted.internet.protocol import Protocol, ServerFactory
 except ImportError:
-    print "drozer Server requires Twisted to run."
-    print "Run 'pip install twisted' to fetch this dependency."
+    print("drozer Server requires Twisted to run.")
+    print("Run 'pip install twisted' to fetch this dependency.")
     sys.exit(-1)
 
-from drozer.configuration import Configuration
-from drozer.server.heartbeat import heartbeat
-from drozer.server.protocols.byte_stream import ByteStream
-from drozer.server.protocols.shell import ShellCollector, ShellServer
-from drozer.server.files import FileProvider, FileResource, StatusResource
-from drozer.server.protocols.http import HTTP
-from drozer.server.protocols.drozerp import Drozer
-from drozer.ssl.provider import Provider
+from ..configuration import Configuration
+from .files import FileProvider, FileResource, StatusResource
+from .heartbeat import heartbeat
+from .protocols.byte_stream import ByteStream
+from .protocols.drozerp import Drozer
+from .protocols.http import HTTP
+from .protocols.shell import ShellCollector, ShellServer
+from ..ssl.provider import Provider
 
 def serve(arguments):
     task.LoopingCall(heartbeat).start(arguments.ping_interval)
         
     if arguments.ssl != None:
-        print "Starting drozer Server, listening on 0.0.0.0:%d (with SSL)" % arguments.port
+        print("Starting drozer Server, listening on 0.0.0.0:%d (with SSL)" % arguments.port)
 
         if arguments.ssl == []:
-            print "Using default SSL key material..."
+            print("Using default SSL key material...")
             
             arguments.ssl = Provider().get_keypair("drozer-server")
         
@@ -34,7 +34,7 @@ def serve(arguments):
                           SwitcherFactoryServer(dict(arguments.credentials)),
                           ssl.DefaultOpenSSLContextFactory(*arguments.ssl))
     else:
-        print "Starting drozer Server, listening on 0.0.0.0:%d" % arguments.port
+        print("Starting drozer Server, listening on 0.0.0.0:%d" % arguments.port)
         
         reactor.listenTCP(arguments.port,
                           SwitcherFactoryServer(dict(arguments.credentials)))

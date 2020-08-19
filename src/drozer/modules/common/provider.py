@@ -1,7 +1,7 @@
 from pydiesel.reflection import ReflectionException
 
-from drozer.modules.common import loader
-from drozer.modules.common.package_manager import PackageManager
+from . import loader
+from .package_manager import PackageManager
 
 class Provider(loader.ClassLoader):
     """
@@ -34,7 +34,7 @@ class Provider(loader.ClassLoader):
             try:
                 return_val = client.delete(self.parseUri(uri), selection, selectionArgs)
             except ReflectionException as e:
-                if e.message.startswith("Unknown Exception"):
+                if str(e).startswith("Unknown Exception"):
                     raise ReflectionException("Could not delete from %s." % uri)
                 else:
                     raise
@@ -54,7 +54,7 @@ class Provider(loader.ClassLoader):
             try:
                 return_val = client.insert(self.parseUri(uri), contentValues)
             except ReflectionException as e:
-                if e.message.startswith("Unknown Exception"):
+                if str(e).startswith("Unknown Exception"):
                     raise ReflectionException("Could not insert into %s." % uri)
                 else:
                     raise
@@ -87,7 +87,7 @@ class Provider(loader.ClassLoader):
                 cursor = client.query(self.parseUri(uri), projection, selection, selectionArgs, sortOrder)
             except ReflectionException as e:
 
-                if e.message.startswith("Unknown Exception"):
+                if str(e).startswith("Unknown Exception"):
                     raise ReflectionException("Could not query %s." % uri)
                 else:
                     raise
@@ -113,7 +113,7 @@ class Provider(loader.ClassLoader):
                     try:
                         fd = client.openFile(self.parseUri(uri), "r")
                     except ReflectionException as e:
-                        if e.message.startswith("Unknown Exception"):
+                        if str(e).startswith("Unknown Exception"):
                             raise ReflectionException("Could not read from %s." % uri)
                         else:
                             raise
@@ -143,7 +143,7 @@ class Provider(loader.ClassLoader):
             try:
                 return_val = client.update(self.parseUri(uri), contentValues, selection, selectionArgs)
             except ReflectionException as e:
-                if e.message.startswith("Unknown Exception"):
+                if str(e).startswith("Unknown Exception"):
                     raise ReflectionException("Could not update %s." % uri)
                 else:
                     raise
@@ -195,7 +195,7 @@ class Provider(loader.ClassLoader):
                 try:
                     uris = uris.union(self.__search_package(package))
                 except ReflectionException as e:
-                    if "java.util.zip.ZipException: unknown format" in e.message:
+                    if "java.util.zip.ZipException: unknown format" in str(e):
                         self.stderr.write("Skipping package %s, because we cannot unzip it..." % package.applicationInfo.packageName)
                     else:
                         raise
@@ -205,7 +205,7 @@ class Provider(loader.ClassLoader):
             try:
                 uris = uris.union(self.__search_package(package))
             except ReflectionException as e:
-                if "java.util.zip.ZipException: unknown format" in e.message:
+                if "java.util.zip.ZipException: unknown format" in str(e):
                     self.stderr.write("Skipping package %s, because we cannot unzip it..." % package.applicationInfo.packageName)
                 else:
                     raise
@@ -238,7 +238,7 @@ class Provider(loader.ClassLoader):
             elif (".odex" in path):
                 strings = self.getStrings(path)
             
-            content_uris.append((path, filter(lambda s: ("CONTENT://" in s.upper()) and ("CONTENT://" != s.upper()), strings)))
+            content_uris.append((path, [s for s in strings if ("CONTENT://" in s.upper()) and ("CONTENT://" != s.upper())]))
 
         return content_uris
 
@@ -258,18 +258,18 @@ class Provider(loader.ClassLoader):
             while cursor.isAfterLast() == False:
                 row = []
 
-                for i in xrange(len(columns)):
+                for i in range(len(columns)):
                     try:
                         if(cursor.getType(i) == blob_type):
                             row.append("%s (Base64-encoded)" % (cursor.getBlob(i).base64_encode()))
                         else:
                             row.append(cursor.getString(i))
                     except ReflectionException as e:
-                        if e.message.startswith("getType"):
+                        if str(e).startswith("getType"):
                             try:
                                 row.append(cursor.getString(i))
                             except ReflectionException as e:
-                                if e.message.startswith("unknown error: Unable to convert BLOB to string"):
+                                if str(e).startswith("unknown error: Unable to convert BLOB to string"):
                                     row.append("%s (Base64-encoded)" % (cursor.getBlob(i).base64_encode()))
                                 else:
                                     raise
@@ -290,7 +290,7 @@ class Provider(loader.ClassLoader):
         create a union set of them.
         """
 
-        print "Scanning %s..." % package.packageName
+        print("Scanning %s..." % package.packageName)
 
         uris = set([])
 
@@ -331,4 +331,4 @@ class Provider(loader.ClassLoader):
     class UnableToOpenFileException(ReflectionException):
         
         def __str__(self):
-            return "it was not possible to open the file represented by: %s" % (self.message)
+            return "it was not possible to open the file represented by: %s" % (self.args)

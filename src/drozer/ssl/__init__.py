@@ -1,1 +1,1 @@
-from drozer.ssl.ssl_manager import SSLManager
+from .ssl_manager import SSLManager

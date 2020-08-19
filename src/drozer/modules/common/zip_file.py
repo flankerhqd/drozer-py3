@@ -1,4 +1,4 @@
-from drozer.modules.common import loader
+from . import loader
 
 class ZipFile(loader.ClassLoader):
     """

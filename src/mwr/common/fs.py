@@ -2,26 +2,22 @@
 A library of fileystem functions.
 """
 
-import md5
+from hashlib import md5
+from typing import Union
 
-def read(path):
+
+def read(path) -> bytes:
     """
     Utility method to read a file from the filesystem into a string.
     """
     
     try:
         f = open(path, 'rb')
-        line = data = f.read()
-
-        while line != "":
-            line = f.read()
-            
-            data += line
-                
+        data = f.read()
         f.close()
         
         return data
-    except IOError:
+    except IOError as e:
         return None
     
 def touch(path):
@@ -30,15 +26,18 @@ def touch(path):
     """
     
     open(path, 'w').close()
-    
-def write(path, data):
+
+def write(path, data: Union[bytes, str]):
     """
     Utility method to write a string into a filesystem file.
     """
     
     try:
         f = open(path, 'wb')
-        f.write(data)
+        if isinstance(data, bytes):
+            f.write(data)
+        else:
+            f.write(data.encode())
         f.close()
         
         return len(data)

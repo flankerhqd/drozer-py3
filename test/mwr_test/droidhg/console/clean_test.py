@@ -1,10 +1,10 @@
 import unittest
 
-#from mwr_test.droidhg.console import clean_mock_reflector
+from mwr_test.droidhg.console import clean_mock_reflector
 
-import test.mwr_test.droidhg.console clean_mock_reflector
+# import test.mwr_test.droidhg.console clean_mock_reflector
 
-from mwr.droidhg.console import clean
+from drozer.console import clean
 
 class CleanTestCase(unittest.TestCase):
 

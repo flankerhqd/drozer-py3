@@ -1,1 +1,1 @@
-import ca
+from . import ca

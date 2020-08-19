@@ -2,8 +2,8 @@ import os
 import platform
 
 from mwr.common import command_wrapper
+from ..configuration import Configuration
 
-from drozer.configuration import Configuration
 
 class Packager(command_wrapper.Wrapper):
     

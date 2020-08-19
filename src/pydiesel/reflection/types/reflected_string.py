@@ -1,19 +1,15 @@
-from pydiesel.api.protobuf_pb2 import Message
-from pydiesel.reflection.exceptions import ReflectionException
-from pydiesel.reflection.types.reflected_type import ReflectedType
+from ...api.protobuf_pb2 import Message
+from ..exceptions import ReflectionException
+from .reflected_type import ReflectedType
 
 class ReflectedString(ReflectedType):
     """
     A ReflectedType that represents a String.
     """
-    
-    def __init__(self, native, *args, **kwargs):
+
+    def __init__(self, native: str, *args, **kwargs):
         ReflectedType.__init__(self, *args, **kwargs)
-        
-        try:
-            self._native = native.decode("utf-8")
-        except UnicodeError:
-            self._native = native
+        self._native = native
 
     def capitalize(self):
         """
@@ -162,7 +158,7 @@ class ReflectedString(ReflectedType):
         method.
         """
 
-        return self._native.join(map(lambda s: str(s), iterable))
+        return self._native.join([str(s) for s in iterable])
 
     def ljust(self, width, fillchar=" "):
         """
@@ -390,5 +386,11 @@ class ReflectedString(ReflectedType):
         return repr(self._native)
 
     def __str__(self):
-        return self._native.encode('utf-8')
-        
+        # return self._native.encode('utf-8')
+        return self._native
+
+    def __format__(self, format_spec):
+        return self._native
+
+    def __hash__(self):
+        return self._native.__hash__()

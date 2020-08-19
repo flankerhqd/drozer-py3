@@ -1,8 +1,8 @@
 import functools
-import urlparse
+import urllib.parse
 
-from BaseHTTPServer import BaseHTTPRequestHandler
-from BaseHTTPServer import HTTPServer
+from http.server import BaseHTTPRequestHandler
+from http.server import HTTPServer
 
 from pydiesel.reflection import ReflectionException
 
@@ -29,12 +29,12 @@ class WebContentResolver(Module, common.PackageManager, common.Provider):
         try:
             server = HTTPServer(('', int(arguments.port)), functools.partial(Handler, self))
 
-            print "WebContentResolver started on port " + str(arguments.port) + "."
-            print "Ctrl+C to Stop"
+            print("WebContentResolver started on port " + str(arguments.port) + ".")
+            print("Ctrl+C to Stop")
 
             server.serve_forever()
         except KeyboardInterrupt:
-            print "Stopping...\n"
+            print("Stopping...\n")
 
             server.socket.close()
 
@@ -53,31 +53,31 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
 
         # grab the requested path, and parse it
-        url = urlparse.urlparse(self.path)
+        url = urllib.parse.urlparse(self.path)
         # split out the path component into an array
         path = [ x for x in url.path.split('/') if x ]
         # parse the trailing url parameters
-        params = urlparse.parse_qs(url.query)
+        params = urllib.parse.parse_qs(url.query)
 
         try:
             if not path or path[0] == 'list':
                 # if / or /list, produce a list of all known content provider uris
                 output = self.__provider_list(filters=params.get('filter', [None])[0], permissions=params.get('permissions', [None])[0])
 
-                self.wfile.write(self.header + output + self.footer)
+                self.wfile.write((self.header + output + self.footer).encode())
             elif path[0] == 'query':
                 # if /query, build a query against the specified content uri, with
                 # the projection and selection
                 output = self.__query(params.get('uri', [None])[0], params.get('projection', [None])[0], params.get('selection', [None])[0], params.get('selectionArgs', [None])[0], params.get('selectionSort', [None])[0])
 
-                self.wfile.write(self.header + output + self.footer)
+                self.wfile.write((self.header + output + self.footer).encode())
             else:
                 # if the path is not recognised, print usage information
-                self.wfile.write(self.header + self.usage() + self.footer)
+                self.wfile.write((self.header + self.usage() + self.footer).encode())
         except ReflectionException as e:
             # handle any ReflectionExceptions here, and show the error message in the
             # user's browser - this will help them to build their query
-            self.wfile.write(self.header + self.__format_exception(e) + self.footer)
+            self.wfile.write((self.header + self.__format_exception(e) + self.footer).encode())
     
     def __eligible_path_permission(self, permissions, path):
         return permissions == None or \
@@ -90,10 +90,10 @@ class Handler(BaseHTTPRequestHandler):
             permissions.lower() == "null" and (provider.readPermission == None or provider.writePermission == None) or \
             provider.readPermission != None and permissions.lower() in provider.readPermission.lower() or \
             provider.writePermission != None and permissions.lower() in provider.writePermission.lower() or \
-            provider.pathPermissions != None and True in map(lambda path: self.__eligible_path_permission(permissions, path), provider.pathPermissions)
+            provider.pathPermissions != None and True in [self.__eligible_path_permission(permissions, path) for path in provider.pathPermissions]
 
     def __format_exception(self, e):
-        return "<h1>" + str(e.__class__) + "</h1><p>" + e.message + "</p>"
+        return "<h1>" + str(e.__class__) + "</h1><p>" + str(e) + "</p>"
 
     def __provider_list(self, filters=None, permissions=None):
         """
@@ -125,6 +125,7 @@ class Handler(BaseHTTPRequestHandler):
 
                     if self.__eligible_provider(permissions, provider):
                         # Give the general values first
+                        # FIXME: AttributeError: 'ReflectedNull' object has no attribute 'split'
                         authorities = provider.authority.split(";")
                         output += "<tr><td>%s</td>" % linkfilter(provider.packageName)
                         output += "<td colspan='2'>%s</td>" % "<br/>".join([linkcontent(a) for a in authorities])

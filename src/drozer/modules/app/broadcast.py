@@ -2,7 +2,6 @@ from xml.etree import ElementTree
 
 from drozer import android
 from drozer.modules import common, Module
-from drozer.modules.common import loader
 import time
 
 class Info(Module, common.Filters, common.IntentFilter, common.PackageManager):
@@ -137,7 +136,7 @@ For more information on how to formulate an Intent, type 'help intents'."""
                            "extras", "flags", "mimetype"]:
             return android.Intent.get_completion_suggestions(action, text, **kwargs)
 
-class Sniff(Module, loader.ClassLoader):
+class Sniff(Module, common.loader.ClassLoader):
 
     name = "Register a broadcast receiver that can sniff particular intents"
     description = "Register a broadcast receiver that can sniff particular intents"

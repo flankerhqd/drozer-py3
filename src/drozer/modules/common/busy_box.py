@@ -1,6 +1,6 @@
 import os
 
-from drozer.modules.common import file_system, shell
+from . import file_system, shell
 
 class BusyBox(shell.Shell):
     """

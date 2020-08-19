@@ -1,4 +1,4 @@
-from drozer.repoman import ModuleManager
+from ..repoman import ModuleManager
 import sys
 
 

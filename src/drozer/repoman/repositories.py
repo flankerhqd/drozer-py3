@@ -1,7 +1,7 @@
 import os
 import shutil
 
-from drozer.configuration import Configuration
+from ..configuration import Configuration
 
 class Repository(object):
     """

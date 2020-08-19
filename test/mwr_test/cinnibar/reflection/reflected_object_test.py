@@ -1,7 +1,7 @@
 import unittest
 
-from mwr.cinnibar import reflection
-from mwr.cinnibar.api.protobuf_pb2 import Message
+from pydiesel import reflection
+from pydiesel.api.protobuf_pb2 import Message
 
 from mwr_test.mocks.reflection import MockReflector
 
@@ -108,7 +108,7 @@ class ReflectedObjectTestCase(unittest.TestCase):
 
             assert False, "should have raised NameError"
         except reflection.ReflectionException as e:
-            assert e.message == "no method callMe"
+            assert str(e) == "no method callMe"
 
     def testItShouldRaiseReflectionExceptionIfInvokingMethodWithInappropriateArguments(self):
         object = reflection.types.ReflectedObject(987654321, reflector=self.reflector)
@@ -121,7 +121,7 @@ class ReflectedObjectTestCase(unittest.TestCase):
 
             assert False, "should have raised NameError"
         except reflection.ReflectionException as e:
-            assert e.message == "no method callMe compatible with those arguments"
+            assert str(e) == "no method callMe compatible with those arguments"
 
 
 def ReflectedObjectTestSuite():

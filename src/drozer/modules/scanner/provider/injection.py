@@ -56,12 +56,12 @@ class Injection(Module, common.FileSystem, common.PackageManager, common.Provide
         try:
             self.contentResolver().query(uri, projection=["'"])
         except ReflectionException as e:
-            if e.message.find("unrecognized token") >= 0:
+            if str(e).find("unrecognized token") >= 0:
                 vulnerable['projection'].add(uri)
 
         try:
             self.contentResolver().query(uri, selection="'")
         except ReflectionException as e:
-            if e.message.find("unrecognized token") >= 0:
+            if str(e).find("unrecognized token") >= 0:
                 vulnerable['selection'].add(uri)
             

@@ -1,7 +1,7 @@
 import argparse
 import textwrap
 
-from pydiesel.reflection.types import ReflectedType
+from pydiesel.reflection.types.reflected_type import ReflectedType
 
 from mwr.common import argparse_completer, console
 from mwr.common.text import wrap
@@ -156,7 +156,7 @@ class Module(object):
         else:
             klass = self.klass(class_or_class_name)
 
-        return self.reflector.construct(klass, *map(lambda arg: self.arg(arg), args))
+        return self.reflector.construct(klass, *[self.arg(arg) for arg in args])
 
     def null_complete(self, text, state):
         return None

@@ -1,7 +1,7 @@
 import os, tempfile
 from mwr.common import fs
 
-from drozer.modules.common import file_system
+from . import file_system
 
 class SuperUser(file_system.FileSystem):
     """

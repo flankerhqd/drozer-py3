@@ -2,8 +2,8 @@ from base64 import b64encode
 from socket import socket
 import ssl
 
-from drozer.server.receivers.http import HTTPRequest, HTTPResponse
-from drozer.ssl.provider import Provider
+from .receivers.http import HTTPRequest, HTTPResponse
+from ..ssl.provider import Provider
 
 def delete(arguments, resource):
     sock = get_socket(arguments)

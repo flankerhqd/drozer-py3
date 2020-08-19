@@ -1,11 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import logging
 import sys
 
 from mwr.common import logger
 
-from drozer.ssl import SSLManager
+from ..ssl import SSLManager
 
 logger.setLevel(logging.DEBUG)
 logger.addStreamHandler()

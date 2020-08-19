@@ -7,8 +7,8 @@ from pydiesel.api import handlers
 from pydiesel.api.builders import SystemResponseFactory
 from pydiesel.api.protobuf_pb2 import Message
 
-from drozer.device import Devices
-from drozer.session import Sessions
+from ...device import Devices
+from ...session import Sessions
 
 class SystemRequestHandler(handlers.SystemRequestHandler):
     """

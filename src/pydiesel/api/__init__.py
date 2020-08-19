@@ -1,10 +1,9 @@
 
-__all__ = [ "api",
-            "handlers",
+__all__ = [ "handlers",
             "transport",
             "Frame",
             "InvalidMessageException",
             "UnexpectedMessageException" ]
 
-from pydiesel.api.frame import Frame
-from pydiesel.api.exceptions import InvalidMessageException, UnexpectedMessageException
+from .frame import Frame
+from .exceptions import InvalidMessageException, UnexpectedMessageException

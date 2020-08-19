@@ -1,7 +1,7 @@
-from pydiesel.api.builders import ReflectionRequestFactory
-from pydiesel.api.protobuf_pb2 import Message
-from pydiesel.reflection.exceptions import ReflectionException
-from pydiesel.reflection.types import ReflectedType
+from ..api.builders import ReflectionRequestFactory
+from ..api.protobuf_pb2 import Message
+from .exceptions import ReflectionException
+from .types.reflected_type import ReflectedType
 
 class Reflector:
     """
@@ -88,7 +88,7 @@ class Reflector:
         ReflectedObject that can be used to instantiate it with #construct.
         """
 
-        response = self.sendAndReceive(ReflectionRequestFactory.resolve(class_name))
+        response: Message = self.sendAndReceive(ReflectionRequestFactory.resolve(class_name))
 
         if response is None:
             raise ReflectionException("expected a response to RESOLVE")

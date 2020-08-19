@@ -4,8 +4,8 @@ from time import time
 from pydiesel.api import Frame
 from pydiesel.api.protobuf_pb2 import Message
 
-from drozer.api.handlers import *
-from drozer.server.receivers.frame import FrameReceiver
+from ...api.handlers import *
+from ..receivers.frame import FrameReceiver
 
 class Drozer(FrameReceiver):
     """
@@ -92,5 +92,5 @@ class Drozer(FrameReceiver):
         Writes a message to a client.
         """
         
-        self.transport.write(str(frame))
+        self.transport.write(frame.bytes())
         

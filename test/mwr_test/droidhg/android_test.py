@@ -1,9 +1,9 @@
 import functools
 import unittest
 
-from mwr.cinnibar.reflection.types import ReflectedObject
+from pydiesel.reflection.types import ReflectedObject
 
-from mwr.droidhg.android import Intent
+from drozer.android import Intent
 
 class IntentTestCase(unittest.TestCase):
 

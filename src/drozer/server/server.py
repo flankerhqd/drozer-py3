@@ -1,8 +1,8 @@
 from mwr.common import cli, path_completion
 
-from drozer import util
-from drozer.server import dz, uploader
-from drozer.ssl.provider import Provider
+from .. import util
+from . import dz, uploader
+from ..ssl.provider import Provider
 
 import sys
 

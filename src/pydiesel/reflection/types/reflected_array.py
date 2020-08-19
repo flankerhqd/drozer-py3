@@ -1,6 +1,6 @@
-from pydiesel.api.protobuf_pb2 import Message
-from pydiesel.reflection.exceptions import ReflectionException
-from pydiesel.reflection.types.reflected_type import ReflectedType
+from ...api.protobuf_pb2 import Message
+from ..exceptions import ReflectionException
+from .reflected_type import ReflectedType
 
 class ReflectedArray(ReflectedType):
     """
@@ -160,5 +160,7 @@ class ReflectedArray(ReflectedType):
         self._native[i:j] = seq
 
     def __str__(self):
-        return "[{}]".format(", ".join(map(lambda e: str(e), self._native)))
-        
+        return "[{}]".format(", ".join([str(e) for e in self._native]))
+
+    def __format__(self, format_spec):
+        return "[{}]".format(", ".join([str(e) for e in self._native]))

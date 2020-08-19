@@ -1,4 +1,4 @@
-from drozer.device import Devices
+from ..device import Devices
 
 def heartbeat():
     """

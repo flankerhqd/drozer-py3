@@ -1,7 +1,7 @@
 import unittest
 
-from mwr.cinnibar import reflection
-from mwr.cinnibar.api.protobuf_pb2 import Message
+from pydiesel import reflection
+from pydiesel.api.protobuf_pb2 import Message
 
 from mwr_test.mocks.reflection import MockReflector
 
@@ -49,7 +49,7 @@ class ReflectorTestCase(unittest.TestCase):
 
             assert False, "expected a ReflectionException"
         except reflection.ReflectionException as e:
-            assert e.message == "no matching constructor for those parameters"
+            assert str(e) == "no matching constructor for those parameters"
 
     def testItShouldDeleteFromTheObjectStore(self):
         object = reflection.types.ReflectedObject(987654321, reflector=self.reflector)
@@ -118,7 +118,7 @@ class ReflectorTestCase(unittest.TestCase):
 
             assert False, "expected a ReflectionException"
         except reflection.ReflectionException as e:
-            assert e.message == "no property"
+            assert str(e) == "no property"
 
     def testItShouldInvokeAMethod(self):
         object = reflection.types.ReflectedObject(987654321, reflector=self.reflector)
@@ -162,7 +162,7 @@ class ReflectorTestCase(unittest.TestCase):
 
             assert False, "expected a ReflectionException"
         except reflection.ReflectionException as e:
-            assert e.message == "no matching method for those parameters"
+            assert str(e) == "no matching method for those parameters"
 
     def testItShouldResolveAClass(self):
         self.reflector.replyWith(self.reflector.buildObjectReply(55512345))
@@ -183,7 +183,7 @@ class ReflectorTestCase(unittest.TestCase):
 
             assert False, "expected a ReflectionException"
         except reflection.ReflectionException as e:
-            assert e.message == "could not resolve"
+            assert str(e) == "could not resolve"
 
     def testItShouldSetAnObjectProperty(self):
         object = reflection.types.ReflectedObject(987654321, reflector=self.reflector)
@@ -210,7 +210,7 @@ class ReflectorTestCase(unittest.TestCase):
 
             assert False, "expected a ReflectionException"
         except reflection.ReflectionException as e:
-            assert e.message == "could not set property"
+            assert str(e) == "could not set property"
 
 
 def ReflectorTestSuite():

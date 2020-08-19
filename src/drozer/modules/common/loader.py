@@ -2,8 +2,8 @@ import os, platform
 
 from pydiesel.reflection import utils
 
-from drozer.configuration import Configuration
-from drozer.modules.base import Module
+from ...configuration import Configuration
+from ..base import Module
 
 class ClassLoader(object):
     """

@@ -1,11 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import logging
 import sys
 
 from mwr.common import logger
 
-from drozer.server import Server
+from ..server import Server
 
 logger.setLevel(logging.INFO)
 logger.addStreamHandler()

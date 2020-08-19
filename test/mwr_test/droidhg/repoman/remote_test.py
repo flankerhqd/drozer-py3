@@ -1,13 +1,13 @@
-import ConfigParser
+import configparser
 import unittest
 
-from mwr.droidhg.configuration import Configuration
-from mwr.droidhg.repoman.remotes import Remote, UnknownRemote
+from drozer.configuration import Configuration
+from drozer.repoman.remotes import Remote, UnknownRemote
 
 class RemoteTestCase(unittest.TestCase):
     
     def mockConfigWithRemotes(self, remotes):
-        config = ConfigParser.SafeConfigParser()
+        config = configparser.SafeConfigParser()
         
         config.add_section('remotes')
         for url in remotes:
@@ -16,7 +16,7 @@ class RemoteTestCase(unittest.TestCase):
         return config
     
     def mockConfigWithoutRemotes(self):
-        return ConfigParser.SafeConfigParser()
+        return configparser.SafeConfigParser()
     
     def testItShouldRetrieveNoRemotes(self):
         Configuration._Configuration__config = self.mockConfigWithRemotes([])
@@ -32,8 +32,8 @@ class RemoteTestCase(unittest.TestCase):
         Configuration._Configuration__config = self.mockConfigWithoutRemotes()
         # if there are no remotes specified, we should create a default one pointing
         # to the Github repository
-        
-        assert Remote.all() == ['https://raw.github.com/mwrlabs/mercury-modules/repository/']
+
+        assert Remote.all() == ['https://raw.github.com/mwrlabs/drozer-modules/repository/']
     
     def testItShouldAddARemote(self):
         Configuration._Configuration__config = self.mockConfigWithRemotes([])

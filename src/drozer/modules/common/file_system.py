@@ -1,4 +1,3 @@
-import binascii
 import os
 import base64
 
@@ -192,7 +191,7 @@ class FileSystem(object):
             file_stream = self.new("java.io.FileOutputStream", destination)
 
             for c in chunk(data, block_size):
-                ByteStreamWriter.writeHexStream(file_stream, binascii.hexlify(c))
+                ByteStreamWriter.writeHexStream(file_stream, c.hex())
 
             file_stream.close()
             

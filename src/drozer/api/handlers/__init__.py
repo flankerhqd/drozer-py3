@@ -4,7 +4,7 @@ __all__ = [ "ReflectionRequestForwarder",
             "SystemRequestHandler",
             "SystemResponseHandler" ]
 
-from drozer.api.handlers.reflection_request_forwarder import ReflectionRequestForwarder
-from drozer.api.handlers.reflection_response_forwarder import ReflectionResponseForwarder
-from drozer.api.handlers.system_request_handler import SystemRequestHandler
-from drozer.api.handlers.system_response_handler import SystemResponseHandler
+from .reflection_request_forwarder import ReflectionRequestForwarder
+from .reflection_response_forwarder import ReflectionResponseForwarder
+from .system_request_handler import SystemRequestHandler
+from .system_response_handler import SystemResponseHandler

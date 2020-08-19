@@ -1,9 +1,9 @@
 import socket
 import ssl
 
-from pydiesel.api import Frame
-from pydiesel.api.transport.exceptions import ConnectionError
-from pydiesel.api.transport.transport import Transport
+from .. import Frame
+from .exceptions import ConnectionError
+from .transport import Transport
 
 from drozer.ssl.provider import Provider # TODO: eugh
 
@@ -62,7 +62,7 @@ class SocketTransport(Transport):
     
             frame = Frame.fromMessage(message.setId(message_id).build())
     
-            self.__socket.sendall(str(frame))
+            self.__socket.sendall(frame.bytes())
     
             return message_id
         except socket.timeout as e:

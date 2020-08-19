@@ -1,7 +1,7 @@
 import os
 import platform 
 
-from mwr.common.stream import DecolouredStream
+from .stream import DecolouredStream
 
 def which(executable):
     """

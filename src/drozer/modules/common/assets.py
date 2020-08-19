@@ -1,4 +1,4 @@
-from drozer.modules.common import loader
+from . import loader
 
 class Assets(loader.ClassLoader):
     """
@@ -18,6 +18,7 @@ class Assets(loader.ClassLoader):
 
         xml_string = str(XmlAssetReader.read(xml))
 
+        # self.reflector comes from  drozer.modules.base
         self.reflector.delete(asset_manager)
         self.reflector.delete(xml)
 

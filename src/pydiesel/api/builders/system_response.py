@@ -1,4 +1,4 @@
-from pydiesel.api.protobuf_pb2 import Message
+from ..protobuf_pb2 import Message
 
 class SystemResponseFactory:
     """

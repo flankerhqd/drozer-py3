@@ -1,7 +1,7 @@
 import OpenSSL
 import unittest
 
-from mwr.droidhg.ssl.ca import CA, NoKeyMaterialError
+from drozer.ssl.ca import CA, NoKeyMaterialError
 
 class CATestCase(unittest.TestCase):
 
@@ -126,13 +126,13 @@ class CATestCase(unittest.TestCase):
         ca = CA()
         ca.create_ca()
         
-        assert CA.pkey_to_pem(ca.ca_key).find("PRIVATE KEY") >= 0
+        assert CA.pkey_to_pem(ca.ca_key).find(b"PRIVATE KEY") >= 0
     
     def testItShouldSerializeACertificateToPEM(self):
         ca = CA()
         ca.create_ca()
         
-        assert CA.certificate_to_pem(ca.ca_cert).find("CERTIFICATE") >= 0
+        assert CA.certificate_to_pem(ca.ca_cert).find(b"CERTIFICATE") >= 0
     
 def CATestSuite():
     suite = unittest.TestSuite()

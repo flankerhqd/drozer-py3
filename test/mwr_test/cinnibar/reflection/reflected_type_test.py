@@ -1,7 +1,7 @@
 import unittest
 
-from mwr.cinnibar import reflection
-from mwr.cinnibar.api.protobuf_pb2 import Message
+from pydiesel import reflection
+from pydiesel.api.protobuf_pb2 import Message
 
 from mwr_test.mocks.reflection import MockReflector
 
@@ -120,7 +120,7 @@ class ReflectedTypeTestCase(unittest.TestCase):
 
             assert False, "should have caused a TypeError building a mixed array"
         except TypeError as e:
-            assert e.message == "mismatched array element types"
+            assert str(e) == "mismatched array element types"
 
     def testItShouldBuildObjectFromArgument(self):
         argument = Message.Argument(type=Message.Argument.OBJECT)
@@ -163,11 +163,11 @@ class ReflectedTypeTestCase(unittest.TestCase):
         assert type.native() == 1
 
     def testItShouldBuildLongFromNative(self):
-        type = reflection.types.ReflectedType.fromNative(long(1), reflector=self.reflector)
+        type = reflection.types.ReflectedType.fromNative(int(1), reflector=self.reflector, obj_type='long')
 
         assert isinstance(type, reflection.types.ReflectedPrimitive)
         assert type.type() == "long"
-        assert type.native() == long(1)
+        assert type.native() == int(1)
     
     def testItShouldBuildNullFromNative(self):
         type = reflection.types.ReflectedType.fromNative(None, reflector=self.reflector)

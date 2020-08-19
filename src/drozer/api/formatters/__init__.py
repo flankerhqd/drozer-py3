@@ -1,1 +1,1 @@
-from drozer.api.formatters.system_response import SystemResponseFormatter
+from .system_response import SystemResponseFormatter

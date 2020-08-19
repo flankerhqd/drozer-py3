@@ -1,15 +1,15 @@
-import ConfigParser
+import configparser
 import os
 import shutil
 import unittest
 
-from mwr.droidhg.configuration import Configuration
-from mwr.droidhg.repoman.repositories import Repository, NotEmptyException, UnknownRepository
+from drozer.configuration import Configuration
+from drozer.repoman.repositories import Repository, NotEmptyException, UnknownRepository
 
 class RepositoryTestCase(unittest.TestCase):
     
     def mockConfigWithRepos(self, repositories):
-        config = ConfigParser.SafeConfigParser()
+        config = configparser.SafeConfigParser()
         
         config.add_section('repositories')
         for repo in repositories:
@@ -18,7 +18,7 @@ class RepositoryTestCase(unittest.TestCase):
         return config
     
     def mockConfigWithoutRepos(self):
-        return ConfigParser.SafeConfigParser()
+        return configparser.SafeConfigParser()
     
     def testItShouldRetrieveNoAdditionalRepositories(self):
         Configuration._Configuration__config = self.mockConfigWithRepos([])
@@ -38,22 +38,22 @@ class RepositoryTestCase(unittest.TestCase):
     def testItShouldBuildDroidhgModulesPathAsDefault(self):
         Configuration._Configuration__config = self.mockConfigWithRepos([])
         
-        assert Repository.droidhg_modules_path() == ""
+        assert Repository.drozer_modules_path() == ""
     
     def testItShouldBuildDroidhgModulesPathWithAnAdditionalRepository(self):
         Configuration._Configuration__config = self.mockConfigWithRepos(['/usr/local/mercury/modules'])
         
-        assert Repository.droidhg_modules_path() == "/usr/local/mercury/modules"
+        assert Repository.drozer_modules_path() == "/usr/local/mercury/modules"
         
     def testItShouldBuildDroidhgModulesPathWithTwoAdditionalRepository(self):
         Configuration._Configuration__config = self.mockConfigWithRepos(['/usr/local/mercury/modules', '/tmp/modules'])
         
-        assert Repository.droidhg_modules_path() == "/usr/local/mercury/modules:/tmp/modules"
+        assert Repository.drozer_modules_path() == "/usr/local/mercury/modules:/tmp/modules"
         
     def testItShouldBuildDroidhgModulesPathWithoutAConfigFile(self):
         Configuration._Configuration__config = self.mockConfigWithoutRepos()
         
-        assert Repository.droidhg_modules_path() == ""
+        assert Repository.drozer_modules_path() == ""
     
     def testItShouldCreateAModuleRepository(self):
         Configuration._Configuration__config = self.mockConfigWithoutRepos()
@@ -62,7 +62,7 @@ class RepositoryTestCase(unittest.TestCase):
         
         assert os.path.exists("./tmp")
         assert os.path.exists("./tmp/__init__.py")
-        assert os.path.exists("./tmp/.mercury_repository")
+        assert os.path.exists("./tmp/.drozer_repository")
         
         assert Repository.all() == ["./tmp"]
         
@@ -157,7 +157,7 @@ class RepositoryTestCase(unittest.TestCase):
         
         assert os.path.exists("./tmp")
         assert os.path.exists("./tmp/__init__.py")
-        assert os.path.exists("./tmp/.mercury_repository")
+        assert os.path.exists("./tmp/.drozer_repository")
         
         assert Repository.all() == []
         

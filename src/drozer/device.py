@@ -1,6 +1,6 @@
 from pydiesel.api.builders import SystemRequestFactory
 
-from drozer.session import Sessions
+from .session import Sessions
 
 class Device:
     """

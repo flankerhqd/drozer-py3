@@ -1,13 +1,13 @@
 import base64
 
-from pydiesel.api.protobuf_pb2 import Message
-from pydiesel.reflection.exceptions import ReflectionException
-from pydiesel.reflection.types.reflected_string import ReflectedString
-from pydiesel.reflection.types.reflected_type import ReflectedType
+from ...api.protobuf_pb2 import Message
+from ..exceptions import ReflectionException
+from .reflected_string import ReflectedString
+from .reflected_type import ReflectedType
 
 class ReflectedBinary(ReflectedString):
     
-    def __init__(self, native, *args, **kwargs):
+    def __init__(self, native: bytes, *args, **kwargs):
         ReflectedType.__init__(self, *args, **kwargs)
         
         self._native = native
@@ -26,7 +26,3 @@ class ReflectedBinary(ReflectedString):
         """
 
         return Message.Argument(type=Message.Argument.DATA, data=self._native)
-
-    def __str__(self):
-        return self._native
-

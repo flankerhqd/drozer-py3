@@ -1,10 +1,10 @@
-import binascii
 import hashlib
-import os, md5
+import os
+from hashlib import md5
 
-from pydiesel.reflection.exceptions import ReflectionException
-from pydiesel.reflection.types.reflected_primitive import ReflectedPrimitive
-from pydiesel.reflection.utils import ClassBuilder
+from ..exceptions import ReflectionException
+from ..types.reflected_primitive import ReflectedPrimitive
+from ..utils import ClassBuilder
 from mwr.common import fs
 
 class ClassLoader(object):
@@ -41,7 +41,7 @@ class ClassLoader(object):
             file_io = self.construct('java.io.File', file_path)
             
             if not self.__verify_file(file_io, self.source):  
-                source_data = [ReflectedPrimitive("byte", (ord(i) if ord(i) < 128 else ord(i) - 0x100), reflector=None) for i in self.source]
+                source_data = [ReflectedPrimitive("byte", (i if i < 128 else i - 0x100), reflector=None) for i in self.source]
     
                 file_stream = self.construct("java.io.FileOutputStream", file_path)
                 file_stream.write(source_data, 0, len(source_data))
@@ -56,7 +56,7 @@ class ClassLoader(object):
         of the library file.
         """
         
-        return binascii.hexlify(hashlib.md5(self.source).digest()) + ".apk"
+        return hashlib.md5(self.source).hexdigest() + ".apk"
     
     def __get_source(self, source_or_relative_path, relative_to=None):
         """

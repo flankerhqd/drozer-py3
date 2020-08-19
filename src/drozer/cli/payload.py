@@ -1,11 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import logging
 import sys
 
 from mwr.common import logger
 
-from drozer.payload.manager import PayloadManager
+from ..payload.manager import PayloadManager
 
 logger.setLevel(logging.DEBUG)
 logger.addStreamHandler()

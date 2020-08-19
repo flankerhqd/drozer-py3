@@ -1,4 +1,6 @@
 from drozer.modules import common, Module
+from pydiesel.reflection import ReflectionException
+
 
 class DeviceInfo(Module, common.Shell):
     
@@ -14,15 +16,23 @@ class DeviceInfo(Module, common.Shell):
         self.stdout.write("-----------------------------------------\n")
         self.stdout.write("/proc/version\n")
         self.stdout.write("-----------------------------------------\n")
-        self.stdout.write(self.readFile("/proc/version") + "\n\n")
+        try:
+            self.stdout.write(self.readFile("/proc/version") + "\n\n")
+        except ReflectionException as e:
+            self.stdout.write(str(e) + "\n\n")
 
         self.stdout.write("-----------------------------------------\n")
         self.stdout.write("/system/build.prop\n")
         self.stdout.write("-----------------------------------------\n")
-        self.stdout.write(self.readFile("/system/build.prop") + "\n\n")
+        try:
+            self.stdout.write(self.readFile("/system/build.prop") + "\n\n")
+        except ReflectionException as e:
+            self.stdout.write(str(e) + "\n\n")
 
         self.stdout.write("-----------------------------------------\n")
         self.stdout.write("getprop\n")
         self.stdout.write("-----------------------------------------\n\n")
-        self.stdout.write(self.shellExec("getprop") + "\n")
-        
+        try:
+            self.stdout.write(self.shellExec("getprop") + "\n")
+        except ReflectionException as e:
+            self.stdout.write(str(e) + "\n\n")

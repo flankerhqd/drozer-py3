@@ -1,5 +1,5 @@
-from pydiesel.api.exceptions import InvalidMessageException, UnexpectedMessageException
-from pydiesel.api.protobuf_pb2 import Message
+from ..exceptions import InvalidMessageException, UnexpectedMessageException
+from ..protobuf_pb2 import Message
 
 class SystemResponseHandler(object):
     """

@@ -1,8 +1,8 @@
 from functools import partial
 
-from pydiesel.api.protobuf_pb2 import Message
-from pydiesel.reflection.exceptions import ReflectionException
-from pydiesel.reflection.types.reflected_type import ReflectedType
+from ...api.protobuf_pb2 import Message
+from ..exceptions import ReflectionException
+from .reflected_type import ReflectedType
 
 class ReflectedObject(ReflectedType):
     """
@@ -59,7 +59,7 @@ class ReflectedObject(ReflectedType):
         reflector's invoke() method.
         """
 
-        result = self._reflector.invoke(self, method_name, *map(lambda arg: ReflectedType.fromNative(arg, reflector=self._reflector), args), **kwargs)
+        result = self._reflector.invoke(self, method_name, *[ReflectedType.fromNative(arg, reflector=self._reflector) for arg in args], **kwargs)
 
         return result
 
@@ -77,4 +77,5 @@ class ReflectedObject(ReflectedType):
 
     def __str__(self):
         return "#<Object {}>".format(self._ref)
-        
+    def __format__(self, format_spec):
+        return "#<Object {}>".format(self._ref)

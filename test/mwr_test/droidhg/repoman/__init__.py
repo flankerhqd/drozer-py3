@@ -1,4 +1,4 @@
-import installer_test
-import remote_test
-import repository_builder_test
-import repository_test
+from . import installer_test
+from . import remote_test
+from . import repository_builder_test
+from . import repository_test

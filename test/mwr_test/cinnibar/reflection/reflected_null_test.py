@@ -1,7 +1,7 @@
 import unittest
 
-from mwr.cinnibar import reflection
-from mwr.cinnibar.api.protobuf_pb2 import Message
+from pydiesel import reflection
+from pydiesel.api.protobuf_pb2 import Message
 
 from mwr_test.mocks.reflection import MockReflector
 

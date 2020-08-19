@@ -9,8 +9,8 @@ import shlex
 import sys
 import textwrap
 
-from mwr.common import system
-from mwr.common.text import wrap
+from . import system
+from .text import wrap
 
 class Cmd(cmd.Cmd):
     """
@@ -59,7 +59,7 @@ class Cmd(cmd.Cmd):
                 else:
                     if self.use_rawinput:
                         try:
-                            line = raw_input(self.prompt)
+                            line = input(self.prompt)
                         except EOFError:
                             line = 'EOF'
                     else:
@@ -76,15 +76,16 @@ class Cmd(cmd.Cmd):
                     stop = self.onecmd(line)
                     stop = self.postcmd(stop, line)
                 except ValueError as e:
-                    if e.message == "No closing quotation":
+                    if str(e) == "No closing quotation":
                         self.stderr.write("Failed to parse your command, because there were unmatched quotation marks.\n")
                         self.stderr.write("Did you want a single ' or \"? You need to escape it (\\' or \\\") or surround it with the other type of quotation marks (\"'\" or '\"').\n\n")
                     else:
                         raise
             self.postloop()
-        except Exception, e:
-            pass
-            
+        except Exception as e:
+            self.stderr.write(str(e))
+            import traceback
+            traceback.print_exc()
         finally:
             if self.use_rawinput and self.completekey:
                 self.pop_completer()
@@ -125,7 +126,7 @@ class Cmd(cmd.Cmd):
                 if len(matches) == 1 and matches[0].endswith(os.path.sep):
                     self.completion_matches = matches
                 else:
-                    self.completion_matches = map(lambda s: s+" ", matches)
+                    self.completion_matches = [s+" " for s in matches]
                 
         try:
             return self.completion_matches[state]
@@ -168,7 +169,7 @@ class Cmd(cmd.Cmd):
             run app.package.info com.example.app
         """
         
-        print self.__do_substitutions(arguments)
+        print(self.__do_substitutions(arguments))
 
     def do_env(self, arguments):
         """
@@ -178,8 +179,8 @@ class Cmd(cmd.Cmd):
         """
 
         for key in self.variables:
-            print "%s=%s" % (key, self.variables[key])
-        print
+            print("%s=%s" % (key, self.variables[key]))
+        print()
     
     def do_set(self, arguments):
         """

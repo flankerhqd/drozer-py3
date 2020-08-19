@@ -1,1 +1,1 @@
-import coloured_stream_test
+from . import coloured_stream_test

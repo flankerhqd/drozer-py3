@@ -32,7 +32,7 @@ class ServerConnector(SocketTransport):
         try:
             return self.sendAndReceive(SystemRequestFactory.listDevices())
         except RuntimeError as e:
-            if e.message == 'Received an empty response from the Agent. This normally means the remote service has crashed.':
+            if str(e) == 'Received an empty response from the Agent. This normally means the remote service has crashed.':
                 raise ConnectionError(e)
             else:
                 raise
@@ -45,7 +45,7 @@ class ServerConnector(SocketTransport):
         try:
             return self.sendAndReceive(SystemRequestFactory.listSessions())
         except RuntimeError as e:
-            if e.message == 'Received an empty response from the Agent. This normally means the remote service has crashed.':
+            if str(e) == 'Received an empty response from the Agent. This normally means the remote service has crashed.':
                 raise ConnectionError(e)
             else:
                 raise
@@ -58,7 +58,7 @@ class ServerConnector(SocketTransport):
         try:
             return self.sendAndReceive(SystemRequestFactory.startSession(device_id).setPassword(password))
         except RuntimeError as e:
-            if e.message == 'Received an empty response from the Agent. This normally means the remote service has crashed.':
+            if str(e) == 'Received an empty response from the Agent. This normally means the remote service has crashed.':
                 raise ConnectionError(e)
             else:
                 raise

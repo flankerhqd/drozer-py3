@@ -19,7 +19,7 @@ Typically, you require root access to the device to install Busybox. drozer can 
         arch = str(self.klass('java.lang.System').getProperty("os.arch")).upper()
         
         # Check for unsupported architecture
-        if "ARM" in arch:
+        if "ARM" in arch or "AARCH64" in arch:
             arch = "arm"
         elif "86" in arch:
             arch = "x86"

@@ -1,8 +1,8 @@
-from StringIO import StringIO
+from io import BytesIO
 import unittest
 
-from mwr.cinnibar.api import builders, frame
-from mwr.cinnibar.api.protobuf_pb2 import Message
+from pydiesel.api import builders, frame
+from pydiesel.api.protobuf_pb2 import Message
 
 class FrameTestCase(unittest.TestCase):
 
@@ -54,16 +54,16 @@ class FrameTestCase(unittest.TestCase):
         assert frame.Frame(2, len(message), message).messageType() == "SYSTEM_RESPONSE"
 
     def testItShouldReadFrameFromAStream(self):
-        stream = StringIO()
-        stream.write("\x00\x00\x00\x02\x00\x00\x00\x0bthe payload")
+        stream = BytesIO()
+        stream.write(b"\x00\x00\x00\x02\x00\x00\x00\x0bthe payload")
         stream.seek(0)
 
         assert frame.Frame.readFrom(stream) != None     # we have read a frame
         assert stream.tell() > 0                        # we have advanced the stream
 
     def testItShouldNotReadPartialFrameFromAStream(self):
-        stream = StringIO()
-        stream.write("\x00\x00\x00\x02\x00\x00\x00\x0bthe")
+        stream = BytesIO()
+        stream.write(b"\x00\x00\x00\x02\x00\x00\x00\x0bthe")
         stream.seek(0)
 
         # the length is 0x0000000b (dec 11), but we only provide 3 bytes of
@@ -73,13 +73,13 @@ class FrameTestCase(unittest.TestCase):
         assert stream.tell() == 0                       # we have left the stream intact
 
     def testItShouldReadFrameFromASocket(self):
-        socket = FrameTestCase.MockSocket(["\x00\x00\x00\x02\x00\x00\x00\x0b", "the payload"])
+        socket = FrameTestCase.MockSocket([b"\x00\x00\x00\x02\x00\x00\x00\x0b", b"the payload"])
 
         assert frame.Frame.readFromSocket(socket) != None
         assert socket.recvd == [8, 11]
 
     def testItShouldReadFragmentedFrameFromASocket(self):
-        socket = FrameTestCase.MockSocket(["\x00\x00\x00\x02\x00\x00\x00\x0b", "the", " payload"])
+        socket = FrameTestCase.MockSocket([b"\x00\x00\x00\x02\x00\x00\x00\x0b", b"the", b" payload"])
         
         assert frame.Frame.readFromSocket(socket) != None
         assert socket.recvd == [8, 11, 8]

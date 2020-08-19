@@ -2,7 +2,7 @@ import re
 
 from mwr.common import fs
 
-from drozer.server.receivers.http import HTTPResponse
+from .receivers.http import HTTPResponse
 
 class FileProvider(object):
     
@@ -37,7 +37,7 @@ class FileProvider(object):
         return ErrorResource(resource, 404, "The resource %s could not be found on this server.")
     
     def get_by_magic(self, magic):
-        resources = filter(lambda r: self.__store[r].magic == magic, self.__store)
+        resources = [r for r in self.__store if self.__store[r].magic == magic]
         
         if len(resources) == 1:
             return self.__store[resources[0]]
@@ -45,7 +45,7 @@ class FileProvider(object):
             return None
     
     def has_magic_for(self, magic):
-        resources = filter(lambda r: self.__store[r].magic == magic, self.__store)
+        resources = [r for r in self.__store if self.__store[r].magic == magic]
         
         if len(resources) == 1:
             return True

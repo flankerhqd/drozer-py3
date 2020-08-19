@@ -1,1 +1,1 @@
-from drozer.server.server import Server
+from .server import Server

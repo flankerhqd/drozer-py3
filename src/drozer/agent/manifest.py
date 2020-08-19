@@ -1,4 +1,6 @@
 from xml.etree import ElementTree as xml
+from mwr.common import fs
+
 
 class Endpoint(object):
     
@@ -6,8 +8,7 @@ class Endpoint(object):
         self.__path = path
         
         lines = open(self.__path).read().split("\n")
-        data = dict(map(lambda l: l.split(":"), filter(lambda l: l.find(":") > -1, lines)))
-        
+        data = dict([l.split(":") for l in lines if l.find(":") > -1])
         self.host = data['host']
         self.password = data['password']
         self.port = int(data['port'])
@@ -41,7 +42,7 @@ class Manifest(object):
     
     def __init__(self, path):
         self.__path = path
-        self.__doc = xml.fromstring(file(self.__path).read())
+        self.__doc = xml.fromstring(fs.read(self.__path).decode())
         
     
     def add_permission(self, name):

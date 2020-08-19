@@ -1,4 +1,3 @@
-import binascii
 import glob
 import hashlib
 import os
@@ -39,9 +38,9 @@ class ClassBuilder(object):
                 raise RuntimeError("Error whilst compiling the Java sources.")
             
             # collect any sub-classes that we generated
-            sources = map(lambda p: os.path.basename(p), glob.glob(self.path.replace(".java", "$*.class")))
+            sources = [os.path.basename(p) for p in glob.glob(self.path.replace(".java", "$*.class"))]
             # package the compiled bytecode into an apk file (%.class => %.apk)
-            if self.__execute(self.dx , "--dex", "--output", os.path.basename(apk_path), *([os.path.basename(self.path).replace(".java", ".class")] + sources)):
+            if self.__execute(self.dx , "--dex", "--output", os.path.basename(apk_path), *([os.path.basename(self.path).replace(".java", ".class")]  + sources)):
                 raise RuntimeError("Error whilst building APK bundle.")
         
         # read the generated source file
@@ -64,20 +63,21 @@ class ClassBuilder(object):
         Spawn a shell command
         """
         
-        print " ".join(argv)
+        print(" ".join(argv))
 
         if platform == 'win32':
-            subprocess.call(argv,shell=True,cwd=os.getcwd())
+            # TODO: leadroyal check win32 performance
+            subprocess.call(argv, cwd=os.getcwd())
         else:
-            subprocess.call(' '.join(argv),shell=True, cwd=os.getcwd())
+            subprocess.call(argv, cwd=os.getcwd())
 
-    def __get_generated_apk_name(self):
+    def __get_generated_apk_name(self) -> str:
         """
         Calculate a unique name for the generated APK file, based on the content
         of the source file.
         """
         
-        return os.path.join(os.path.dirname(self.path), binascii.hexlify(hashlib.md5(self.__get_source()).digest()) + ".apk")
+        return os.path.join(os.path.dirname(self.path), hashlib.md5(self.__get_source()).hexdigest() + ".apk")
         
     def __get_source(self):
         """

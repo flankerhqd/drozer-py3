@@ -1,18 +1,18 @@
-import ConfigParser
+import configparser
 import os
 import shutil
 import unittest
 
 from mwr.common import fs
 
-from mwr.droidhg.configuration import Configuration
-from mwr.droidhg.repoman.installer import ModuleInstaller
-from mwr.droidhg.repoman.repositories import Repository
+from drozer.configuration import Configuration
+from drozer.repoman.installer import ModuleInstaller
+from drozer.repoman.repositories import Repository
 
 class ModuleInstallerTestCase(unittest.TestCase):
     
     def setUp(self):
-        Configuration._Configuration__config = ConfigParser.SafeConfigParser()
+        Configuration._Configuration__config = configparser.SafeConfigParser()
         
         shutil.rmtree("./tmp", True)
         
@@ -32,7 +32,7 @@ class ModuleInstallerTestCase(unittest.TestCase):
         assert os.path.exists("./tmp/a/local/__init__.py")
         assert os.path.exists("./tmp/a/local/module.py")
         
-        assert fs.read("./tmp/a/local/module.py") == "This is a local, raw module."
+        assert fs.read("./tmp/a/local/module.py") == b"This is a local, raw module."
         
     def testItShouldInstallAnArchiveModuleFromALocalSource(self):
         ModuleInstaller("./tmp").install(["./test/mwr_test/mocks/a.local.zip"])
@@ -43,7 +43,7 @@ class ModuleInstallerTestCase(unittest.TestCase):
         assert os.path.exists("./tmp/a/local/__init__.py")
         assert os.path.exists("./tmp/a/local/module.py")
         
-        assert fs.read("./tmp/a/local/module.py") == "This is a local, archived module.\n"
+        assert fs.read("./tmp/a/local/module.py") == b"This is a local, archived module.\n"
 
     def testItShouldNotInstallARawLocalModuleIfAlreadyPresent(self):
         fs.write("./tmp/a.local.module", "This is a local, raw module.")
@@ -56,13 +56,13 @@ class ModuleInstallerTestCase(unittest.TestCase):
         assert os.path.exists("./tmp/a/local/__init__.py")
         assert os.path.exists("./tmp/a/local/module.py")
 
-        assert fs.read("./tmp/a/local/module.py") == "This is a local, raw module."
+        assert fs.read("./tmp/a/local/module.py") == b"This is a local, raw module."
 
         fs.write("./tmp/a.local.module", "This is an edited local, raw module.")
 
         ModuleInstaller("./tmp").install(["./tmp/a.local.module"])
 
-        assert fs.read("./tmp/a/local/module.py") != "This is an edited local, raw module."
+        assert fs.read("./tmp/a/local/module.py") != b"This is an edited local, raw module."
 
     def testItShouldNotInstallAnArchivedLocalModuleIfAlreadyPresent(self):
 
@@ -76,7 +76,7 @@ class ModuleInstallerTestCase(unittest.TestCase):
 
         ModuleInstaller("./tmp").install(["./test/mwr_test/mocks(reinstall)/a.local.zip"])
         
-        assert fs.read("./tmp/a/local/module.py") != "This is an edited local, archived module.\n"
+        assert fs.read("./tmp/a/local/module.py") != b"This is an edited local, archived module.\n"
 
     def testItShouldOverwriteARawLocalModuleIfForceIsSet(self):
 
@@ -90,13 +90,13 @@ class ModuleInstallerTestCase(unittest.TestCase):
         assert os.path.exists("./tmp/a/local/__init__.py")
         assert os.path.exists("./tmp/a/local/module.py")
 
-        assert fs.read("./tmp/a/local/module.py") == "This is a local, raw module."
+        assert fs.read("./tmp/a/local/module.py") == b"This is a local, raw module."
 
         fs.write("./tmp/a.local.module", "This is an edited local, raw module.")
 
         ModuleInstaller("./tmp").install(["./tmp/a.local.module"], True)
 
-        assert fs.read("./tmp/a/local/module.py") == "This is an edited local, raw module."
+        assert fs.read("./tmp/a/local/module.py") == b"This is an edited local, raw module."
 
     def testItShouldOverwriteAnArchivedLocalModuleIfForceIsSet(self):
         
@@ -110,7 +110,7 @@ class ModuleInstallerTestCase(unittest.TestCase):
 
         ModuleInstaller("./tmp").install(["./test/mwr_test/mocks/mocks(reinstall)/a.local.zip"], True)
         
-        assert fs.read("./tmp/a/local/module.py") == "This is an edited local, archived module.\n"
+        assert fs.read("./tmp/a/local/module.py") == b"This is an edited local, archived module.\n"
 
 def ModuleInstallerTestSuite():
     suite = unittest.TestSuite()
