@@ -8,17 +8,26 @@ from .transport import Transport
 from drozer.ssl.provider import Provider # TODO: eugh
 
 class SocketTransport(Transport):
-    
+    AdbHost = "127.0.0.1"
+    AdbPort = 5037
+
     def __init__(self, arguments, trust_callback=None):
         Transport.__init__(self)
         self.__socket = socket.socket()
-        
+
         if arguments.ssl:
             provider = Provider()
             self.__socket = ssl.wrap_socket(self.__socket, cert_reqs=ssl.CERT_REQUIRED, ca_certs=provider.ca_certificate_path())
 
         self.setTimeout(90.0)
-        self.__socket.connect(self.__getEndpoint(arguments))
+        if arguments.usb:
+            self.__socket.connect((self.AdbHost, self.AdbPort))
+            self.__socket.send(self.adb('host:transport-usb'))
+            assert self.__socket.recv(4) == b'OKAY'
+            self.__socket.send(self.adb('tcp:%d' % self.DefaultPort))
+            assert self.__socket.recv(4) == b'OKAY'
+        else:
+            self.__socket.connect(self.__getEndpoint(arguments))
         
         if arguments.ssl:
             trust_callback(provider, self.__socket.getpeercert(True), self.__socket.getpeername())
@@ -113,4 +122,6 @@ class SocketTransport(Transport):
             port = self.DefaultPort
         
         return (host, int(port))
-            
+
+    def adb(self, s: str):
+        return ('%04x' % len(s)).encode('ascii') + s.encode()

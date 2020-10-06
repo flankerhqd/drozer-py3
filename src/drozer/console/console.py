@@ -29,6 +29,7 @@ class Console(cli.Base):
         
         self._parser.add_argument("device", default=None, nargs='?', help="the unique identifier of the Agent to connect to")
         self._parser.add_argument("--server", default=None, metavar="HOST[:PORT]", help="specify the address and port of the drozer server")
+        self._parser.add_argument("-U", "--usb", action="store_true", default=False, help="connect to drozer console via usb (don't need adb forward)")
         self._parser.add_argument("--ssl", action="store_true", default=False, help="connect with SSL")
         self._parser.add_argument("--accept-certificate", action="store_true", default=False, help="accept any SSL certificate with a valid trust chain")
         self._parser.add_argument("--debug", action="store_true", default=False, help="enable debug mode")
