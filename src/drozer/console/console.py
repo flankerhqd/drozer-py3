@@ -29,7 +29,6 @@ class Console(cli.Base):
         
         self._parser.add_argument("device", default=None, nargs='?', help="the unique identifier of the Agent to connect to")
         self._parser.add_argument("--server", default=None, metavar="HOST[:PORT]", help="specify the address and port of the drozer server")
-        self._parser.add_argument("-U", "--usb", action="store_true", default=False, help="connect to drozer console via usb (don't need adb forward)")
         self._parser.add_argument("--ssl", action="store_true", default=False, help="connect with SSL")
         self._parser.add_argument("--accept-certificate", action="store_true", default=False, help="accept any SSL certificate with a valid trust chain")
         self._parser.add_argument("--debug", action="store_true", default=False, help="enable debug mode")
@@ -128,7 +127,7 @@ class Console(cli.Base):
             sys.stderr.write("There was a problem connecting to the drozer Server.\n\n")
             sys.stderr.write("Things to check:\n\n")
             sys.stderr.write(" - is the drozer Server running?\n")
-            sys.stderr.write(" - have you set up appropriate adb port forwards?\n")
+            sys.stderr.write(" - is adb connect successfully alive?\n")
             sys.stderr.write(" - have you specified the correct hostname and port with --server?\n")
             sys.stderr.write(" - is the server protected with SSL (add an --ssl switch)?\n")
             sys.stderr.write(" - is the agent protected with a password (add a --password switch)?\n\n")

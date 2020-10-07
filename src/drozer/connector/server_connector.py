@@ -13,9 +13,6 @@ class ServerConnector(SocketTransport):
     receiving Frames on the wire.
     """
 
-    DefaultHost = "127.0.0.1"
-    DefaultPort = 31415
-    
     def __init__(self, arguments, trust_callback=None):
         try:
             SocketTransport.__init__(self, arguments, trust_callback)

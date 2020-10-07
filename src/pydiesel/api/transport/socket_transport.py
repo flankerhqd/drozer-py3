@@ -1,5 +1,6 @@
 import socket
 import ssl
+from typing import Optional
 
 from .. import Frame
 from .exceptions import ConnectionError
@@ -10,24 +11,28 @@ from drozer.ssl.provider import Provider # TODO: eugh
 class SocketTransport(Transport):
     AdbHost = "127.0.0.1"
     AdbPort = 5037
+    DefaultPort = 31415
 
     def __init__(self, arguments, trust_callback=None):
         Transport.__init__(self)
         self.__socket = socket.socket()
+        self.setTimeout(90.0)
 
         if arguments.ssl:
             provider = Provider()
             self.__socket = ssl.wrap_socket(self.__socket, cert_reqs=ssl.CERT_REQUIRED, ca_certs=provider.ca_certificate_path())
 
-        self.setTimeout(90.0)
-        if arguments.usb:
-            self.__socket.connect((self.AdbHost, self.AdbPort))
-            self.__socket.send(self.adb('host:transport-usb'))
-            assert self.__socket.recv(4) == b'OKAY'
-            self.__socket.send(self.adb('tcp:%d' % self.DefaultPort))
-            assert self.__socket.recv(4) == b'OKAY'
-        else:
-            self.__socket.connect(self.__getEndpoint(arguments))
+        e_msg = self.connect_via_adb()
+        if e_msg:
+            print(e_msg)
+            print("Connect via adb fail, then try tcp connect")
+            endpoint = self.__getEndpoint(arguments)
+            if endpoint is None:
+                raise ConnectionError("Connect via adb fail and arguments.server is not configured")
+
+            self.__socket = socket.socket()
+            self.setTimeout(90.0)
+            self.__socket.connect(endpoint)
         
         if arguments.ssl:
             trust_callback(provider, self.__socket.getpeercert(True), self.__socket.getpeername())
@@ -113,7 +118,7 @@ class SocketTransport(Transport):
         if arguments.server != None:
             endpoint = arguments.server
         else:
-            endpoint = ":".join([self.DefaultHost, str(self.DefaultPort)])
+            return None
 
         if ":" in endpoint:
             host, port = endpoint.split(":")
@@ -125,3 +130,15 @@ class SocketTransport(Transport):
 
     def adb(self, s: str):
         return ('%04x' % len(s)).encode('ascii') + s.encode()
+
+    def connect_via_adb(self) -> Optional[str]:
+        self.__socket.connect((self.AdbHost, self.AdbPort))
+        self.__socket.send(self.adb('host:transport-usb'))
+        if self.__socket.recv(4) != b'OKAY':
+            self.__socket.close()
+            return "adb(host:transport-usb) fail"
+        self.__socket.send(self.adb('tcp:%d' % self.DefaultPort))
+        if self.__socket.recv(4) != b'OKAY':
+            self.__socket.close()
+            return "adb(tcp:%d) fail" % self.DefaultPort
+
