@@ -26,3 +26,6 @@ class ReflectedBinary(ReflectedString):
         """
 
         return Message.Argument(type=Message.Argument.DATA, data=self._native)
+
+    def data(self) -> bytes:
+        return self._native

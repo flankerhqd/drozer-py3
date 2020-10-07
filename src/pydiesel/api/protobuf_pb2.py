@@ -18,7 +18,7 @@ _sym_db = _symbol_database.Default()
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='protobuf.proto',
   package='com.mwr.jdiesel.api',
-  serialized_pb=_b('\n\x0eprotobuf.proto\x12\x13\x63om.mwr.jdiesel.api\"\xa3\x1e\n\x07Message\x12\n\n\x02id\x18\x01 \x02(\x05\x12\x36\n\x04type\x18\x02 \x02(\x0e\x32(.com.mwr.jdiesel.api.Message.MessageType\x12\x42\n\x0esystem_request\x18\x05 \x01(\x0b\x32*.com.mwr.jdiesel.api.Message.SystemRequest\x12\x44\n\x0fsystem_response\x18\x06 \x01(\x0b\x32+.com.mwr.jdiesel.api.Message.SystemResponse\x12J\n\x12reflection_request\x18\x07 \x01(\x0b\x32..com.mwr.jdiesel.api.Message.ReflectionRequest\x12L\n\x13reflection_response\x18\x08 \x01(\x0b\x32/.com.mwr.jdiesel.api.Message.ReflectionResponse\x1a\xa2\n\n\x11ReflectionRequest\x12\x12\n\nsession_id\x18\x01 \x02(\t\x12H\n\x04type\x18\x02 \x02(\x0e\x32:.com.mwr.jdiesel.api.Message.ReflectionRequest.RequestType\x12G\n\x07resolve\x18\x03 \x01(\x0b\x32\x36.com.mwr.jdiesel.api.Message.ReflectionRequest.Resolve\x12K\n\tconstruct\x18\x04 \x01(\x0b\x32\x38.com.mwr.jdiesel.api.Message.ReflectionRequest.Construct\x12\x45\n\x06invoke\x18\x05 \x01(\x0b\x32\x35.com.mwr.jdiesel.api.Message.ReflectionRequest.Invoke\x12P\n\x0cset_property\x18\x06 \x01(\x0b\x32:.com.mwr.jdiesel.api.Message.ReflectionRequest.SetProperty\x12P\n\x0cget_property\x18\x07 \x01(\x0b\x32:.com.mwr.jdiesel.api.Message.ReflectionRequest.GetProperty\x12\x45\n\x06\x64\x65lete\x18\x08 \x01(\x0b\x32\x35.com.mwr.jdiesel.api.Message.ReflectionRequest.Delete\x1a\x1c\n\x07Resolve\x12\x11\n\tclassname\x18\x01 \x01(\t\x1a\x82\x01\n\tConstruct\x12<\n\x06object\x18\x01 \x01(\x0b\x32,.com.mwr.jdiesel.api.Message.ObjectReference\x12\x37\n\x08\x61rgument\x18\x02 \x03(\x0b\x32%.com.mwr.jdiesel.api.Message.Argument\x1a\x8f\x01\n\x06Invoke\x12<\n\x06object\x18\x01 \x01(\x0b\x32,.com.mwr.jdiesel.api.Message.ObjectReference\x12\x0e\n\x06method\x18\x02 \x01(\t\x12\x37\n\x08\x61rgument\x18\x03 \x03(\x0b\x32%.com.mwr.jdiesel.api.Message.Argument\x1a\x93\x01\n\x0bSetProperty\x12<\n\x06object\x18\x01 \x01(\x0b\x32,.com.mwr.jdiesel.api.Message.ObjectReference\x12\x10\n\x08property\x18\x02 \x01(\t\x12\x34\n\x05value\x18\x03 \x01(\x0b\x32%.com.mwr.jdiesel.api.Message.Argument\x1a]\n\x0bGetProperty\x12<\n\x06object\x18\x01 \x01(\x0b\x32,.com.mwr.jdiesel.api.Message.ObjectReference\x12\x10\n\x08property\x18\x02 \x01(\t\x1a\x46\n\x06\x44\x65lete\x12<\n\x06object\x18\x01 \x01(\x0b\x32,.com.mwr.jdiesel.api.Message.ObjectReference\"u\n\x0bRequestType\x12\x0b\n\x07RESOLVE\x10\x01\x12\r\n\tCONSTRUCT\x10\x02\x12\n\n\x06INVOKE\x10\x03\x12\x10\n\x0cSET_PROPERTY\x10\x04\x12\x10\n\x0cGET_PROPERTY\x10\x05\x12\n\n\x06\x44\x45LETE\x10\x06\x12\x0e\n\nDELETE_ALL\x10\x07\x1a\xfa\x01\n\x12ReflectionResponse\x12\x12\n\nsession_id\x18\x01 \x02(\t\x12N\n\x06status\x18\x02 \x02(\x0e\x32>.com.mwr.jdiesel.api.Message.ReflectionResponse.ResponseStatus\x12\x35\n\x06result\x18\x03 \x01(\x0b\x32%.com.mwr.jdiesel.api.Message.Argument\x12\x14\n\x0c\x65rrormessage\x18\x08 \x01(\t\"3\n\x0eResponseStatus\x12\x0b\n\x07SUCCESS\x10\x01\x12\t\n\x05\x45RROR\x10\x02\x12\t\n\x05\x46\x41TAL\x10\x03\x1a\xd3\x02\n\rSystemRequest\x12J\n\x04type\x18\x01 \x02(\x0e\x32\x36.com.mwr.jdiesel.api.Message.SystemRequest.RequestType:\x04PING\x12\x33\n\x06\x64\x65vice\x18\x05 \x01(\x0b\x32#.com.mwr.jdiesel.api.Message.Device\x12\x12\n\nsession_id\x18\x07 \x01(\t\x12\x10\n\x08password\x18\x08 \x01(\t\"\x9a\x01\n\x0bRequestType\x12\x08\n\x04PING\x10\x01\x12\x0f\n\x0b\x42IND_DEVICE\x10\x02\x12\x11\n\rUNBIND_DEVICE\x10\x03\x12\x10\n\x0cLIST_DEVICES\x10\x04\x12\x11\n\rSTART_SESSION\x10\x05\x12\x10\n\x0cSTOP_SESSION\x10\x06\x12\x13\n\x0fRESTART_SESSION\x10\x07\x12\x11\n\rLIST_SESSIONS\x10\x08\x1a\xcc\x03\n\x0eSystemResponse\x12\x46\n\x04type\x18\x01 \x02(\x0e\x32\x38.com.mwr.jdiesel.api.Message.SystemResponse.ResponseType\x12J\n\x06status\x18\x02 \x02(\x0e\x32:.com.mwr.jdiesel.api.Message.SystemResponse.ResponseStatus\x12\x34\n\x07\x64\x65vices\x18\x06 \x03(\x0b\x32#.com.mwr.jdiesel.api.Message.Device\x12\x12\n\nsession_id\x18\x07 \x01(\t\x12\x15\n\rerror_message\x18\x08 \x01(\t\x12\x36\n\x08sessions\x18\t \x03(\x0b\x32$.com.mwr.jdiesel.api.Message.Session\"c\n\x0cResponseType\x12\x08\n\x04PONG\x10\x01\x12\t\n\x05\x42OUND\x10\x02\x12\x0b\n\x07UNBOUND\x10\x03\x12\x0f\n\x0b\x44\x45VICE_LIST\x10\x04\x12\x0e\n\nSESSION_ID\x10\x05\x12\x10\n\x0cSESSION_LIST\x10\x06\"(\n\x0eResponseStatus\x12\x0b\n\x07SUCCESS\x10\x01\x12\t\n\x05\x45RROR\x10\x02\x1a\xf4\x02\n\x08\x41rgument\x12H\n\x04type\x18\x01 \x02(\x0e\x32\x32.com.mwr.jdiesel.api.Message.Argument.ArgumentType:\x06STRING\x12\x39\n\tprimitive\x18\x02 \x01(\x0b\x32&.com.mwr.jdiesel.api.Message.Primitive\x12\x0e\n\x06string\x18\x03 \x01(\t\x12<\n\x06object\x18\x04 \x01(\x0b\x32,.com.mwr.jdiesel.api.Message.ObjectReference\x12\x31\n\x05\x61rray\x18\x05 \x01(\x0b\x32\".com.mwr.jdiesel.api.Message.Array\x12\x0c\n\x04\x64\x61ta\x18\x06 \x01(\x0c\"T\n\x0c\x41rgumentType\x12\x08\n\x04NULL\x10\x01\x12\r\n\tPRIMITIVE\x10\x02\x12\n\n\x06STRING\x10\x03\x12\n\n\x06OBJECT\x10\x04\x12\t\n\x05\x41RRAY\x10\x05\x12\x08\n\x04\x44\x41TA\x10\x06\x1a\xc2\x01\n\x05\x41rray\x12\x42\n\x04type\x18\x01 \x02(\x0e\x32,.com.mwr.jdiesel.api.Message.Array.ArrayType:\x06STRING\x12\x36\n\x07\x65lement\x18\x02 \x03(\x0b\x32%.com.mwr.jdiesel.api.Message.Argument\"=\n\tArrayType\x12\r\n\tPRIMITIVE\x10\x01\x12\n\n\x06STRING\x10\x02\x12\n\n\x06OBJECT\x10\x03\x12\t\n\x05\x41RRAY\x10\x04\x1aK\n\x06\x44\x65vice\x12\n\n\x02id\x18\x01 \x02(\t\x12\x14\n\x0cmanufacturer\x18\x02 \x02(\t\x12\r\n\x05model\x18\x03 \x02(\t\x12\x10\n\x08software\x18\x04 \x02(\t\x1a$\n\x0fObjectReference\x12\x11\n\treference\x18\x01 \x01(\x05\x1a\xa6\x02\n\tPrimitive\x12\x42\n\x04type\x18\x01 \x02(\x0e\x32\x34.com.mwr.jdiesel.api.Message.Primitive.PrimitiveType\x12\x0c\n\x04\x62ool\x18\x02 \x01(\x08\x12\x0b\n\x03int\x18\x03 \x01(\x05\x12\x0c\n\x04long\x18\x04 \x01(\x03\x12\r\n\x05\x66loat\x18\x05 \x01(\x02\x12\x0c\n\x04\x62yte\x18\x06 \x01(\x05\x12\r\n\x05short\x18\x07 \x01(\x05\x12\x0e\n\x06\x64ouble\x18\x08 \x01(\x01\x12\x0c\n\x04\x63har\x18\t \x01(\x05\"b\n\rPrimitiveType\x12\x08\n\x04\x42OOL\x10\x01\x12\x07\n\x03INT\x10\x02\x12\x08\n\x04LONG\x10\x03\x12\t\n\x05\x46LOAT\x10\x04\x12\x08\n\x04\x42YTE\x10\x05\x12\t\n\x05SHORT\x10\x06\x12\n\n\x06\x44OUBLE\x10\x07\x12\x08\n\x04\x43HAR\x10\x08\x1a(\n\x07Session\x12\n\n\x02id\x18\x01 \x02(\t\x12\x11\n\tdevice_id\x18\x02 \x02(\t\"g\n\x0bMessageType\x12\x12\n\x0eSYSTEM_REQUEST\x10\x01\x12\x13\n\x0fSYSTEM_RESPONSE\x10\x02\x12\x16\n\x12REFLECTION_REQUEST\x10\x03\x12\x17\n\x13REFLECTION_RESPONSE\x10\x04\x42\x02H\x01')
+  serialized_pb=_b('\n\x0eprotobuf.proto\x12\x13\x63om.mwr.jdiesel.api\"\xb4!\n\x07Message\x12\n\n\x02id\x18\x01 \x02(\x05\x12\x36\n\x04type\x18\x02 \x02(\x0e\x32(.com.mwr.jdiesel.api.Message.MessageType\x12\x42\n\x0esystem_request\x18\x05 \x01(\x0b\x32*.com.mwr.jdiesel.api.Message.SystemRequest\x12\x44\n\x0fsystem_response\x18\x06 \x01(\x0b\x32+.com.mwr.jdiesel.api.Message.SystemResponse\x12J\n\x12reflection_request\x18\x07 \x01(\x0b\x32..com.mwr.jdiesel.api.Message.ReflectionRequest\x12L\n\x13reflection_response\x18\x08 \x01(\x0b\x32/.com.mwr.jdiesel.api.Message.ReflectionResponse\x12Q\n\x16\x66ile_transform_request\x18\t \x01(\x0b\x32\x31.com.mwr.jdiesel.api.Message.FileTransformRequest\x12S\n\x17\x66ile_transform_response\x18\n \x01(\x0b\x32\x32.com.mwr.jdiesel.api.Message.FileTransformResponse\x1a\xa2\n\n\x11ReflectionRequest\x12\x12\n\nsession_id\x18\x01 \x02(\t\x12H\n\x04type\x18\x02 \x02(\x0e\x32:.com.mwr.jdiesel.api.Message.ReflectionRequest.RequestType\x12G\n\x07resolve\x18\x03 \x01(\x0b\x32\x36.com.mwr.jdiesel.api.Message.ReflectionRequest.Resolve\x12K\n\tconstruct\x18\x04 \x01(\x0b\x32\x38.com.mwr.jdiesel.api.Message.ReflectionRequest.Construct\x12\x45\n\x06invoke\x18\x05 \x01(\x0b\x32\x35.com.mwr.jdiesel.api.Message.ReflectionRequest.Invoke\x12P\n\x0cset_property\x18\x06 \x01(\x0b\x32:.com.mwr.jdiesel.api.Message.ReflectionRequest.SetProperty\x12P\n\x0cget_property\x18\x07 \x01(\x0b\x32:.com.mwr.jdiesel.api.Message.ReflectionRequest.GetProperty\x12\x45\n\x06\x64\x65lete\x18\x08 \x01(\x0b\x32\x35.com.mwr.jdiesel.api.Message.ReflectionRequest.Delete\x1a\x1c\n\x07Resolve\x12\x11\n\tclassname\x18\x01 \x01(\t\x1a\x82\x01\n\tConstruct\x12<\n\x06object\x18\x01 \x01(\x0b\x32,.com.mwr.jdiesel.api.Message.ObjectReference\x12\x37\n\x08\x61rgument\x18\x02 \x03(\x0b\x32%.com.mwr.jdiesel.api.Message.Argument\x1a\x8f\x01\n\x06Invoke\x12<\n\x06object\x18\x01 \x01(\x0b\x32,.com.mwr.jdiesel.api.Message.ObjectReference\x12\x0e\n\x06method\x18\x02 \x01(\t\x12\x37\n\x08\x61rgument\x18\x03 \x03(\x0b\x32%.com.mwr.jdiesel.api.Message.Argument\x1a\x93\x01\n\x0bSetProperty\x12<\n\x06object\x18\x01 \x01(\x0b\x32,.com.mwr.jdiesel.api.Message.ObjectReference\x12\x10\n\x08property\x18\x02 \x01(\t\x12\x34\n\x05value\x18\x03 \x01(\x0b\x32%.com.mwr.jdiesel.api.Message.Argument\x1a]\n\x0bGetProperty\x12<\n\x06object\x18\x01 \x01(\x0b\x32,.com.mwr.jdiesel.api.Message.ObjectReference\x12\x10\n\x08property\x18\x02 \x01(\t\x1a\x46\n\x06\x44\x65lete\x12<\n\x06object\x18\x01 \x01(\x0b\x32,.com.mwr.jdiesel.api.Message.ObjectReference\"u\n\x0bRequestType\x12\x0b\n\x07RESOLVE\x10\x01\x12\r\n\tCONSTRUCT\x10\x02\x12\n\n\x06INVOKE\x10\x03\x12\x10\n\x0cSET_PROPERTY\x10\x04\x12\x10\n\x0cGET_PROPERTY\x10\x05\x12\n\n\x06\x44\x45LETE\x10\x06\x12\x0e\n\nDELETE_ALL\x10\x07\x1a\xfa\x01\n\x12ReflectionResponse\x12\x12\n\nsession_id\x18\x01 \x02(\t\x12N\n\x06status\x18\x02 \x02(\x0e\x32>.com.mwr.jdiesel.api.Message.ReflectionResponse.ResponseStatus\x12\x35\n\x06result\x18\x03 \x01(\x0b\x32%.com.mwr.jdiesel.api.Message.Argument\x12\x14\n\x0c\x65rrormessage\x18\x08 \x01(\t\"3\n\x0eResponseStatus\x12\x0b\n\x07SUCCESS\x10\x01\x12\t\n\x05\x45RROR\x10\x02\x12\t\n\x05\x46\x41TAL\x10\x03\x1a\xd3\x02\n\rSystemRequest\x12J\n\x04type\x18\x01 \x02(\x0e\x32\x36.com.mwr.jdiesel.api.Message.SystemRequest.RequestType:\x04PING\x12\x33\n\x06\x64\x65vice\x18\x05 \x01(\x0b\x32#.com.mwr.jdiesel.api.Message.Device\x12\x12\n\nsession_id\x18\x07 \x01(\t\x12\x10\n\x08password\x18\x08 \x01(\t\"\x9a\x01\n\x0bRequestType\x12\x08\n\x04PING\x10\x01\x12\x0f\n\x0b\x42IND_DEVICE\x10\x02\x12\x11\n\rUNBIND_DEVICE\x10\x03\x12\x10\n\x0cLIST_DEVICES\x10\x04\x12\x11\n\rSTART_SESSION\x10\x05\x12\x10\n\x0cSTOP_SESSION\x10\x06\x12\x13\n\x0fRESTART_SESSION\x10\x07\x12\x11\n\rLIST_SESSIONS\x10\x08\x1a\xcc\x03\n\x0eSystemResponse\x12\x46\n\x04type\x18\x01 \x02(\x0e\x32\x38.com.mwr.jdiesel.api.Message.SystemResponse.ResponseType\x12J\n\x06status\x18\x02 \x02(\x0e\x32:.com.mwr.jdiesel.api.Message.SystemResponse.ResponseStatus\x12\x34\n\x07\x64\x65vices\x18\x06 \x03(\x0b\x32#.com.mwr.jdiesel.api.Message.Device\x12\x12\n\nsession_id\x18\x07 \x01(\t\x12\x15\n\rerror_message\x18\x08 \x01(\t\x12\x36\n\x08sessions\x18\t \x03(\x0b\x32$.com.mwr.jdiesel.api.Message.Session\"c\n\x0cResponseType\x12\x08\n\x04PONG\x10\x01\x12\t\n\x05\x42OUND\x10\x02\x12\x0b\n\x07UNBOUND\x10\x03\x12\x0f\n\x0b\x44\x45VICE_LIST\x10\x04\x12\x0e\n\nSESSION_ID\x10\x05\x12\x10\n\x0cSESSION_LIST\x10\x06\"(\n\x0eResponseStatus\x12\x0b\n\x07SUCCESS\x10\x01\x12\t\n\x05\x45RROR\x10\x02\x1a\xf4\x02\n\x08\x41rgument\x12H\n\x04type\x18\x01 \x02(\x0e\x32\x32.com.mwr.jdiesel.api.Message.Argument.ArgumentType:\x06STRING\x12\x39\n\tprimitive\x18\x02 \x01(\x0b\x32&.com.mwr.jdiesel.api.Message.Primitive\x12\x0e\n\x06string\x18\x03 \x01(\t\x12<\n\x06object\x18\x04 \x01(\x0b\x32,.com.mwr.jdiesel.api.Message.ObjectReference\x12\x31\n\x05\x61rray\x18\x05 \x01(\x0b\x32\".com.mwr.jdiesel.api.Message.Array\x12\x0c\n\x04\x64\x61ta\x18\x06 \x01(\x0c\"T\n\x0c\x41rgumentType\x12\x08\n\x04NULL\x10\x01\x12\r\n\tPRIMITIVE\x10\x02\x12\n\n\x06STRING\x10\x03\x12\n\n\x06OBJECT\x10\x04\x12\t\n\x05\x41RRAY\x10\x05\x12\x08\n\x04\x44\x41TA\x10\x06\x1a\xc2\x01\n\x05\x41rray\x12\x42\n\x04type\x18\x01 \x02(\x0e\x32,.com.mwr.jdiesel.api.Message.Array.ArrayType:\x06STRING\x12\x36\n\x07\x65lement\x18\x02 \x03(\x0b\x32%.com.mwr.jdiesel.api.Message.Argument\"=\n\tArrayType\x12\r\n\tPRIMITIVE\x10\x01\x12\n\n\x06STRING\x10\x02\x12\n\n\x06OBJECT\x10\x03\x12\t\n\x05\x41RRAY\x10\x04\x1aK\n\x06\x44\x65vice\x12\n\n\x02id\x18\x01 \x02(\t\x12\x14\n\x0cmanufacturer\x18\x02 \x02(\t\x12\r\n\x05model\x18\x03 \x02(\t\x12\x10\n\x08software\x18\x04 \x02(\t\x1a$\n\x0fObjectReference\x12\x11\n\treference\x18\x01 \x01(\x05\x1a\xa6\x02\n\tPrimitive\x12\x42\n\x04type\x18\x01 \x02(\x0e\x32\x34.com.mwr.jdiesel.api.Message.Primitive.PrimitiveType\x12\x0c\n\x04\x62ool\x18\x02 \x01(\x08\x12\x0b\n\x03int\x18\x03 \x01(\x05\x12\x0c\n\x04long\x18\x04 \x01(\x03\x12\r\n\x05\x66loat\x18\x05 \x01(\x02\x12\x0c\n\x04\x62yte\x18\x06 \x01(\x05\x12\r\n\x05short\x18\x07 \x01(\x05\x12\x0e\n\x06\x64ouble\x18\x08 \x01(\x01\x12\x0c\n\x04\x63har\x18\t \x01(\x05\"b\n\rPrimitiveType\x12\x08\n\x04\x42OOL\x10\x01\x12\x07\n\x03INT\x10\x02\x12\x08\n\x04LONG\x10\x03\x12\t\n\x05\x46LOAT\x10\x04\x12\x08\n\x04\x42YTE\x10\x05\x12\t\n\x05SHORT\x10\x06\x12\n\n\x06\x44OUBLE\x10\x07\x12\x08\n\x04\x43HAR\x10\x08\x1a(\n\x07Session\x12\n\n\x02id\x18\x01 \x02(\t\x12\x11\n\tdevice_id\x18\x02 \x02(\t\x1a\x61\n\x14\x46ileTransformRequest\x12\x12\n\nsession_id\x18\x01 \x02(\t\x12\x0e\n\x06upload\x18\x02 \x02(\x08\x12\x17\n\x0fremote_filename\x18\x03 \x02(\t\x12\x0c\n\x04\x64\x61ta\x18\x04 \x01(\x0c\x1aJ\n\x15\x46ileTransformResponse\x12\x12\n\nsession_id\x18\x01 \x02(\t\x12\x0f\n\x07success\x18\x02 \x02(\x08\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c\"\xa0\x01\n\x0bMessageType\x12\x12\n\x0eSYSTEM_REQUEST\x10\x01\x12\x13\n\x0fSYSTEM_RESPONSE\x10\x02\x12\x16\n\x12REFLECTION_REQUEST\x10\x03\x12\x17\n\x13REFLECTION_RESPONSE\x10\x04\x12\x1a\n\x16\x46ILE_TRANSFORM_REQUEST\x10\x05\x12\x1b\n\x17\x46ILE_TRANSFORM_RESPONSE\x10\x06\x42\x02H\x01')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -61,8 +61,8 @@ _MESSAGE_REFLECTIONREQUEST_REQUESTTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1609,
-  serialized_end=1726,
+  serialized_start=1777,
+  serialized_end=1894,
 )
 _sym_db.RegisterEnumDescriptor(_MESSAGE_REFLECTIONREQUEST_REQUESTTYPE)
 
@@ -87,8 +87,8 @@ _MESSAGE_REFLECTIONRESPONSE_RESPONSESTATUS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1928,
-  serialized_end=1979,
+  serialized_start=2096,
+  serialized_end=2147,
 )
 _sym_db.RegisterEnumDescriptor(_MESSAGE_REFLECTIONRESPONSE_RESPONSESTATUS)
 
@@ -133,8 +133,8 @@ _MESSAGE_SYSTEMREQUEST_REQUESTTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2167,
-  serialized_end=2321,
+  serialized_start=2335,
+  serialized_end=2489,
 )
 _sym_db.RegisterEnumDescriptor(_MESSAGE_SYSTEMREQUEST_REQUESTTYPE)
 
@@ -171,8 +171,8 @@ _MESSAGE_SYSTEMRESPONSE_RESPONSETYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2643,
-  serialized_end=2742,
+  serialized_start=2811,
+  serialized_end=2910,
 )
 _sym_db.RegisterEnumDescriptor(_MESSAGE_SYSTEMRESPONSE_RESPONSETYPE)
 
@@ -193,8 +193,8 @@ _MESSAGE_SYSTEMRESPONSE_RESPONSESTATUS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1928,
-  serialized_end=1968,
+  serialized_start=2096,
+  serialized_end=2136,
 )
 _sym_db.RegisterEnumDescriptor(_MESSAGE_SYSTEMRESPONSE_RESPONSESTATUS)
 
@@ -231,8 +231,8 @@ _MESSAGE_ARGUMENT_ARGUMENTTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=3075,
-  serialized_end=3159,
+  serialized_start=3243,
+  serialized_end=3327,
 )
 _sym_db.RegisterEnumDescriptor(_MESSAGE_ARGUMENT_ARGUMENTTYPE)
 
@@ -261,8 +261,8 @@ _MESSAGE_ARRAY_ARRAYTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=3295,
-  serialized_end=3356,
+  serialized_start=3463,
+  serialized_end=3524,
 )
 _sym_db.RegisterEnumDescriptor(_MESSAGE_ARRAY_ARRAYTYPE)
 
@@ -307,8 +307,8 @@ _MESSAGE_PRIMITIVE_PRIMITIVETYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=3670,
-  serialized_end=3768,
+  serialized_start=3838,
+  serialized_end=3936,
 )
 _sym_db.RegisterEnumDescriptor(_MESSAGE_PRIMITIVE_PRIMITIVETYPE)
 
@@ -334,11 +334,19 @@ _MESSAGE_MESSAGETYPE = _descriptor.EnumDescriptor(
       name='REFLECTION_RESPONSE', index=3, number=4,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FILE_TRANSFORM_REQUEST', index=4, number=5,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FILE_TRANSFORM_RESPONSE', index=5, number=6,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=3812,
-  serialized_end=3915,
+  serialized_start=4156,
+  serialized_end=4316,
 )
 _sym_db.RegisterEnumDescriptor(_MESSAGE_MESSAGETYPE)
 
@@ -368,8 +376,8 @@ _MESSAGE_REFLECTIONREQUEST_RESOLVE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=983,
-  serialized_end=1011,
+  serialized_start=1151,
+  serialized_end=1179,
 )
 
 _MESSAGE_REFLECTIONREQUEST_CONSTRUCT = _descriptor.Descriptor(
@@ -404,8 +412,8 @@ _MESSAGE_REFLECTIONREQUEST_CONSTRUCT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1014,
-  serialized_end=1144,
+  serialized_start=1182,
+  serialized_end=1312,
 )
 
 _MESSAGE_REFLECTIONREQUEST_INVOKE = _descriptor.Descriptor(
@@ -447,8 +455,8 @@ _MESSAGE_REFLECTIONREQUEST_INVOKE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1147,
-  serialized_end=1290,
+  serialized_start=1315,
+  serialized_end=1458,
 )
 
 _MESSAGE_REFLECTIONREQUEST_SETPROPERTY = _descriptor.Descriptor(
@@ -490,8 +498,8 @@ _MESSAGE_REFLECTIONREQUEST_SETPROPERTY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1293,
-  serialized_end=1440,
+  serialized_start=1461,
+  serialized_end=1608,
 )
 
 _MESSAGE_REFLECTIONREQUEST_GETPROPERTY = _descriptor.Descriptor(
@@ -526,8 +534,8 @@ _MESSAGE_REFLECTIONREQUEST_GETPROPERTY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1442,
-  serialized_end=1535,
+  serialized_start=1610,
+  serialized_end=1703,
 )
 
 _MESSAGE_REFLECTIONREQUEST_DELETE = _descriptor.Descriptor(
@@ -555,8 +563,8 @@ _MESSAGE_REFLECTIONREQUEST_DELETE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1537,
-  serialized_end=1607,
+  serialized_start=1705,
+  serialized_end=1775,
 )
 
 _MESSAGE_REFLECTIONREQUEST = _descriptor.Descriptor(
@@ -634,8 +642,8 @@ _MESSAGE_REFLECTIONREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=412,
-  serialized_end=1726,
+  serialized_start=580,
+  serialized_end=1894,
 )
 
 _MESSAGE_REFLECTIONRESPONSE = _descriptor.Descriptor(
@@ -685,8 +693,8 @@ _MESSAGE_REFLECTIONRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1729,
-  serialized_end=1979,
+  serialized_start=1897,
+  serialized_end=2147,
 )
 
 _MESSAGE_SYSTEMREQUEST = _descriptor.Descriptor(
@@ -736,8 +744,8 @@ _MESSAGE_SYSTEMREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1982,
-  serialized_end=2321,
+  serialized_start=2150,
+  serialized_end=2489,
 )
 
 _MESSAGE_SYSTEMRESPONSE = _descriptor.Descriptor(
@@ -802,8 +810,8 @@ _MESSAGE_SYSTEMRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2324,
-  serialized_end=2784,
+  serialized_start=2492,
+  serialized_end=2952,
 )
 
 _MESSAGE_ARGUMENT = _descriptor.Descriptor(
@@ -867,8 +875,8 @@ _MESSAGE_ARGUMENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2787,
-  serialized_end=3159,
+  serialized_start=2955,
+  serialized_end=3327,
 )
 
 _MESSAGE_ARRAY = _descriptor.Descriptor(
@@ -904,8 +912,8 @@ _MESSAGE_ARRAY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3162,
-  serialized_end=3356,
+  serialized_start=3330,
+  serialized_end=3524,
 )
 
 _MESSAGE_DEVICE = _descriptor.Descriptor(
@@ -954,8 +962,8 @@ _MESSAGE_DEVICE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3358,
-  serialized_end=3433,
+  serialized_start=3526,
+  serialized_end=3601,
 )
 
 _MESSAGE_OBJECTREFERENCE = _descriptor.Descriptor(
@@ -983,8 +991,8 @@ _MESSAGE_OBJECTREFERENCE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3435,
-  serialized_end=3471,
+  serialized_start=3603,
+  serialized_end=3639,
 )
 
 _MESSAGE_PRIMITIVE = _descriptor.Descriptor(
@@ -1069,8 +1077,8 @@ _MESSAGE_PRIMITIVE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3474,
-  serialized_end=3768,
+  serialized_start=3642,
+  serialized_end=3936,
 )
 
 _MESSAGE_SESSION = _descriptor.Descriptor(
@@ -1105,8 +1113,101 @@ _MESSAGE_SESSION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3770,
-  serialized_end=3810,
+  serialized_start=3938,
+  serialized_end=3978,
+)
+
+_MESSAGE_FILETRANSFORMREQUEST = _descriptor.Descriptor(
+  name='FileTransformRequest',
+  full_name='com.mwr.jdiesel.api.Message.FileTransformRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='session_id', full_name='com.mwr.jdiesel.api.Message.FileTransformRequest.session_id', index=0,
+      number=1, type=9, cpp_type=9, label=2,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='upload', full_name='com.mwr.jdiesel.api.Message.FileTransformRequest.upload', index=1,
+      number=2, type=8, cpp_type=7, label=2,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='remote_filename', full_name='com.mwr.jdiesel.api.Message.FileTransformRequest.remote_filename', index=2,
+      number=3, type=9, cpp_type=9, label=2,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='data', full_name='com.mwr.jdiesel.api.Message.FileTransformRequest.data', index=3,
+      number=4, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=3980,
+  serialized_end=4077,
+)
+
+_MESSAGE_FILETRANSFORMRESPONSE = _descriptor.Descriptor(
+  name='FileTransformResponse',
+  full_name='com.mwr.jdiesel.api.Message.FileTransformResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='session_id', full_name='com.mwr.jdiesel.api.Message.FileTransformResponse.session_id', index=0,
+      number=1, type=9, cpp_type=9, label=2,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='success', full_name='com.mwr.jdiesel.api.Message.FileTransformResponse.success', index=1,
+      number=2, type=8, cpp_type=7, label=2,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='data', full_name='com.mwr.jdiesel.api.Message.FileTransformResponse.data', index=2,
+      number=3, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=4079,
+  serialized_end=4153,
 )
 
 _MESSAGE = _descriptor.Descriptor(
@@ -1158,10 +1259,24 @@ _MESSAGE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='file_transform_request', full_name='com.mwr.jdiesel.api.Message.file_transform_request', index=6,
+      number=9, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='file_transform_response', full_name='com.mwr.jdiesel.api.Message.file_transform_response', index=7,
+      number=10, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
-  nested_types=[_MESSAGE_REFLECTIONREQUEST, _MESSAGE_REFLECTIONRESPONSE, _MESSAGE_SYSTEMREQUEST, _MESSAGE_SYSTEMRESPONSE, _MESSAGE_ARGUMENT, _MESSAGE_ARRAY, _MESSAGE_DEVICE, _MESSAGE_OBJECTREFERENCE, _MESSAGE_PRIMITIVE, _MESSAGE_SESSION, ],
+  nested_types=[_MESSAGE_REFLECTIONREQUEST, _MESSAGE_REFLECTIONRESPONSE, _MESSAGE_SYSTEMREQUEST, _MESSAGE_SYSTEMRESPONSE, _MESSAGE_ARGUMENT, _MESSAGE_ARRAY, _MESSAGE_DEVICE, _MESSAGE_OBJECTREFERENCE, _MESSAGE_PRIMITIVE, _MESSAGE_SESSION, _MESSAGE_FILETRANSFORMREQUEST, _MESSAGE_FILETRANSFORMRESPONSE, ],
   enum_types=[
     _MESSAGE_MESSAGETYPE,
   ],
@@ -1171,7 +1286,7 @@ _MESSAGE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=40,
-  serialized_end=3915,
+  serialized_end=4316,
 )
 
 _MESSAGE_REFLECTIONREQUEST_RESOLVE.containing_type = _MESSAGE_REFLECTIONREQUEST
@@ -1228,11 +1343,15 @@ _MESSAGE_PRIMITIVE.fields_by_name['type'].enum_type = _MESSAGE_PRIMITIVE_PRIMITI
 _MESSAGE_PRIMITIVE.containing_type = _MESSAGE
 _MESSAGE_PRIMITIVE_PRIMITIVETYPE.containing_type = _MESSAGE_PRIMITIVE
 _MESSAGE_SESSION.containing_type = _MESSAGE
+_MESSAGE_FILETRANSFORMREQUEST.containing_type = _MESSAGE
+_MESSAGE_FILETRANSFORMRESPONSE.containing_type = _MESSAGE
 _MESSAGE.fields_by_name['type'].enum_type = _MESSAGE_MESSAGETYPE
 _MESSAGE.fields_by_name['system_request'].message_type = _MESSAGE_SYSTEMREQUEST
 _MESSAGE.fields_by_name['system_response'].message_type = _MESSAGE_SYSTEMRESPONSE
 _MESSAGE.fields_by_name['reflection_request'].message_type = _MESSAGE_REFLECTIONREQUEST
 _MESSAGE.fields_by_name['reflection_response'].message_type = _MESSAGE_REFLECTIONRESPONSE
+_MESSAGE.fields_by_name['file_transform_request'].message_type = _MESSAGE_FILETRANSFORMREQUEST
+_MESSAGE.fields_by_name['file_transform_response'].message_type = _MESSAGE_FILETRANSFORMRESPONSE
 _MESSAGE_MESSAGETYPE.containing_type = _MESSAGE
 DESCRIPTOR.message_types_by_name['Message'] = _MESSAGE
 
@@ -1349,6 +1468,20 @@ Message = _reflection.GeneratedProtocolMessageType('Message', (_message.Message,
     # @@protoc_insertion_point(class_scope:com.mwr.jdiesel.api.Message.Session)
     ))
   ,
+
+  FileTransformRequest = _reflection.GeneratedProtocolMessageType('FileTransformRequest', (_message.Message,), dict(
+    DESCRIPTOR = _MESSAGE_FILETRANSFORMREQUEST,
+    __module__ = 'protobuf_pb2'
+    # @@protoc_insertion_point(class_scope:com.mwr.jdiesel.api.Message.FileTransformRequest)
+    ))
+  ,
+
+  FileTransformResponse = _reflection.GeneratedProtocolMessageType('FileTransformResponse', (_message.Message,), dict(
+    DESCRIPTOR = _MESSAGE_FILETRANSFORMRESPONSE,
+    __module__ = 'protobuf_pb2'
+    # @@protoc_insertion_point(class_scope:com.mwr.jdiesel.api.Message.FileTransformResponse)
+    ))
+  ,
   DESCRIPTOR = _MESSAGE,
   __module__ = 'protobuf_pb2'
   # @@protoc_insertion_point(class_scope:com.mwr.jdiesel.api.Message)
@@ -1370,6 +1503,8 @@ _sym_db.RegisterMessage(Message.Device)
 _sym_db.RegisterMessage(Message.ObjectReference)
 _sym_db.RegisterMessage(Message.Primitive)
 _sym_db.RegisterMessage(Message.Session)
+_sym_db.RegisterMessage(Message.FileTransformRequest)
+_sym_db.RegisterMessage(Message.FileTransformResponse)
 
 
 DESCRIPTOR.has_options = True

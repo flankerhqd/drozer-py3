@@ -8,6 +8,7 @@ import traceback
 from pydiesel.api.protobuf_pb2 import Message
 from pydiesel.api.transport.exceptions import ConnectionError
 from pydiesel.reflection import Reflector
+from pydiesel.file import Ftp
 
 from mwr.common import cmd_ext as cmd
 from mwr.common import console
@@ -45,6 +46,7 @@ class Session(cmd.Cmd):
         self.modules = collection.ModuleCollection(loader.ModuleLoader())
         self.prompt = "dz> "
         self.reflector = Reflector(self)
+        self.ftp = Ftp(self)
         if hasattr(arguments, 'no_color') and not arguments.no_color:
             self.stdout = ColouredStream(self.stdout)
             self.stderr = ColouredStream(self.stderr)

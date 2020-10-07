@@ -1,0 +1,2 @@
+class FtpException(Exception):
+    pass

@@ -33,6 +33,7 @@ class Module(object):
         if self.module_type == "drozer":
             self.modules = session.modules
             self.reflector = session.reflector
+            self.ftp = session.ftp
             self.stdout = session.stdout
             self.stderr = session.stderr
             self.variables = session.variables
