@@ -15,21 +15,34 @@ class SocketTransport(Transport):
 
     def __init__(self, arguments, trust_callback=None):
         Transport.__init__(self)
-        self.__socket = socket.socket()
-        self.setTimeout(90.0)
 
         if arguments.ssl:
             provider = Provider()
             self.__socket = ssl.wrap_socket(self.__socket, cert_reqs=ssl.CERT_REQUIRED, ca_certs=provider.ca_certificate_path())
 
-        e_msg = self.connect_via_adb()
-        if e_msg:
+        # connect adb 31415
+        success = False
+        e_msg = self.connect_via_adb(self.DefaultPort)
+        if e_msg is None:
+            success = True
+        else:
             print(e_msg)
-            print("Connect via adb fail, then try tcp connect")
+        if not success:
+            # connect adb custom-port
             endpoint = self.__getEndpoint(arguments)
             if endpoint is None:
                 raise ConnectionError("Connect via adb fail and arguments.server is not configured")
+            if self.DefaultPort != endpoint[1]:
+                print("tcp(%d) over adb fail, then try tcp(%d) over adb" % (self.DefaultPort, endpoint[1]))
+                e_msg = self.connect_via_adb(endpoint[1])
+        if e_msg is None:
+            success = True
+        else:
+            print(e_msg)
 
+        if not success:
+            # connect custom host:port
+            print("Connect via adb fail, then try tcp connect")
             self.__socket = socket.socket()
             self.setTimeout(90.0)
             self.__socket.connect(endpoint)
@@ -131,14 +144,15 @@ class SocketTransport(Transport):
     def adb(self, s: str):
         return ('%04x' % len(s)).encode('ascii') + s.encode()
 
-    def connect_via_adb(self) -> Optional[str]:
+    def connect_via_adb(self, port: int) -> Optional[str]:
+        self.__socket = socket.socket()
+        self.setTimeout(90.0)
         self.__socket.connect((self.AdbHost, self.AdbPort))
         self.__socket.send(self.adb('host:transport-usb'))
         if self.__socket.recv(4) != b'OKAY':
             self.__socket.close()
             return "adb(host:transport-usb) fail"
-        self.__socket.send(self.adb('tcp:%d' % self.DefaultPort))
+        self.__socket.send(self.adb('tcp:%d' % port))
         if self.__socket.recv(4) != b'OKAY':
             self.__socket.close()
-            return "adb(tcp:%d) fail" % self.DefaultPort
-
+            return "adb(tcp:%d) fail" % port
