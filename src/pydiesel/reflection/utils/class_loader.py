@@ -1,10 +1,11 @@
 import hashlib
 import os
 from hashlib import md5
+from typing import Optional
 
 from ..exceptions import ReflectionException
-from ..types.reflected_primitive import ReflectedPrimitive
-from ..utils import ClassBuilder
+from ..utils import ApkBuilder
+from ...file import Ftp
 from mwr.common import fs
 
 class ClassLoader(object):
@@ -23,9 +24,10 @@ class ClassLoader(object):
         self.javac_path = None
         self.relative_to=relative_to
         self.system_class_loader = system_class_loader
+        self.ftp: Optional[Ftp] = None
 
     def loadClass(self, klass):
-        return self.getClassLoader().loadClass(klass);
+        return self.getClassLoader().loadClass(klass)
         
     def getClassLoader(self):
         """
@@ -40,12 +42,8 @@ class ClassLoader(object):
     
             file_io = self.construct('java.io.File', file_path)
             
-            if not self.__verify_file(file_io, self.source):  
-                source_data = [ReflectedPrimitive("byte", (i if i < 128 else i - 0x100), reflector=None) for i in self.source]
-    
-                file_stream = self.construct("java.io.FileOutputStream", file_path)
-                file_stream.write(source_data, 0, len(source_data))
-                file_stream.close()
+            if not self.__verify_file(file_io, self.source):
+                self.ftp.upload(file_path, self.source)
             return self.construct('dalvik.system.DexClassLoader', file_path, self.cache_path, None, self.system_class_loader)
         else:
             raise RuntimeError("drozer could not find or compile a required extension library.\n")
@@ -77,7 +75,7 @@ class ClassLoader(object):
             if os.path.exists(apk_path):
                 source = fs.read(apk_path)
             elif os.path.exists(java_path):
-                source = ClassBuilder(java_path, self.dx_path(), self.javac_path(), self.android_path()).build()
+                source = ApkBuilder(java_path, self.dx_path(), self.javac_path(), self.android_path()).build()
         else:
             source = source_or_relative_path
 

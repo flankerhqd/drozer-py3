@@ -1,6 +1,6 @@
 
-__all__ = [ "ClassBuilder",
-            "ClassLoader" ]
+__all__ = ["ApkBuilder",
+            "ClassLoader"]
 
-from .class_builder import ClassBuilder
+from .apk_builder import ApkBuilder
 from .class_loader import ClassLoader

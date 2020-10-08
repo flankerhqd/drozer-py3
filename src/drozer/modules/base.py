@@ -28,6 +28,7 @@ class Module(object):
     pop_completer = None
 
     __klasses = {}
+    __loaders = {}
 
     def __init__(self, session):
         if self.module_type == "drozer":
@@ -63,16 +64,31 @@ class Module(object):
         """
         Store a reflected Class reference in the cache of classes.
         """
-        
+
         Module.__klasses[klass] = ref
     
     @classmethod
-    def cached_klass(cls, klass):
+    def cache_classloader(cls, apk: str, classloader_ref):
+        """
+        Store a reflected Class reference in the cache of classes.
+        """
+        Module.__loaders[apk] = classloader_ref
+
+    @classmethod
+    def cached_klass(cls, klass) -> bool:
         """
         True, if there is a reflected Class reference stored in the cache of classes.
         """
         
         return klass in Module.__klasses
+
+    @classmethod
+    def cached_classloader(cls, apk: str) -> bool:
+        """
+        True, if there is a reflected Class reference stored in the cache of classes.
+        """
+
+        return apk in Module.__loaders
 
     def clearObjectStore(self):
         """
@@ -108,6 +124,14 @@ class Module(object):
         
         return Module.__klasses[klass]
     
+    @classmethod
+    def get_cached_classloader(cls, apk: str):
+        """
+        Retrieve a reflected class reference from the cache of classes.
+        """
+
+        return Module.__loaders[apk]
+
     def get_completion_suggestions(self, action, text, line, **kwargs):
         """
         Stub Method: invoked during completion of module arguments, to allow the module

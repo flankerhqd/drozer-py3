@@ -15,22 +15,25 @@ class ClassLoader(object):
         """
         Load a Class from a local apk file (source) on the running Dalvik VM.
         """
-        
-        if relative_to == None:
+
+        if relative_to is None:
             relative_to = os.path.join(os.path.dirname(__file__), "..")
         elif relative_to.find(".py") >= 0 or relative_to.find(".pyc") >= 0:
             relative_to = os.path.dirname(relative_to)
-        
-        if not Module.cached_klass(".".join([source, klass])):
+
+        if not Module.cached_classloader(source):
             loader = utils.ClassLoader(source, self.__get_cache_path(), self.__get_constructor(), self.klass('java.lang.ClassLoader').getSystemClassLoader(), relative_to=relative_to)
             loader.android_path = lambda: Configuration.library("android.jar")
             loader.dx_path = lambda: Configuration.executable("dx.bat") if platform.system() == "Windows" else Configuration.executable("dx")
             loader.javac_path = lambda: Configuration.executable("javac")
-            
-            Module.cache_klass(".".join([source, klass]), loader.loadClass(klass))
-            
+            loader.ftp = self.ftp
+            Module.cache_classloader(source, loader.getClassLoader())
+        classloader = Module.get_cached_classloader(source)
+
+        if not Module.cached_klass(".".join([source, klass])):
+            Module.cache_klass(".".join([source, klass]), classloader.loadClass(klass))
         return Module.get_cached_klass(".".join([source, klass]))
-     
+
     def __get_cache_path(self):
         """
         Get a working path, to which the compiled will be unpacked.

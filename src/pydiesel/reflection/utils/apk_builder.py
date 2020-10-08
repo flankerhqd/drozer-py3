@@ -6,7 +6,7 @@ import subprocess
 from sys import platform
 from mwr.common import fs, system
 
-class ClassBuilder(object):
+class ApkBuilder(object):
     """
     ClassBuilder provides a wrapper around the process to build a Java source
     file for the Android platform.
