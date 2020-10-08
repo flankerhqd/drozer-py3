@@ -1,6 +1,6 @@
 import socket
 import ssl
-from typing import Optional
+from typing import Optional, List
 
 from .. import Frame
 from .exceptions import ConnectionError
@@ -15,7 +15,7 @@ class SocketTransport(Transport):
 
     def __init__(self, arguments, trust_callback=None):
         Transport.__init__(self)
-
+        self.choice = None
         if arguments.ssl:
             provider = Provider()
             self.__socket = ssl.wrap_socket(self.__socket, cert_reqs=ssl.CERT_REQUIRED, ca_certs=provider.ca_certificate_path())
@@ -145,14 +145,35 @@ class SocketTransport(Transport):
         return ('%04x' % len(s)).encode('ascii') + s.encode()
 
     def connect_via_adb(self, port: int) -> Optional[str]:
+        # adb devices
+        _tmp_socket = socket.socket()
+        _tmp_socket.connect((self.AdbHost, self.AdbPort))
+        _tmp_socket.send(self.adb('host:devices'))
+        if _tmp_socket.recv(4) != b'OKAY':
+            _tmp_socket.close()
+            return "adb(host:devices) fail"
+        devices = _tmp_socket.recv(int(_tmp_socket.recv(4).decode('ascii'), 16)).decode().strip().split('\n')
+        _tmp_socket.close()
+
+        # adb -s
         self.__socket = socket.socket()
-        self.setTimeout(90.0)
         self.__socket.connect((self.AdbHost, self.AdbPort))
-        self.__socket.send(self.adb('host:transport-usb'))
+        if len(devices) == 1:
+            self.__socket.send(self.adb('host:transport-any'))
+        else:
+            self.__socket.send(self.adb('host:transport:%s' % self.choose_device(devices)))
         if self.__socket.recv(4) != b'OKAY':
             self.__socket.close()
-            return "adb(host:transport-usb) fail"
+            return "adb(host:transport-any) fail"
+        # connect via tcp:<port>
         self.__socket.send(self.adb('tcp:%d' % port))
         if self.__socket.recv(4) != b'OKAY':
             self.__socket.close()
             return "adb(tcp:%d) fail" % port
+
+    def choose_device(self, devices: List[str]) -> str:
+        if self.choice is None:
+            for i in range(len(devices)):
+                print('[%d]' % i, devices[i])
+            self.choice = devices[int(input("Input your choice\n"))].split('\t')[0]
+        return self.choice
