@@ -25,9 +25,9 @@ class Permissions(Module, common.PackageManager):
         pm = con.getPackageManager()
         res = con.getResources()
 
-        if (arguments.permission):
+        if arguments.permission:
             prot = self.__getProtLevel(pm, arguments.permission)
-            if (prot != ""):
+            if prot != "":
                 self.stdout.write(self.__getDescription(pm, res, arguments.permission) + "\n")
                 self.stdout.write(prot + "\n")
             else:
@@ -49,13 +49,13 @@ class Permissions(Module, common.PackageManager):
                 prot = self.__getProtLevel(pm, permission)
                 display = False
 
-                if (arguments.protectionlevel):
-                    if (arguments.protectionlevel.upper() in prot.upper()):
+                if arguments.protectionlevel:
+                    if arguments.protectionlevel.upper() in prot.upper():
                         display = True
                 else:
                     display = True
 
-                if (display):
+                if display:
                     self.stdout.write(permission + "\n")
                     self.stdout.write(self.__getDescription(pm, res, permission) + "\n")
                     self.stdout.write(prot + "\n\n")
@@ -75,11 +75,11 @@ class Permissions(Module, common.PackageManager):
             pl = pm.getPermissionInfo(permission, 0).protectionLevel
             plHumanReadable = ""
 
-            if (pl == 0):
+            if pl == 0:
                 plHumanReadable = "normal"
             else:
                 for k, v in sorted(self.__protectionLevels.items()):
-                    if (pl & k == k):
+                    if pl & k == k:
                         plHumanReadable += v + "|"
                     
                 plHumanReadable = plHumanReadable.strip("|")

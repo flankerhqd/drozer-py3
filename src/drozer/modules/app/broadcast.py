@@ -190,7 +190,7 @@ class Sniff(Module, common.loader.ClassLoader):
         self.stdout.write("[*] Output is updated once a second. Press Control+C to exit.\n\n") 
         while (True):
             output = broadcast.getOutput()
-            if (str(output) == ""):
+            if str(output) == "":
                 time.sleep(1)
             else:
                 self.stdout.write(str(output))

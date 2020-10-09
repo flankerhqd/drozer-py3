@@ -141,7 +141,7 @@ class SystemRequestHandler(handlers.SystemRequestHandler):
             self.connection.device = None
             device.connection = None
             
-            if(device not in Devices):
+            if device not in Devices:
                 return SystemResponseFactory\
                     .unbound(device)\
                     .inReplyTo(message)\

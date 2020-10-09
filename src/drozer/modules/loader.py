@@ -18,7 +18,7 @@ class ModuleLoader(object):
         collection of module identifiers.
         """
 
-        if(len(self.__modules) == 0):
+        if len(self.__modules) == 0:
             self.__load(base)
 
         return sorted(self.__modules.keys())
@@ -28,7 +28,7 @@ class ModuleLoader(object):
         Gets a module implementation, given its identifier.
         """
 
-        if(len(self.__modules) == 0):
+        if len(self.__modules) == 0:
             self.__load(base)
         
         return self.__modules[key]

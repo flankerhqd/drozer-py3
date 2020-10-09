@@ -235,7 +235,7 @@ class Provider(loader.ClassLoader):
                 # look for an odex file too, because some system packages do not
                 # list these in sourceDir
                 strings += self.getStrings(path.replace(".apk", ".odex")) 
-            elif (".odex" in path):
+            elif ".odex" in path:
                 strings = self.getStrings(path)
             
             content_uris.append((path, [s for s in strings if ("CONTENT://" in s.upper()) and ("CONTENT://" != s.upper())]))
@@ -260,7 +260,7 @@ class Provider(loader.ClassLoader):
 
                 for i in range(len(columns)):
                     try:
-                        if(cursor.getType(i) == blob_type):
+                        if cursor.getType(i) == blob_type:
                             row.append("%s (Base64-encoded)" % (cursor.getBlob(i).base64_encode()))
                         else:
                             row.append(cursor.getString(i))

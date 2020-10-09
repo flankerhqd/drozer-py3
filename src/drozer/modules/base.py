@@ -176,7 +176,7 @@ class Module(object):
         Instantiate a Java class, either by name or with a class reference.
         """
 
-        if(isinstance(class_or_class_name, ReflectedType)):
+        if isinstance(class_or_class_name, ReflectedType):
             klass = class_or_class_name
         else:
             klass = self.klass(class_or_class_name)

@@ -538,7 +538,7 @@ class Session(cmd.Cmd):
                 
                 for permission in requestedPermissions:
                     #Check for PERMISSION_GRANTED
-                    if (packageManager.checkPermission(str(permission), packageName) == pm.PERMISSION_GRANTED):
+                    if packageManager.checkPermission(str(permission), packageName) == pm.PERMISSION_GRANTED:
                         self.__permissions.append(str(permission))
             
             self.__permissions.append("com.mwr.dz.permissions.GET_CONTEXT")
@@ -554,7 +554,7 @@ class Session(cmd.Cmd):
         if not self.has_context():
             self.prompt = self.prompt.replace(">","-limited>")
 
-        if(self.__onecmd):
+        if self.__onecmd:
             return
         try:
             latest = meta.latest_version()

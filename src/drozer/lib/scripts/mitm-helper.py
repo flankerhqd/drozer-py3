@@ -413,7 +413,7 @@ class Tool:
         component.setBorder(swing.border.CompoundBorder(border, margin))
 
     def toggle(self, button):
-        if (self.enableButton.getText() == "Disabled"):
+        if self.enableButton.getText() == "Disabled":
             self.enableButton.setText("Enabled")
         else:
             self.enableButton.setText("Disabled")
@@ -433,7 +433,7 @@ class Tool:
         return self.editBox.getText()
 
     def getButtonEnabled(self):
-        if (self.enableButton.getText() == "Disabled"):
+        if self.enableButton.getText() == "Disabled":
             return False
         else:
             return True

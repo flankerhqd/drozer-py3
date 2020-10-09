@@ -65,7 +65,7 @@ class Base(object):
         # try to find the command, before we invoke the parser so we can add additional arguments
         command_argv = [a for a in argv if "do_" + a in self.__commands()]
         
-        if(len(command_argv) == 1 and hasattr(self, "args_for_" + command_argv[0])):
+        if len(command_argv) == 1 and hasattr(self, "args_for_" + command_argv[0]):
             getattr(self, "args_for_" + command_argv[0])()
         if hasattr(self, "before_parse_args"):
             self.before_parse_args(argv)

@@ -60,7 +60,7 @@ class Console(cli.Base):
             session_id = response.system_response.session_id
 
             try:
-                if(arguments.debug):
+                if arguments.debug:
                     session = DebugSession(server, session_id, arguments)
                 else:
                     session = Session(server, session_id, arguments)
@@ -131,7 +131,7 @@ class Console(cli.Base):
             sys.stderr.write(" - have you specified the correct hostname and port with --server?\n")
             sys.stderr.write(" - is the server protected with SSL (add an --ssl switch)?\n")
             sys.stderr.write(" - is the agent protected with a password (add a --password switch)?\n\n")
-            if(hasattr(throwable, 'cause')):
+            if hasattr(throwable, 'cause'):
                 sys.stderr.write("Debug Information:\n")
                 sys.stderr.write("%s\n\n" % str(throwable.cause))
             
