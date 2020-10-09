@@ -1,7 +1,10 @@
 import os
 import base64
+from typing import Optional
 
 from mwr.common.list import chunk
+from pydiesel.file import FtpException
+
 
 class FileSystem(object):
     """
@@ -22,7 +25,7 @@ class FileSystem(object):
 
         file_io = self.new("java.io.File", source)
 
-        if file_io.exists() == True:
+        if file_io.exists():
             return file_io.delete()
         else:
             return None
@@ -37,21 +40,21 @@ class FileSystem(object):
         if data:
             if os.path.isdir(destination):
                 destination = os.path.sep.join([destination, source.split("/")[-1]])
-                
+
             output = open(destination, 'wb')
-            output.write(str(data))
+            output.write(data)
             output.close()
 
             return len(data)
         else:
             return None
-        
+
     def ensureDirectory(self, target):
         """
         Tests whether a directory exists, on the Agent's file system, and creates
         it if it does not.
         """
-        
+
         if self.isFile(target):
             return False
         elif not self.isDirectory(target):
@@ -75,54 +78,54 @@ class FileSystem(object):
 
         file_io = self.new("java.io.File", source)
 
-        if file_io.exists() == True:
+        if file_io.exists():
             return file_io.length()
         else:
             return None
-    
+
     def format_file_size(self, size):
         """
         Return the size of a file in human-readable form (i.e., x KiB).
         """
-        
+
         for x in ['bytes', 'KiB', 'MiB', 'GiB']:
             if size < 1024.0 and size > -1024.0:
                 if x != "bytes":
                     return "%.1f %s" % (size, x)
                 else:
                     return "%d %s" % (size, x)
-            
+
             size /= 1024.0
-            
+
         return "%3.1f%s" % (size, 'TiB')
 
     def isDirectory(self, target):
         """
         Test whether a target exists, and is a directory.
         """
-        
+
         file_io = self.new("java.io.File", target)
-        
+
         return file_io.exists() and file_io.isDirectory()
 
     def isFile(self, target):
         """
         Test whether a target exists, and is a normal file.
         """
-        
+
         file_io = self.new("java.io.File", target)
-        
+
         return file_io.exists() and file_io.isFile()
-        
+
     def listFiles(self, target):
         """
         Gets a list of all files in the folder target.
         """
-        #TODO does not work past the first folder
+        # TODO does not work past the first folder
         file_io = self.new("java.io.File", target)
-        
-        return ["%s%s" %(s, '/') if file_io.isDirectory() else s for s in file_io.list()]
-        
+
+        return ["%s%s" % (s, '/') if file_io.isDirectory() else s for s in file_io.list()]
+
     def md5sum(self, source):
         """
         Calculate the MD5 checksum of a file on the Agent's file system.
@@ -132,45 +135,30 @@ class FileSystem(object):
 
         file_io = self.new("java.io.File", source)
 
-        if file_io.exists() == True:
+        if file_io.exists():
             return FileUtil.md5sum(file_io)
         else:
             return None
 
-    def readFile(self, source, block_size=65536):
+    def readFile(self, source, block_size=65536) -> Optional[bytes]:
         """
         Read a file from the Agent's file system, and return the data.
         """
-
-        ByteStreamReader = self.loadClass("common/ByteStreamReader.apk", "ByteStreamReader")
-
-        file_io = self.new("java.io.File", source)
-
-        if file_io.exists() == True:
-            file_stream = self.new("java.io.FileInputStream", file_io)
-
-            data = ""
-            
-            while True:
-                block = ByteStreamReader.read(file_stream, 0, block_size).base64_encode()
-                
-                if len(block) > 0:
-                    data += base64.decodestring(block)
-                else:
-                    return data
-        else:
+        try:
+            return self.ftp.download(source)
+        except FtpException:
             return None
 
-    def uploadFile(self, source, destination, block_size=65536):
+    def uploadFile(self, source: str, destination, block_size=65536):
         """
         Copy a file from the local file system to the Agent's.
         """
-        
+
         if self.isDirectory(destination):
             destination = "/".join([destination, source.split(os.path.sep)[-1]])
 
         return self.writeFile(destination, open(source, 'rb').read(), block_size=block_size)
-    
+
     def workingDir(self):
         """
         Get the full path to the Agent's working directory.
@@ -178,24 +166,12 @@ class FileSystem(object):
 
         return self.variables['WD']
 
-    def writeFile(self, destination, data, block_size=65536):
+    def writeFile(self, destination, data: bytes, block_size=65536) -> Optional[int]:
         """
         Write data into a file on the Agent's file system.
         """
-
-        ByteStreamWriter = self.loadClass("common/ByteStreamWriter.apk", "ByteStreamWriter")
-
-        file_io = self.new("java.io.File", destination)
-
-        if file_io.exists() != True:
-            file_stream = self.new("java.io.FileOutputStream", destination)
-
-            for c in chunk(data, block_size):
-                ByteStreamWriter.writeHexStream(file_stream, c.hex())
-
-            file_stream.close()
-            
+        try:
+            self.ftp.upload(destination, data)
             return len(data)
-        else:
+        except FtpException:
             return None
-            

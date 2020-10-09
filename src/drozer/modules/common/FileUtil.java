@@ -31,20 +31,4 @@ public class FileUtil {
     }
     return result;
   }
-
-  public static StringBuffer read(File file) throws IOException {
-    StringBuffer data = new StringBuffer();
-    BufferedInputStream file_stream = new BufferedInputStream(new FileInputStream(file));
-
-    byte[] buf = new byte[BUFFER_SIZE];
-    int count;
-    while((count = file_stream.read(buf, 0, BUFFER_SIZE)) != -1)
-      data.append(new String(buf));
-
-    file_stream.close();
-
-    //return file.toString();
-    return data;
-  }
-
 }
