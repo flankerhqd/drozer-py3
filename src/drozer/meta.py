@@ -31,7 +31,7 @@ class Version:
 
 name = "drozer"
 vendor = "MWR InfoSecurity"
-version = Version("2.4.4", "2017-11-09")
+version = Version("2.4.5", "2020-10-09")
 
 contact = "drozer@mwrinfosecurity.com"
 description = "The Leading Android Security Testing Framework"
@@ -48,17 +48,6 @@ drozer provides tools to help you use, share and understand public Android explo
 
 drozer is open source software, maintained by MWR InfoSecurity, and can be downloaded from: http://mwr.to/drozer
 '''
-
-def latest_version():
-    try:
-        xml = urlopen(Request("https://www.mwrinfosecurity.com/products/drozer/community-edition/manifest.xml", None, {"user-agent": "drozer: %s" % version}), None, 1).read()
-        doc = ElementTree.fromstring(xml)
-        
-        return max([Version(n.text[1:], n.attrib['release_date']) for n in doc.findall('version')])
-    except HTTPError:
-        return None
-    except URLError:
-        return None
 
 def print_version():
     print("%s %s\n" % (name, version))

@@ -129,7 +129,7 @@ def get_version():
 
 setuptools.setup(
   name = meta.name,
-  version = '2.4.3.beta1',
+  version = str(meta.version),
   author = meta.vendor,
   author_email = meta.contact,
   description = meta.description,
