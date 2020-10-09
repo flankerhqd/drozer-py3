@@ -10,19 +10,29 @@ class Assets(loader.ClassLoader):
         Extract the AndroidManifest.xml file from a package on the device, and
         recover it as an XML representation.
         """
+        # https://github.com/LeadroyaL/ShrinkApkAnalyzer
+        ApkAnalyzerCli = self.loadClass("common/shrink.apk", "com.android.tools.apk.analyzer.ApkAnalyzerCli")
+        ApkAnalyzerImpl = self.loadClass("common/shrink.apk", "com.android.tools.apk.analyzer.ApkAnalyzerImpl")
 
-        XmlAssetReader = self.loadClass("common/XmlAssetReader.apk", "XmlAssetReader")
+        """
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(baos, true, "utf-8");
+        ApkAnalyzerCli(ps, ps, ApkAnalyzerImpl(ps));
+        String content = new String(baos.toByteArray(), StandardCharsets.UTF_8);
+        ps.close();
+        baos.close();
+        """
 
-        asset_manager = self.getAssetManager(package)
-        xml = asset_manager.openXmlResourceParser("AndroidManifest.xml")
+        baos = self.new('java.io.ByteArrayOutputStream')
+        ps = self.new('java.io.PrintStream', baos)
+        impl = self.reflector.construct(ApkAnalyzerImpl, ps)
+        cli = self.reflector.construct(ApkAnalyzerCli, ps, ps, impl)
+        cli.run(["manifest", "print", package])
+        ret = baos.toByteArray().data().decode('utf-8')
+        ps.close()
+        baos.close()
 
-        xml_string = str(XmlAssetReader.read(xml))
-
-        # self.reflector comes from  drozer.modules.base
-        self.reflector.delete(asset_manager)
-        self.reflector.delete(xml)
-
-        return xml_string 
+        return ret
 
     def getAssetManager(self, package):
         """
