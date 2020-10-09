@@ -147,7 +147,10 @@ class SocketTransport(Transport):
     def connect_via_adb(self, port: int) -> Optional[str]:
         # adb devices
         _tmp_socket = socket.socket()
-        _tmp_socket.connect((self.AdbHost, self.AdbPort))
+        try:
+            _tmp_socket.connect((self.AdbHost, self.AdbPort))
+        except Exception:
+            return "adb server seems not alive"
         _tmp_socket.send(self.adb('host:devices'))
         if _tmp_socket.recv(4) != b'OKAY':
             _tmp_socket.close()
@@ -157,7 +160,10 @@ class SocketTransport(Transport):
 
         # adb -s
         self.__socket = socket.socket()
-        self.__socket.connect((self.AdbHost, self.AdbPort))
+        try:
+            self.__socket.connect((self.AdbHost, self.AdbPort))
+        except Exception:
+            return "adb server seems not alive"
         if len(devices) == 1:
             self.__socket.send(self.adb('host:transport-any'))
         else:
