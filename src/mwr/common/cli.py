@@ -76,7 +76,7 @@ class Base(object):
         parses the command-line arguments, and invokes an appropriate handler.
         """
 
-        if argv == None:
+        if argv is None:
             argv = []
         
         self.prepare_argument_parser(argv)
@@ -152,7 +152,7 @@ class Base(object):
         Print usage information.
         """
 
-        if message != None:
+        if message is not None:
             print("error:", message)
         print(self._parser.format_help())
         

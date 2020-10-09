@@ -107,7 +107,7 @@ class SocketTransport(Transport):
         while(True):
             response = self.receive()
 
-            if response == None:
+            if response is None:
                 raise ConnectionError(RuntimeError('Received an empty response from the Agent.'))
             elif response.id == message_id:
                 return response
@@ -128,7 +128,7 @@ class SocketTransport(Transport):
         not provided.
         """
 
-        if arguments.server != None:
+        if arguments.server is not None:
             endpoint = arguments.server
         else:
             return None

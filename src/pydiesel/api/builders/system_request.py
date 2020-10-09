@@ -98,7 +98,7 @@ class SystemRequestFactory:
         Set the password required to establish a session.
         """
         
-        if password != None:
+        if password is not None:
             self.builder.system_request.password = password
         
         return self

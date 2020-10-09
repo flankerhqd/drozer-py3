@@ -38,10 +38,10 @@ class ArgumentParserCompleter(object):
             # find the last option flag in the line, if there was one
             flag, value_index = self.__get_flag_metadata(words, word)
             # if we found a previous flag, we try to offer suggestions for it
-            if flag != None:
+            if flag is not None:
                 action = self.__get_action(flag)
 
-                if action != None:
+                if action is not None:
                     _suggestions, offer_flags = self.__offer_action_suggestions(action, value_index, text, line)
                     
                     suggestions.extend([s for s in _suggestions if s.startswith(text)])
@@ -147,14 +147,14 @@ class ArgumentParserCompleter(object):
         Where possible, this method provides the suggestions itself, otherwise
         it defers to the suggestion provider.
         """
-        if action.choices != None:                          # this is pick-from-a-list
+        if action.choices is not None:                          # this is pick-from-a-list
             suggestions = action.choices
         elif isinstance(action.type, argparse.FileType):    # this is local path completion
             suggestions = path_completion.complete(text)
         else:                                               # we don't know, defer to the provider
             suggestions = self.provider.get_completion_suggestions(action, text, line, **kwargs)
         
-        if suggestions != None:
+        if suggestions is not None:
             return suggestions
         else:
             return []
@@ -167,7 +167,7 @@ class ArgumentParserCompleter(object):
         
         nargs = action.nargs
         # if nargs is None, we assume the default: 1
-        if nargs == None:
+        if nargs is None:
             nargs = 1
         
         # depending on the nargs we are expecting, we need to behave slightly

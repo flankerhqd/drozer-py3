@@ -80,17 +80,17 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write((self.header + self.__format_exception(e) + self.footer).encode())
     
     def __eligible_path_permission(self, permissions, path):
-        return permissions == None or \
-            permissions.lower() == "null" and (path.getReadPermission() == None or path.getWritePermission() == None) or \
-            path.getReadPermission() != None and permissions.lower() in path.getReadPermission().lower() or \
-            path.getWritePermission() != None and permissions.lower() in path.getWritePermission().lower()
+        return permissions is None or \
+            permissions.lower() == "null" and (path.getReadPermission() is None or path.getWritePermission() is None) or \
+            path.getReadPermission() is not None and permissions.lower() in path.getReadPermission().lower() or \
+            path.getWritePermission() is not None and permissions.lower() in path.getWritePermission().lower()
              
     def __eligible_provider(self, permissions, provider):
-        return permissions == None or \
-            permissions.lower() == "null" and (provider.readPermission == None or provider.writePermission == None) or \
-            provider.readPermission != None and permissions.lower() in provider.readPermission.lower() or \
-            provider.writePermission != None and permissions.lower() in provider.writePermission.lower() or \
-            provider.pathPermissions != None and True in [self.__eligible_path_permission(permissions, path) for path in provider.pathPermissions]
+        return permissions is None or \
+            permissions.lower() == "null" and (provider.readPermission is None or provider.writePermission is None) or \
+            provider.readPermission is not None and permissions.lower() in provider.readPermission.lower() or \
+            provider.writePermission is not None and permissions.lower() in provider.writePermission.lower() or \
+            provider.pathPermissions is not None and True in [self.__eligible_path_permission(permissions, path) for path in provider.pathPermissions]
 
     def __format_exception(self, e):
         return "<h1>" + str(e.__class__) + "</h1><p>" + str(e) + "</p>"
@@ -120,7 +120,7 @@ class Handler(BaseHTTPRequestHandler):
             return link("/?permissions=%s" % url, display or url)
 
         for package in self.module.packageManager().getPackages(common.PackageManager.GET_PROVIDERS):
-            if package.providers != None and (filters == None or filters.lower() in package.packageName.lower()):
+            if package.providers is not None and (filters is None or filters.lower() in package.packageName.lower()):
                 for provider in package.providers:
 
                     if self.__eligible_provider(permissions, provider):
@@ -133,7 +133,7 @@ class Handler(BaseHTTPRequestHandler):
                         output += "<td>%s</td>" % linkperm(provider.writePermission)
                         output += "<td>%s</td></tr>" % provider.multiprocess
 
-                        if provider.pathPermissions != None:
+                        if provider.pathPermissions is not None:
                             for permission in provider.pathPermissions:
                                 if self.__eligible_path_permission(permissions, permission):
                                     output += "<tr><td>&nbsp;</td><td>&nbsp;</td>"
@@ -150,10 +150,10 @@ class Handler(BaseHTTPRequestHandler):
         web interface.
         """
         
-        cursor = self.module.contentResolver().query(uri, projection != None and projection.split(",") or None, selection, selectionArgs != None and selectionArgs.split(",") or None, sortOrder)
+        cursor = self.module.contentResolver().query(uri, projection is not None and projection.split(",") or None, selection, selectionArgs is not None and selectionArgs.split(",") or None, sortOrder)
         output = "<table><thead><tr>"
 
-        if cursor != None:
+        if cursor is not None:
             rows = self.module.getResultSet(cursor)
 
             for v in rows[0]:

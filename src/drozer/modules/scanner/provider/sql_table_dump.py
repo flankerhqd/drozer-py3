@@ -18,7 +18,7 @@ class SqlTables(Module, common.FileSystem, common.PackageManager, common.Provide
         
     def execute(self, arguments):
         results = []
-        if arguments.package_or_uri != None and arguments.package_or_uri.startswith("content://"):
+        if arguments.package_or_uri is not None and arguments.package_or_uri.startswith("content://"):
             results.append(self.__test_uri(arguments.package_or_uri))
         else:
             for uri in self.findAllContentUris(arguments.package_or_uri):

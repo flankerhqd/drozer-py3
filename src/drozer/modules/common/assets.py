@@ -5,7 +5,7 @@ class Assets(loader.ClassLoader):
     Utility methods for interacting with the Android Asset Manager.
     """
 
-    def getAndroidManifest(self, package):
+    def getAndroidManifest(self, package) -> str:
         """
         Extract the AndroidManifest.xml file from a package on the device, and
         recover it as an XML representation.

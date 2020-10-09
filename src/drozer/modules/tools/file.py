@@ -17,7 +17,7 @@ class Download(Module, common.ClassLoader, common.FileSystem):
     def execute(self, arguments):
         length = self.downloadFile(arguments.source, arguments.destination)
         
-        if length != None:
+        if length is not None:
             self.stdout.write("Read %d bytes\n" % length)
         else:
             self.stderr.write("Could not download file. The file may not exist.\n")
@@ -44,7 +44,7 @@ class Size(Module, common.FileSystem):
     def execute(self, arguments):
         size = self.fileSize(arguments.target)
 
-        if size != None:
+        if size is not None:
             if size > 1024:
                 self.stdout.write("%s (%d bytes)\n" % (self.format_file_size(size), size))
             else:
@@ -72,7 +72,7 @@ class MD5Sum(Module, common.ClassLoader, common.FileSystem):
     def execute(self, arguments):
         md5sum = self.md5sum(arguments.target)
 
-        if md5sum != None:
+        if md5sum is not None:
             self.stdout.write("%s\n" % md5sum)
         else:
             self.stderr.write("Could not calculate the md5 checksum. The file may not exist.\n")
@@ -99,7 +99,7 @@ class Upload(Module, common.ClassLoader, common.FileSystem):
     def execute(self, arguments):
         length = self.uploadFile(arguments.source, arguments.destination)
 
-        if length != None:
+        if length is not None:
             self.stdout.write("Written %d bytes\n" % length)
         else:
             self.stderr.write("Could not upload file.\n")

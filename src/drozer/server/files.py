@@ -16,7 +16,7 @@ class FileProvider(object):
         return len(self.__store)
     
     def create(self, resource, body, magic=None, mimetype=None, multipart=None, custom_headers=None):
-        if multipart == None:
+        if multipart is None:
             self.__store[resource] = InMemoryResource(resource, body, magic=magic, mimetype=mimetype, custom_headers=custom_headers)
             
             return self.__store[resource].getBody() == body
@@ -31,7 +31,7 @@ class FileProvider(object):
         
     def get(self, resource):
         for key in self.__store:
-            if re.match("^" + key  + "$", resource) != None:
+            if re.match("^" + key  + "$", resource) is not None:
                 return self.__store[key]
         
         return ErrorResource(resource, 404, "The resource %s could not be found on this server.")
@@ -142,21 +142,21 @@ class InMemoryMultipartResource(Resource):
     
     def getBody(self, user_agent):
         for k in self.body:
-            if re.match(k, user_agent) != None:
+            if re.match(k, user_agent) is not None:
                 return self.body[k]
             
         return None
     
     def getResponse(self, request):
         headers = {}
-        if self.mimetype != None:
+        if self.mimetype is not None:
             headers['Content-Type'] = self.mimetype
             
         body = self.getBody(request.headers['User-Agent'])
 
         headers = dict(headers.items() + self.custom_headers.items())
         
-        if body != None:
+        if body is not None:
             return HTTPResponse(status=200, headers=headers, body=body)
         else:
             return ErrorResource(request.resource, 404, "The resource %s could not be found on this server.").getResponse(request)
@@ -177,7 +177,7 @@ class InMemoryResource(Resource):
             
     def getResponse(self, request):
         headers = {}
-        if self.mimetype != None:
+        if self.mimetype is not None:
             headers['Content-Type'] = self.mimetype
 
         headers = dict(headers.items() + self.custom_headers.items())

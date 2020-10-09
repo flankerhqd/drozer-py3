@@ -19,7 +19,7 @@ class Injection(Module, common.FileSystem, common.PackageManager, common.Provide
     def execute(self, arguments):
         vulnerable = { 'projection': set([]), 'selection': set([]), 'uris': set([]) }
     
-        if arguments.package_or_uri != None and arguments.package_or_uri.startswith("content://"):
+        if arguments.package_or_uri is not None and arguments.package_or_uri.startswith("content://"):
             self.__test_uri(arguments.package_or_uri, vulnerable)
         else:
             for uri in self.findAllContentUris(arguments.package_or_uri):

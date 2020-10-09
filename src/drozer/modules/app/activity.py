@@ -67,7 +67,7 @@ class Info(Module, common.Filters, common.IntentFilter, common.PackageManager):
         parser.add_argument("-v", "--verbose", action="store_true", default=False, help="be verbose")
 
     def execute(self, arguments):
-        if arguments.package == None:
+        if arguments.package is None:
             for package in self.packageManager().getPackages(common.PackageManager.GET_ACTIVITIES):
                 self.__get_activities(arguments, package)
         else:
@@ -102,12 +102,12 @@ class Info(Module, common.Filters, common.IntentFilter, common.PackageManager):
     def __print_activity(self, package, activity, prefix, include_intent_filters):
         self.stdout.write("%s%s\n" % (prefix, activity.name))
         
-        if(activity._has_property("parentActivityName") and activity.parentActivityName != None):
+        if(activity._has_property("parentActivityName") and activity.parentActivityName is not None):
             self.stdout.write("%s  Parent Activity: %s\n" % (prefix, activity.parentActivityName))
 
         self.stdout.write("%s  Permission: %s\n" % (prefix, activity.permission))
         
-        if(activity.targetActivity != None):
+        if(activity.targetActivity is not None):
             self.stdout.write("%s  Target Activity: %s\n" % (prefix, activity.targetActivity))
         if include_intent_filters:
             intent_filters = self.find_intent_filters(activity, 'activity')

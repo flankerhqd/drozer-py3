@@ -23,7 +23,7 @@ class Columns(Module, common.Provider, common.TableFormatter):
     def execute(self, arguments):
         c = self.contentResolver().query(arguments.uri)
 
-        if c != None:
+        if c is not None:
             columns = c.getColumnNames()
             c.close();
 
@@ -179,7 +179,7 @@ Finding content providers that do not require permissions to read/write:
         parser.add_argument("-v", "--verbose", action="store_true", default=False, help="be verbose")
 
     def execute(self, arguments):
-        if arguments.package == None:
+        if arguments.package is None:
             for package in self.packageManager().getPackages(common.PackageManager.GET_PROVIDERS | common.PackageManager.GET_URI_PERMISSION_PATTERNS):
                 self.__get_providers(arguments, package)
         else:
@@ -194,7 +194,7 @@ Finding content providers that do not require permissions to read/write:
     def __get_providers(self, arguments, package):
         providers = self.match_filter(package.providers, 'authority', arguments.filter)        
         
-        if arguments.permission != None:
+        if arguments.permission is not None:
             r_providers = self.match_filter(providers, 'readPermission', arguments.permission)
             w_providers = self.match_filter(providers, 'writePermission', arguments.permission)
 
@@ -231,12 +231,12 @@ Finding content providers that do not require permissions to read/write:
         self.stdout.write("%s  Content Provider: %s\n" % (prefix, provider.name))
         self.stdout.write("%s  Multiprocess Allowed: %s\n" % (prefix, provider.multiprocess))
         self.stdout.write("%s  Grant Uri Permissions: %s\n" % (prefix, provider.grantUriPermissions))
-        if provider.uriPermissionPatterns != None:
+        if provider.uriPermissionPatterns is not None:
             self.stdout.write("%s  Uri Permission Patterns:\n" % prefix)
             for pattern in provider.uriPermissionPatterns:
                 self.stdout.write("%s    Path: %s\n" % (prefix, pattern.getPath()))
                 self.stdout.write("%s      Type: %s\n" % (prefix, Info.PatternMatcherTypes[int(pattern.getType())]))
-        if provider.pathPermissions != None:
+        if provider.pathPermissions is not None:
             self.stdout.write("%s  Path Permissions:\n" % prefix)
             for permission in provider.pathPermissions:
                 self.stdout.write("%s    Path: %s\n" % (prefix, permission.getPath()))
@@ -273,25 +273,25 @@ class Insert(Module, common.Provider):
     def execute(self, arguments):
         values = self.new("android.content.ContentValues")
 
-        if arguments.boolean != None:
+        if arguments.boolean is not None:
             for b in arguments.boolean:
                 values.put(b[0], self.arg(b[1].upper().startswith("T"), obj_type="boolean"))
-        if arguments.double != None:
+        if arguments.double is not None:
             for d in arguments.double:
                 values.put(d[0], self.arg(d[1], obj_type="double"))
-        if arguments.float != None:
+        if arguments.float is not None:
             for f in arguments.float:
                 values.put(f[0], self.arg(f[1], obj_type="float"))
-        if arguments.integer != None:
+        if arguments.integer is not None:
             for i in arguments.integer:
                 values.put(i[0], self.arg(int(i[1]), obj_type="int"))
-        if arguments.long != None:
+        if arguments.long is not None:
             for l in arguments.long:
                 values.put(l[0], self.arg(l[1], obj_type="long"))
-        if arguments.short != None:
+        if arguments.short is not None:
             for s in arguments.short:
                 values.put(s[0], self.arg(s[1], obj_type="short"))
-        if arguments.string != None:
+        if arguments.string is not None:
             for s in arguments.string:
                 values.put(s[0], self.arg(s[1], obj_type="string"))
 
@@ -338,7 +338,7 @@ Querying, with a WHERE clause in the SELECT statement:
     def execute(self, arguments):
         c = self.contentResolver().query(arguments.uri, arguments.projection, arguments.selection, arguments.selection_args, arguments.order)
 
-        if c != None:
+        if c is not None:
             rows = self.getResultSet(c)
 
             self.print_table(rows, show_headers=True, vertical=arguments.vertical)
@@ -397,25 +397,25 @@ class Update(Module, common.Provider):
     def execute(self, arguments):
         values = self.new("android.content.ContentValues")
 
-        if arguments.boolean != None:
+        if arguments.boolean is not None:
             for b in arguments.boolean:
                 values.put(b[0], self.arg(b[1].upper().startswith("T"), obj_type="boolean"))
-        if arguments.double != None:
+        if arguments.double is not None:
             for d in arguments.double:
                 values.put(d[0], self.arg(d[1], obj_type="double"))
-        if arguments.float != None:
+        if arguments.float is not None:
             for f in arguments.float:
                 values.put(f[0], self.arg(f[1], obj_type="float"))
-        if arguments.integer != None:
+        if arguments.integer is not None:
             for i in arguments.integer:
                 values.put(i[0], self.arg(i[1], obj_type="integer"))
-        if arguments.long != None:
+        if arguments.long is not None:
             for l in arguments.long:
                 values.put(l[0], self.arg(l[1], obj_type="long"))
-        if arguments.short != None:
+        if arguments.short is not None:
             for s in arguments.short:
                 values.put(s[0], self.arg(s[1], obj_type="short"))
-        if arguments.string != None:
+        if arguments.string is not None:
             for s in arguments.string:
                 values.put(s[0], self.arg(s[1], obj_type="string"))
 

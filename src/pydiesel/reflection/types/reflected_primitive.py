@@ -195,7 +195,7 @@ class ReflectedPrimitive(ReflectedType):
         power = isinstance(power, ReflectedPrimitive) and power._native or power
         modulus = isinstance(modulus, ReflectedPrimitive) and modulus._native or modulus
 
-        if modulus == None:
+        if modulus is None:
             return pow(self._native, power)
         else:
             return pow(self._native, power, modulus)
@@ -237,7 +237,7 @@ class ReflectedPrimitive(ReflectedType):
         mantissa = isinstance(mantissa, ReflectedPrimitive) and mantissa._native or mantissa
         modulus = isinstance(modulus, ReflectedPrimitive) and modulus._native or modulus
 
-        if modulus == None:
+        if modulus is None:
             return pow(mantissa, self._native)
         else:
             return pow(mantissa, self._native, modulus)

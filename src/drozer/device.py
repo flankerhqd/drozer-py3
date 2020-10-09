@@ -188,7 +188,7 @@ class Device:
         If the connection has closed, raises a DeviceGoneAway exception.
         """
 
-        if self.connection != None:
+        if self.connection is not None:
             self.connection.write(message)
         else:
             raise DeviceGoneAway(self.device_id)

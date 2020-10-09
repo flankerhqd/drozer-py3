@@ -364,14 +364,14 @@ optional arguments:
         component.
         """
 
-        return self.action != None or self.component != None
+        return self.action is not None or self.component is not None
     
     def __add_action_to(self, intent, context):
         """
         Set the ACTION of intent, iff we have a value to set.
         """
         
-        if self.action != None:
+        if self.action is not None:
             intent.setAction(self.action)
     
     def __add_categories_to(self, intent, context):
@@ -379,7 +379,7 @@ optional arguments:
         Set the CATEGORY of intent, iff we have a value to set.
         """
         
-        if self.category != None:
+        if self.category is not None:
             for category in self.category:
                 intent.addCategory(category)
     
@@ -388,7 +388,7 @@ optional arguments:
         Set the COMPONENT of intent, iff we have a value to set.
         """
         
-        if self.component != None:
+        if self.component is not None:
             com = context.new("android.content.ComponentName", *self.component)
             # pass the built ComponentName to the intent
             intent.setComponent(com)
@@ -398,7 +398,7 @@ optional arguments:
         Set the DATA of intent as a Uri, iff we have a value to set.
         """
         
-        if self.data_uri != None:
+        if self.data_uri is not None:
             uri = context.klass("android.net.Uri")
             intent.setData(uri.parse(self.data_uri))
 
@@ -407,7 +407,7 @@ optional arguments:
         Set the EXTRAS of intent, iff we have a value to set.
         """
         
-        if self.extras != None:
+        if self.extras is not None:
             extras = context.new("android.os.Bundle")
 
             for extra in self.extras:
@@ -443,7 +443,7 @@ optional arguments:
         """
         Set the FLAGS of intent, iff we have a value to set.
         """
-        if self.flags != None:
+        if self.flags is not None:
             intent.setFlags(self.__build_flags(self.flags))
     
     def __add_type_to(self, intent, context):
@@ -451,7 +451,7 @@ optional arguments:
         Set the TYPE of intent, iff we have a value to set.
         """
         
-        if self.mimetype != None:
+        if self.mimetype is not None:
             intent.setType(self.mimetype)
             
     def __build_flags(self, flags):

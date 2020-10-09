@@ -52,7 +52,7 @@ Package: com.android.mms
     def execute(self, arguments):
 
         # One or all packages
-        if arguments.package != None:
+        if arguments.package is not None:
             packages = [self.packageManager().getPackageInfo(arguments.package, 0)]
         else:
             packages = self.packageManager().getPackages()

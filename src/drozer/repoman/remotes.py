@@ -38,7 +38,7 @@ class Remote(object):
         If the URL already exists, no remote will be created.
         """
         
-        if cls.get(url) == None:
+        if cls.get(url) is None:
             Configuration.set('remotes', url, url)
             
             return True
@@ -51,7 +51,7 @@ class Remote(object):
         Removes a drozer remote, with the specified URL.
         """
         
-        if cls.get(url) != None:
+        if cls.get(url) is not None:
             Configuration.delete('remotes', url)
             
             return True
@@ -66,7 +66,7 @@ class Remote(object):
         
         url = Configuration.get('remotes', url)
         
-        if url != None:
+        if url is not None:
             return cls(url)
         else:
             return None

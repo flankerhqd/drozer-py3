@@ -30,7 +30,7 @@ class ModuleManager(cli.Base):
         
         repository = self.__choose_repo()
         
-        if repository != None:
+        if repository is not None:
             installer = ModuleInstaller(repository)
             modules = installer.install(arguments.options, arguments.force)
                         
@@ -68,12 +68,12 @@ class ModuleManager(cli.Base):
         parses the command-line arguments, and invokes an appropriate handler.
         """
 
-        if argv == None:
+        if argv is None:
             argv = []
 
         arguments = self._parser.parse_args(argv)
 
-        if arguments.help or arguments.command == None:
+        if arguments.help or arguments.command is None:
             self._parser.print_help()
         else:
             try:
@@ -151,7 +151,7 @@ class ModuleManager(cli.Base):
                     print(module)
                     
                     if include_descriptions:
-                        if module.description != None:
+                        if module.description is not None:
                             print("%s\n" % text.indent(text.wrap(module.description, console.get_size()[0] - 4), "    "))
                         else:
                             print(text.indent("No description given.\n", "    "))
@@ -225,12 +225,12 @@ class RemoteManager(cli.Base):
         parses the command-line arguments, and invokes an appropriate handler.
         """
 
-        if argv == None:
+        if argv is None:
             argv = []
 
         arguments = self._parser.parse_args(argv)
 
-        if arguments.help or arguments.command == None:
+        if arguments.help or arguments.command is None:
             self._parser.print_help()
         else:
             try:
@@ -336,12 +336,12 @@ class RepositoryManager(cli.Base):
         parses the command-line arguments, and invokes an appropriate handler.
         """
 
-        if argv == None:
+        if argv is None:
             argv = []
 
         arguments = self._parser.parse_args(argv)
 
-        if arguments.help or arguments.command == None:
+        if arguments.help or arguments.command is None:
             self._parser.print_help()
         else:
             try:

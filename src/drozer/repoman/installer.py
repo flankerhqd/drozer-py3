@@ -28,13 +28,13 @@ class ModuleInfo(object):
         return re.match(pattern, self.name)
     
     def __eq__(self, other):
-        return other != None and str(self) == str(other)
+        return other is not None and str(self) == str(other)
     
     def __hash__(self):
         return hash(self.name)
     
     def __ne__(self, other):
-        return other == None or str(self) != str(other)
+        return other is None or str(self) != str(other)
     
     def __str__(self):
         return self.name
@@ -99,7 +99,7 @@ class ModuleInstaller(object):
         
         index = self.__get_combined_index()
 
-        return sorted([m for m in index if m.matches(".*" + module.replace("*", ".*") + ".*") != None], key=lambda m: m.name)
+        return sorted([m for m in index if m.matches(".*" + module.replace("*", ".*") + ".*") is not None], key=lambda m: m.name)
     
     def __create_package(self, package):
         """
@@ -144,12 +144,12 @@ class ModuleInstaller(object):
         for url in Remote.all():
             source = Remote.get(url).download("INDEX.xml")
             
-            if source != None:
+            if source is not None:
                 modules = xml.fromstring(source)
                 
                 index = index.union([ModuleInfo(url, m.attrib['name'], m.find("./description").text) for m in modules.findall("./module")])
         
-        return [m for m in index if m != None and m != ""]
+        return [m for m in index if m is not None and m != ""]
 
     def __install_module(self, fetch, module, force):
         """
@@ -160,7 +160,7 @@ class ModuleInstaller(object):
         
         # check that we successfully read source for the module, otherwise there
         # isn't much more we can do here
-        if source == None:
+        if source is None:
             raise InstallError("Failed to get module for '%s'." % module)
         
         return self.__unpack_module(os.path.basename(str(module)), source, force)
@@ -182,7 +182,7 @@ class ModuleInstaller(object):
             
             # if we found the source, we return straight away - this allows us to
             # install the module from the first source that we come across
-            if source != None:
+            if source is not None:
                 return source
         
         return None
@@ -231,7 +231,7 @@ class ModuleInstaller(object):
         if os.path.exists(path) and not force:
             raise AlreadyInstalledError("The target (%s) already exists in the repository." % module)
         # write the module file into the package
-        if fs.write(path, source) != None:
+        if fs.write(path, source) is not None:
             return True
         else:
             raise InstallError("Failed to write module to repository.")

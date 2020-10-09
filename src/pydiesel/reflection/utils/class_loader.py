@@ -37,7 +37,7 @@ class ClassLoader(object):
         
         self.source = self.__get_source(self.source_or_relative_path, relative_to=self.relative_to)
 
-        if self.source != None:
+        if self.source is not None:
             file_path = "/".join([self.cache_path, self.__get_cached_apk_name()])
     
             file_io = self.construct('java.io.File', file_path)
@@ -64,7 +64,7 @@ class ClassLoader(object):
         source = None
 
         if source_or_relative_path.endswith(".apk"):
-            if relative_to == None:
+            if relative_to is None:
                 relative_to = os.path.join(os.path.dirname(__file__), "..")
             elif relative_to.find(".py") >= 0 or relative_to.find(".pyc") >= 0:
                 relative_to = os.path.dirname(relative_to)
@@ -86,7 +86,7 @@ class ClassLoader(object):
         checks the hash value of the requested apk to the one already present on the agent
         """
 
-        if remote == None or not remote.exists() or local_data == None:
+        if remote is None or not remote.exists() or local_data is None:
             """
             no file present on the agent
             """

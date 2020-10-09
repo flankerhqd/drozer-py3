@@ -231,7 +231,7 @@ class Cmd(cmd.Cmd):
         Remove output redirection when a command has finished executing.
         """
 
-        if self.__output_redirected != None:
+        if self.__output_redirected is not None:
             tee = self.stdout
             self.stdout = self.__output_redirected
 
@@ -272,14 +272,14 @@ class Cmd(cmd.Cmd):
                 
             self.__history_stack.append(history_file)
             readline.clear_history()
-            if history_file != None and os.path.exists(history_file):
+            if history_file is not None and os.path.exists(history_file):
                 readline.read_history_file(history_file)
                 
             readline.parse_and_bind(self.completekey + ": complete")
     
     def pop_completer(self):
         if "readline" in sys.modules:
-            if self.__history_stack[-1] != None:
+            if self.__history_stack[-1] is not None:
                 readline.write_history_file(self.__history_stack.pop())
             else:
                 self.__history_stack.pop()

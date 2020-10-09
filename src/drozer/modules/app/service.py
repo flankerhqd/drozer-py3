@@ -40,7 +40,7 @@ List exported services with no permissions required to interact with it:
         parser.add_argument("-v", action="store_true", dest="verbose", default=False)
 
     def execute(self, arguments):
-        if arguments.package == None:
+        if arguments.package is None:
             for package in self.packageManager().getPackages(common.PackageManager.GET_SERVICES | common.PackageManager.GET_PERMISSIONS):
                 self.__get_services(arguments, package)
         else:

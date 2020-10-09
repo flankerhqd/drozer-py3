@@ -43,7 +43,7 @@ class HTTPMessage:
         self.headers = headers
         self.body = body
         
-        if self.headers == None:
+        if self.headers is None:
             self.headers = {}
     
     def format_headers(self):
@@ -130,12 +130,12 @@ class HTTPRequest(HTTPMessage):
         message = None
         header = HTTPRequest.readHeaders(stream)
         
-        if header == None:
+        if header is None:
             stream.seek(position)
         else:
             message = HTTPRequest.processHeader(header)
 
-        if message == None:
+        if message is None:
             return None
         else:
             if "Content-Length" in message.headers:
@@ -261,7 +261,7 @@ class HTTPResponse(HTTPMessage):
                  505: "HTTP Version Not Supported" }[self.status]
     
     def __str__(self):
-        if self.body == None:
+        if self.body is None:
             return "%s %d %s\r\n%s\r\n\r\n" % (self.version, self.status, self.status_text(), self.format_headers())
         else:
             return "%s %d %s\r\n%s\r\n\r\n%s" % (self.version, self.status, self.status_text(), self.format_headers(), self.body)

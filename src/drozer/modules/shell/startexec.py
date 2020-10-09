@@ -34,7 +34,7 @@ class Exec(Module, common.Shell):
         parser.add_argument("command", help="the Linux command to execute")
 
     def execute(self, arguments):
-        if arguments.command == None:
+        if arguments.command is None:
             print("No command specified.")
             return
             

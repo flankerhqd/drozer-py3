@@ -25,7 +25,7 @@ class Server(cli.Base):
         """delete a resource from the drozer Server"""
         
         arguments.server = util.parse_server(arguments.server)
-        if arguments.ssl != None and arguments.ssl == []:
+        if arguments.ssl is not None and arguments.ssl == []:
             arguments.ssl = Provider().get_keypair("drozer-server")
         
         if uploader.delete(arguments, arguments.resource):
@@ -54,7 +54,7 @@ class Server(cli.Base):
         """upload a resource to the drozer Server"""
         
         arguments.server = util.parse_server(arguments.server)
-        if arguments.ssl != None and arguments.ssl == []:
+        if arguments.ssl is not None and arguments.ssl == []:
             arguments.ssl = Provider().get_keypair("drozer-server")
         
         if uploader.upload(arguments, arguments.resource, open(arguments.file).read(), magic=arguments.magic):

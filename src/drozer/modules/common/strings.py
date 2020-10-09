@@ -13,7 +13,7 @@ class Strings(object):
         
         strings = StringsKlass.get(path)
 
-        if strings == None:
+        if strings is None:
             return []
         else:
             return strings.split("\n")

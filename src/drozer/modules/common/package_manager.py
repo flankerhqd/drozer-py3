@@ -142,7 +142,7 @@ class PackageManager(object):
         Get the Android PackageManager.
         """
 
-        if self.__package_manager_proxy == None:
+        if self.__package_manager_proxy is None:
             self.__package_manager_proxy = PackageManager.PackageManagerProxy(self)
 
         return self.__package_manager_proxy

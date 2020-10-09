@@ -22,7 +22,7 @@ from ..ssl.provider import Provider
 def serve(arguments):
     task.LoopingCall(heartbeat).start(arguments.ping_interval)
         
-    if arguments.ssl != None:
+    if arguments.ssl is not None:
         print("Starting drozer Server, listening on 0.0.0.0:%d (with SSL)" % arguments.port)
 
         if arguments.ssl == []:
@@ -99,7 +99,7 @@ class ProtocolSwitcher(Protocol):
         routed to the appropriate handler.
         """
 
-        if self.protocol == None:
+        if self.protocol is None:
             protocol = self.__chooseProtocol(data)
             
             if protocol is not None:

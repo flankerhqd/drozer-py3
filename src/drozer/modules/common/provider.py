@@ -78,7 +78,7 @@ class Provider(loader.ClassLoader):
 
             client = self.__get_client(uri)
             
-            if client == None:
+            if client is None:
                 raise ReflectionException("Could not get a ContentProviderClient for %s." % uri)
             
             cursor = None
@@ -109,7 +109,7 @@ class Provider(loader.ClassLoader):
             if self.__must_release_client:
                 fd = None
    
-                if client != None:
+                if client is not None:
                     try:
                         fd = client.openFile(self.parseUri(uri), "r")
                     except ReflectionException as e:
@@ -120,14 +120,14 @@ class Provider(loader.ClassLoader):
     
                 self.__release(client)
     
-                if fd != None:
+                if fd is not None:
                     return str(ByteStreamReader.read(self.__module.new("java.io.FileInputStream", fd.getFileDescriptor())))
                 else:
                     raise Provider.UnableToOpenFileException(uri)
             else:
                 input_stream = self.__content_resolver.openInputStream(self.parseUri(uri))
                 
-                if input_stream != None:
+                if input_stream is not None:
                     return str(ByteStreamReader.read(input_stream))
                 else:
                     raise Provider.UnableToOpenFileException(uri)
@@ -163,7 +163,7 @@ class Provider(loader.ClassLoader):
                 return self.__content_resolver
         
         def __release(self, client):
-            if self.__must_release_client and client != None:
+            if self.__must_release_client and client is not None:
                 try:
                     client.release()
                 except ReflectionException:
@@ -174,7 +174,7 @@ class Provider(loader.ClassLoader):
         Get a ContentResolver to interact with a ContentProvider.
         """
 
-        if self.__content_resolver_proxy == None:
+        if self.__content_resolver_proxy is None:
             self.__content_resolver_proxy = Provider.ContentResolverProxy(self)
 
         return self.__content_resolver_proxy
@@ -190,7 +190,7 @@ class Provider(loader.ClassLoader):
         # collect content uris by enumerating all authorities, and uris detected
         # in the source
         
-        if package == None:
+        if package is None:
             for package in self.packageManager().getPackages(PackageManager.GET_PROVIDERS | PackageManager.GET_URI_PERMISSION_PATTERNS):
                 try:
                     uris = uris.union(self.__search_package(package))
@@ -227,7 +227,7 @@ class Provider(loader.ClassLoader):
             if ".apk" in path:
                 dex_file = self.extractFromZip("classes.dex", path, self.cacheDir())
 
-                if dex_file != None:
+                if dex_file is not None:
                     strings = self.getStrings(dex_file.getAbsolutePath())
 
                     dex_file.delete()
@@ -250,7 +250,7 @@ class Provider(loader.ClassLoader):
         rows = []
         blob_type = self.klass("android.database.Cursor").FIELD_TYPE_BLOB
 
-        if cursor != None:
+        if cursor is not None:
             columns = cursor.getColumnNames()
             rows.append(columns)
 
@@ -294,15 +294,15 @@ class Provider(loader.ClassLoader):
 
         uris = set([])
 
-        if package.providers != None:
+        if package.providers is not None:
             for provider in package.providers:
-                if provider.authority != None:
+                if provider.authority is not None:
                     paths = set([])
                     
-                    if provider.uriPermissionPatterns != None:
+                    if provider.uriPermissionPatterns is not None:
                         for pattern in provider.uriPermissionPatterns:
                             paths.add(pattern.getPath())
-                    if provider.pathPermissions != None:
+                    if provider.pathPermissions is not None:
                         for permission in provider.pathPermissions:
                             paths.add(permission.getPath())
                             

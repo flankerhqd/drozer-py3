@@ -20,7 +20,7 @@ class Traversal(Module, common.FileSystem, common.PackageManager, common.Provide
         vulnerable = set([])
         uris = set([])
 
-        if arguments.package_or_uri != None and arguments.package_or_uri.startswith("content://"):
+        if arguments.package_or_uri is not None and arguments.package_or_uri.startswith("content://"):
             uris.add(arguments.package_or_uri)
 
             self.__test_uri(arguments.package_or_uri, vulnerable)
@@ -61,6 +61,6 @@ class Traversal(Module, common.FileSystem, common.PackageManager, common.Provide
             else:
                 raise
     
-        if data != None and len(data) > 0:
+        if data is not None and len(data) > 0:
             vulnerable.add(uri)
             

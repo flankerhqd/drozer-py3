@@ -374,7 +374,7 @@ class Tool:
         optionPanel = swing.JPanel()
         optionPanel.setLayout(swing.BoxLayout(optionPanel, swing.BoxLayout.X_AXIS))
 
-        if editBox != None:
+        if editBox is not None:
 
             self.editBox = swing.JTextField(editBox)
             self.editBox.setMaximumSize(awt.Dimension(1000, 30))
@@ -382,16 +382,16 @@ class Tool:
             optionPanel.add(swing.JLabel(editBoxLabel))
             optionPanel.add(self.editBox)
 
-        if browseButton != None:
+        if browseButton is not None:
             self.browseButton = swing.JButton('Browse',actionPerformed=self.openBrowseDialog)
             optionPanel.add(self.browseButton)
 
 
-        if editBox != None or browseButton != None:
+        if editBox is not None or browseButton is not None:
             self._setBorder(optionPanel, 10, 10)
             self.panel.add(optionPanel)
 
-        if tickBox != None:
+        if tickBox is not None:
             self.tickBox = swing.JCheckBox(tickBox)
             tickBoxPanel = swing.JPanel()
             tickBoxPanel.setLayout(swing.BoxLayout(tickBoxPanel, swing.BoxLayout.X_AXIS))

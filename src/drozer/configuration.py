@@ -25,13 +25,13 @@ class Configuration(object):
         path = cls.library(name)
 
         #is the required exe available on the PATH?
-        if path == None and cls.get("executables", name) == None:
+        if path is None and cls.get("executables", name) is None:
             path = system.which(name)
         
-        if path == None:
+        if path is None:
             path = cls.get("executables", name)
         
-        if path == None or path == "":
+        if path is None or path == "":
             sys.stderr.write("Could not find %s. Please ensure that it is installed and on your PATH.\n\nIf this error persists, specify the path in the ~/.drozer_config file:\n\n    [executables]\n    %s = %s\n" % (name, name, platform.system() == "Windows" and "C:\\path\\to\\" + name or "/path/to/" + name))
             
         return path
@@ -144,7 +144,7 @@ class Configuration(object):
         Loads the configuration from file, if it has not already been loaded.
         """
         
-        if cls.__config == None:
+        if cls.__config is None:
             cls.__config = configparser.SafeConfigParser()
             cls.__config.optionxform = lambda optionstr: optionstr.replace(":", "|")
             

@@ -32,7 +32,7 @@ class Tee(object):
         self.file = DecolouredStream(open(name, mode))
 
     def __del__(self):
-        if hasattr(self, 'file') and self.file != None:
+        if hasattr(self, 'file') and self.file is not None:
             self.file.close()
 
     def write(self, data):

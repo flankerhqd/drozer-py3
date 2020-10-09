@@ -9,10 +9,10 @@ class Filters(object):
         property 'key' is equal to 'term'.
         """
 
-        if collection == None:
+        if collection is None:
             collection = []
             
-        if term != None and term != "":
+        if term is not None and term != "":
             return [e for e in collection if str(getattr(e, key)).upper().find(str(term).upper()) >= 0]
         else:
             return collection

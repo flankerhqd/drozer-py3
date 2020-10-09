@@ -47,9 +47,9 @@ class ARMEABI(Module, common.ShellCode):
         self.format = "R"   # we only support RAW format
         
         architecture = "armeabi"
-        if arguments.working_directory != None:
+        if arguments.working_directory is not None:
             directory = arguments.working_directory
-        elif self.__exploit != None:
+        elif self.__exploit is not None:
             directory = self.__exploit.working_directory
         else:
             directory = "/data/data/com.android.browser"

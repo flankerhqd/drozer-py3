@@ -43,7 +43,7 @@ class Info(Module, common.Filters, common.IntentFilter, common.PackageManager):
         parser.add_argument("-v", "--verbose", action="store_true", default=False, help="be verbose")
 
     def execute(self, arguments):
-        if arguments.package == None:
+        if arguments.package is None:
             for package in self.packageManager().getPackages(common.PackageManager.GET_RECEIVERS | common.PackageManager.GET_PERMISSIONS):
                 self.__get_receivers(arguments, package)
         else:

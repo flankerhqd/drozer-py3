@@ -26,7 +26,7 @@ def get_socket(arguments):
         sock = ssl.wrap_socket(sock, cert_reqs=ssl.CERT_REQUIRED, ca_certs=provider.ca_certificate_path())
 
     sock.settimeout(5.0)
-    if hasattr(arguments, 'push_server') and arguments.push_server != None:
+    if hasattr(arguments, 'push_server') and arguments.push_server is not None:
         sock.connect(arguments.push_server)
     else:
         sock.connect(arguments.server)
@@ -37,12 +37,12 @@ def upload(arguments, resource, data, magic=None, mimetype=None, headers=None):
     sock = get_socket(arguments)
     
     request = HTTPRequest(verb="POST", resource=resource, headers=headers, body=data)
-    if arguments.credentials != None:
+    if arguments.credentials is not None:
         request.headers["Authorization"] = "Basic %s" % b64encode(":".join(arguments.credentials))
     request.headers["Content-Length"] = len(data)
-    if mimetype != None:
+    if mimetype is not None:
         request.headers["Content-Type"] = mimetype
-    if magic != None:
+    if magic is not None:
         request.headers["X-Drozer-Magic"] = magic
         
     request.writeTo(sock)

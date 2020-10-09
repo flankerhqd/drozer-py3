@@ -151,7 +151,7 @@ class Module(object):
         Test if Context is available to this module.
         """
         
-        return not self.getContext() == None
+        return not self.getContext() is None
 
     def klass(self, class_name):
         """

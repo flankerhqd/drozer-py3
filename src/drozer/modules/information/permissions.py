@@ -38,7 +38,7 @@ class Permissions(Module, common.PackageManager):
             
             # Iterate through each package and get unique permissions
             for package in self.packageManager().getPackages(common.PackageManager.GET_PERMISSIONS):
-                    if package.requestedPermissions != None:
+                    if package.requestedPermissions is not None:
                         for permission in package.requestedPermissions:
                             if permission not in permissionList:
                                 permissionList.append(str(permission))

@@ -19,18 +19,18 @@ class Backup(Module, common.Filters, common.PackageManager):
         parser.add_argument("-k", "--api-keys", action="store_true", dest="api_key", default=False, help="Only print packages that contain api keys")
     def execute(self, arguments):
         if arguments.api_key:
-            packages = [s for s in self.packageManager().getPackages(common.PackageManager.GET_META_DATA | common.PackageManager.GET_ACTIVITIES) if s.applicationInfo.metaData != None and s.applicationInfo.metaData.containsKey(Backup.API_KEY_HANDLE)]
+            packages = [s for s in self.packageManager().getPackages(common.PackageManager.GET_META_DATA | common.PackageManager.GET_ACTIVITIES) if s.applicationInfo.metaData is not None and s.applicationInfo.metaData.containsKey(Backup.API_KEY_HANDLE)]
         else:
             packages = self.packageManager().getPackages(common.PackageManager.GET_META_DATA | common.PackageManager.GET_ACTIVITIES)
 
-        for package in [p for p in packages if arguments.filter == None or p.packageName.upper().find(arguments.filter.upper()) >= 0]:
+        for package in [p for p in packages if arguments.filter is None or p.packageName.upper().find(arguments.filter.upper()) >= 0]:
             application = package.applicationInfo
 
             if (application.flags & Backup.FLAG_ALLOW_BACKUP) != 0:
                 self.stdout.write("Package: %s\n"%package.packageName)
                 self.stdout.write("  UID: %s\n"%application.uid)
                 self.stdout.write("  Backup Agent: %s\n"%application.backupAgentName)
-                if application.metaData != None and application.metaData.containsKey(Backup.API_KEY_HANDLE):
+                if application.metaData is not None and application.metaData.containsKey(Backup.API_KEY_HANDLE):
                     self.stdout.write("  API Key: %s\n" % application.metaData.getString(Backup.API_KEY_HANDLE))
                 else:
                     self.stdout.write("  API Key: Unknown\n")

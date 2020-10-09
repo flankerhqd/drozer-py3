@@ -51,11 +51,11 @@ class ApkBuilder(object):
         Test if all elements of the build path have been properly initialised.
         """
         
-        if self.sdk_path == None:
+        if self.sdk_path is None:
             raise RuntimeError("SDK is not defined. Please set SDK to the path to android.jar within the SDK.")
-        if self.javac == None:
+        if self.javac is None:
             raise RuntimeError("Could not find javac on your PATH.")
-        if self.dx == None:
+        if self.dx is None:
             raise RuntimeError("Could not find dx on your PATH.")
         
     def __execute(self, *argv):

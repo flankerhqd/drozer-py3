@@ -68,7 +68,7 @@ class SSLManager(cli.Base):
         
         path = provider.ca_path(skip_default=True)
 
-        if path == None or not os.path.exists(path):
+        if path is None or not os.path.exists(path):
             path = os.path.abspath(os.curdir)
         
         if provider.keypair_exists("drozer-ca", skip_default=True):
@@ -89,7 +89,7 @@ class SSLManager(cli.Base):
         Creates an SSL Keypair, signing it with the built-in CA.
         """
         
-        if arguments.subject == None or arguments.subject == "":
+        if arguments.subject is None or arguments.subject == "":
             print("Please specify the subject CN.")
         else:
             if provider.keypair_exists(arguments.subject):
@@ -106,7 +106,7 @@ class SSLManager(cli.Base):
                 p12_path, export_password = provider.make_pcks12(arguments.subject, key, certificate)
                 bks_path = provider.make_bks_key_store(arguments.subject, p12_path, export_password, arguments.bks[0], arguments.bks[1])
                 
-                if bks_path != None:
+                if bks_path is not None:
                     print("Created SSL keypair, %s: %s" % (arguments.subject, bks_path))
                 else:
                     print("There was a problem creating the BKS KeyStore.")

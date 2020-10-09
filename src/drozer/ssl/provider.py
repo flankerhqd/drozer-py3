@@ -30,7 +30,7 @@ class Provider(object):
         
         ca_path = Configuration.get("ssl", "ca_path")
         
-        if ca_path == None and skip_default == False:
+        if ca_path is None and skip_default == False:
             ca_path = os.path.join(os.path.dirname(__file__), "embedded_ca")
         
         return ca_path
@@ -75,7 +75,7 @@ class Provider(object):
         True, if the CA key file exists, and can be read.
         """
         
-        return self.ca_path() != None and os.path.exists(self.__ca_key_path())
+        return self.ca_path() is not None and os.path.exists(self.__ca_key_path())
     
     def key_material_exists(self):
         """
@@ -98,7 +98,7 @@ class Provider(object):
         True, if a keypair by the specified CN exists.
         """
         
-        if self.ca_path(skip_default) == None:
+        if self.ca_path(skip_default) is None:
             return False
         
         key, certificate = self.get_keypair(cn, skip_default)
@@ -124,7 +124,7 @@ class Provider(object):
                 "-srcstorepass", export_password,
                 "-alias", "drozer"]
         
-        if keytool != None:
+        if keytool is not None:
             if os.spawnve(os.P_WAIT, argv[0], argv, os.environ) == 0:
                 return self.__bks_path(cn)
         else:
@@ -154,7 +154,7 @@ class Provider(object):
                 "-provider", "org.bouncycastle.jce.provider.BouncyCastleProvider",
                 "-providerpath", os.path.abspath(os.path.join(os.path.dirname(__file__), "bcprov-ext-jdk15on-1.46.jar"))]
         
-        if keytool != None:
+        if keytool is not None:
             if os.spawnve(os.P_WAIT, argv[0], argv, os.environ) == 0:
                 return self.__bks_path('drozer-ca')
         else:
@@ -182,7 +182,7 @@ class Provider(object):
                 "-storetype", "JKS",
                 "-storepass", "drozer"]
         
-        if keytool != None:
+        if keytool is not None:
             if os.spawnve(os.P_WAIT, argv[0], argv, os.environ) == 0:
                 return self.__bks_path('drozer-ca')
         else:
@@ -199,7 +199,7 @@ class Provider(object):
         Prepare a PKCS12 package, given a key and a certificate.
         """
         
-        if export_password == None:
+        if export_password is None:
             export_password = ''.join(random.choice(list("abcdefghijklmnopqrstuvwxyz01234556789")) for x in range(12))
         
         pkcs12 = OpenSSL.crypto.PKCS12()
@@ -247,7 +247,7 @@ class Provider(object):
         
         known_certificate = self.trusted_certificate_for(peer)
         
-        if known_certificate == None:
+        if known_certificate is None:
             return -1
         elif known_certificate == self.digest(certificate):
             return 0

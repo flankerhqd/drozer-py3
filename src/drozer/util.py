@@ -13,9 +13,9 @@ def parse_server(server_string):
     host = DefaultHost
     port = DefaultPort
     
-    if server_string != None and server_string.find(":") == -1:
+    if server_string is not None and server_string.find(":") == -1:
         host = server_string
-    elif server_string != None:
+    elif server_string is not None:
         host, port = server_string.split(":", 1)
     
     return (socket.gethostbyname(host), int(port))

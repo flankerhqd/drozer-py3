@@ -48,7 +48,7 @@ class PayloadManager(cli.Base):
         
         args, unknown = self.parse_known_args(self._parser, argv)
         
-        if hasattr(args, 'module') and args.module != None and args.module != "":
+        if hasattr(args, 'module') and args.module is not None and args.module != "":
             self.builder.module(args.module).add_arguments(self._parser)
         
     def get_completion_suggestions(self, action, text, line, **kwargs):

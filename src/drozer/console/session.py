@@ -67,7 +67,7 @@ class Session(cmd.Cmd):
         
         self.__load_variables()
         
-        if arguments.onecmd == None:
+        if arguments.onecmd is None:
             self.__print_banner()
 
     def completefilename(self, text, line, begidx, endidx):
@@ -516,8 +516,8 @@ class Session(cmd.Cmd):
         self.stdout.write(wrap(textwrap.dedent(self.help_intents.__doc__).strip() + "\n\n", console.get_size()[0]))
     
     def has_context(self):
-        if self.__has_context == None:
-            self.__has_context = not self.reflector.resolve("com.mwr.dz.Agent").getContext() == None
+        if self.__has_context is None:
+            self.__has_context = not self.reflector.resolve("com.mwr.dz.Agent").getContext() is None
             
         return self.__has_context == True
     
@@ -526,14 +526,14 @@ class Session(cmd.Cmd):
         Retrieves the set of permissions that we have in this session.
         """
         
-        if self.__permissions == None and self.has_context():
+        if self.__permissions is None and self.has_context():
             pm = self.reflector.resolve("android.content.pm.PackageManager")
             packageName = str(self.context().getPackageName())
             packageManager = self.context().getPackageManager()
             
             package = packageManager.getPackageInfo(packageName, pm.GET_PERMISSIONS)
             self.__permissions = []
-            if package.requestedPermissions != None:
+            if package.requestedPermissions is not None:
                 requestedPermissions = [str(p) for p in package.requestedPermissions]
                 
                 for permission in requestedPermissions:
@@ -542,7 +542,7 @@ class Session(cmd.Cmd):
                         self.__permissions.append(str(permission))
             
             self.__permissions.append("com.mwr.dz.permissions.GET_CONTEXT")
-        elif self.__permissions == None:
+        elif self.__permissions is None:
             self.__permissions = []
         
         return self.__permissions
@@ -558,7 +558,7 @@ class Session(cmd.Cmd):
             return
         try:
             latest = meta.latest_version()
-            if latest != None:
+            if latest is not None:
                 if meta.version > latest:
                     print("It seems that you are running a drozer pre-release. Brilliant!\n\nPlease send any bugs, feature requests or other feedback to our Github project:\nhttp://github.com/mwrlabs/drozer.\n\nYour contributions help us to make drozer awesome.\n")
                 elif meta.version < latest:
@@ -613,13 +613,13 @@ class Session(cmd.Cmd):
         except KeyError:
             pass
 
-        if module == None:
+        if module is None:
             try:
                 module = self.modules.get(key)
             except KeyError:
                 pass
 
-        if module == None:
+        if module is None:
             raise KeyError(key)
         else:
             return module(self)

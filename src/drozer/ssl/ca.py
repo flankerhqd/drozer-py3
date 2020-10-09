@@ -59,7 +59,7 @@ class CA(object):
         Returns True if this CA is initialised.
         """
         
-        return self.ca_key != None and self.ca_cert != None
+        return self.ca_key is not None and self.ca_cert is not None
     
     def load(self, key, cert):
         """

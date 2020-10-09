@@ -31,7 +31,7 @@ class AgentManager(cli.Base):
         
         if arguments.rogue or arguments.no_gui:
             e = manifest.Endpoint(packager.endpoint_path())
-            if arguments.server != None:
+            if arguments.server is not None:
                 e.put_server(arguments.server)
             e.write()
             
@@ -42,11 +42,11 @@ class AgentManager(cli.Base):
         else:
             permissions = set([])
         
-        if arguments.permission != None:
+        if arguments.permission is not None:
             permissions = permissions.union(arguments.permission)
 
         defined_permissions = {}
-        if arguments.define_permission != None:
+        if arguments.define_permission is not None:
             defined_permissions = dict(itertools.zip_longest(*[iter(arguments.define_permission)] * 2, fillvalue=""))
 
         # add extra permissions to the Manifest file

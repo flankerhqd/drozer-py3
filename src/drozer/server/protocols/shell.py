@@ -20,12 +20,12 @@ class ShellCollector(Protocol):
         self.transport.write("\n")
     
     def dataReceived(self, data):
-        if self.shell == None:
+        if self.shell is None:
             if data.strip() in shells:
                 self.shell = shells[data.strip()]
                 self.shell.collector = self
             
-            if self.shell == None:
+            if self.shell is None:
                 self.transport.write("Shell: ")
             else:
                 self.transport.write("Selecting Shell: %s\n" % data)
@@ -52,6 +52,6 @@ class ShellServer(Protocol):
         self.__logger.info("accepted shell from %s:%d" % (str(peer.host), peer.port))
     
     def dataReceived(self, data):
-        if self.collector != None:
+        if self.collector is not None:
             self.collector.transport.write(data)
         

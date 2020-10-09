@@ -38,7 +38,7 @@ class Reflector:
 
         response = self.sendAndReceive(ReflectionRequestFactory.delete(robj._ref))
 
-        return response != None and response.reflection_response.status == Message.ReflectionResponse.SUCCESS
+        return response is not None and response.reflection_response.status == Message.ReflectionResponse.SUCCESS
 
     def deleteAll(self):
         """

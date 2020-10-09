@@ -66,11 +66,11 @@ class ReflectedType(object):
         from .reflected_primitive import ReflectedPrimitive
         from .reflected_string import ReflectedString
 
-        if obj_type == None and isinstance(obj, ReflectedType) or obj_type == "object":
+        if obj_type is None and isinstance(obj, ReflectedType) or obj_type == "object":
             return obj
-        elif obj_type == None and isinstance(obj, int) and -sys.maxsize - 1 < obj < sys.maxsize or obj_type == "int":
+        elif obj_type is None and isinstance(obj, int) and -sys.maxsize - 1 < obj < sys.maxsize or obj_type == "int":
             return ReflectedPrimitive("int", obj, reflector=reflector)
-        elif obj_type == None and isinstance(obj, int) or obj_type == "long":
+        elif obj_type is None and isinstance(obj, int) or obj_type == "long":
             return ReflectedPrimitive("long", obj, reflector=reflector)
         elif obj_type == "byte" and isinstance(obj, int):
             return ReflectedPrimitive("byte", obj, reflector=reflector)
@@ -78,13 +78,13 @@ class ReflectedType(object):
             return ReflectedPrimitive("char", obj, reflector=reflector)
         elif obj_type == "short":
             return ReflectedPrimitive("short", obj, reflector=reflector)
-        elif obj_type == None and isinstance(obj, float) or obj_type == "float":
+        elif obj_type is None and isinstance(obj, float) or obj_type == "float":
             return ReflectedPrimitive("float", obj, reflector=reflector)
-        elif obj_type == None and isinstance(obj, bool) or obj_type == "boolean":
+        elif obj_type is None and isinstance(obj, bool) or obj_type == "boolean":
             return ReflectedPrimitive("boolean", obj, reflector=reflector)
-        elif obj_type == None and isinstance(obj, bytes) or obj_type == "data":
+        elif obj_type is None and isinstance(obj, bytes) or obj_type == "data":
             return ReflectedBinary(obj, reflector=reflector)
-        elif obj_type == None and isinstance(obj, str) or obj_type == "string":
+        elif obj_type is None and isinstance(obj, str) or obj_type == "string":
             return ReflectedString(obj, reflector=reflector)
         elif obj_type == "double":
             return ReflectedPrimitive("double", obj, reflector=reflector)

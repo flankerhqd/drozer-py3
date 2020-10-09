@@ -68,7 +68,7 @@ class Console(cli.Base):
                 if len(arguments.file) > 0:
                     session.do_load(" ".join(arguments.file))
                     session.do_exit("")
-                elif arguments.onecmd != None:
+                elif arguments.onecmd is not None:
                     session.onecmd(arguments.onecmd)
                     session.do_exit("")
                 else:
@@ -152,7 +152,7 @@ class Console(cli.Base):
         Determines which device to request after connecting to the server.
         """
 
-        if arguments.device == None:
+        if arguments.device is None:
             devices = self.__getServerConnector(arguments).listDevices().system_response.devices
 
             if len(devices) == 1:
@@ -177,7 +177,7 @@ class Console(cli.Base):
         Get a Server object which provides a connection to the selected server.
         """
 
-        if self.__server == None:
+        if self.__server is None:
             self.__server = ServerConnector(arguments, self.__manage_trust)
 
         return self.__server

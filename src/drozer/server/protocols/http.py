@@ -48,7 +48,7 @@ class HTTP(HttpReceiver):
             
             resource = self.__file_provider.get(request.resource)
             
-            if resource != None and resource.reserved:
+            if resource is not None and resource.reserved:
                 resource = ErrorResource(request.resource, 403, "You are not authorized to delete the resource %s.")
             else:
                 self.__file_provider.delete(request.resource)
@@ -72,7 +72,7 @@ class HTTP(HttpReceiver):
             else:
                 resource = self.__file_provider.get(request.resource)
                 
-                if resource != None and resource.reserved:
+                if resource is not None and resource.reserved:
                     resource = ErrorResource(request.resource, 403, "You are not authorized to write the resource %s.")
                 else:
                     if "Content-Type" in request.headers:
@@ -95,7 +95,7 @@ class HTTP(HttpReceiver):
 
                     print(request.headers)
                     
-                    if magic != None and self.__file_provider.has_magic_for(magic) and self.__file_provider.get_by_magic(magic).resource != request.resource:
+                    if magic is not None and self.__file_provider.has_magic_for(magic) and self.__file_provider.get_by_magic(magic).resource != request.resource:
                         resource = ErrorResource(request.resource, 409, "Could not create %s. The specified magic has already been assigned to another resource.")
                     elif self.__file_provider.create(request.resource, request.body, magic=magic, mimetype=mimetype, multipart=multipart, custom_headers=custom_headers):
                         resource = CreatedResource(request.resource)
@@ -103,9 +103,9 @@ class HTTP(HttpReceiver):
                         resource = ErrorResource(request.resource, 500, "The server encountered an error whilst creating the resource %s.")
 
         httpResponse = resource.getResponse(request)
-        if httpResponse != None and request.verb == "GET":
+        if httpResponse is not None and request.verb == "GET":
             resource.download(request.resource)
-        if httpResponse != None and request.verb == "HEAD":
+        if httpResponse is not None and request.verb == "HEAD":
             httpResponse.body = None
  
         self.transport.write(str(httpResponse))
