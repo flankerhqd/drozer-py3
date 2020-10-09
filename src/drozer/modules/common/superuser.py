@@ -9,50 +9,50 @@ class SuperUser(file_system.FileSystem):
     of "minimal su" on the Agent.
     """
 
-    def suPath(self):
+    def suPath(self) -> str:
         """
         Get the path to which su is uploaded on the Agent.
         """
 
         return "%s/su" % (self.workingDir())
 
-    def _localPathMinimalSu(self):
+    def _localPathMinimalSu(self) -> str:
         """
         Get the path to the su binary on the local system.
         """
 
         return os.path.join(os.path.dirname(__file__) , "..", "tools", "setup", "minimal-su", "libs", "armeabi", "su")
 
-    def __agentPathScript(self):
+    def __agentPathScript(self) -> str:
         """
         Get the path to which the install script is uploaded on the Agent.
         """
 
         return "%s/install-minimal-su.sh" % (self.workingDir())
 
-    def isAnySuInstalled(self):
+    def isAnySuInstalled(self) -> bool:
         """
         Test whether any su binary is installed on the Agent.
         """
         
-        return (self.exists("/system/bin/su") or self.exists("/system/xbin/su"))
+        return self.exists("/system/bin/su") or self.exists("/system/xbin/su")
             
-    def isMinimalSuInstalled(self):
+    def isMinimalSuInstalled(self) -> bool:
         """
         
         Test whether the 'minimal su' binary is installed on the Agent.
         """
         
-        return (self.md5sum("/system/bin/su") == fs.md5sum(self._localPathMinimalSu()))
+        return self.md5sum("/system/bin/su") == fs.md5sum(self._localPathMinimalSu())
 
-    def suExec(self, command):
+    def suExec(self, command: str):
         """
         Execute a command as root, using minimal-su
         """
 
         self.shellExec("su -c \"" + command + "\"")
 
-    def uploadMinimalSu(self):
+    def uploadMinimalSu(self) -> bool:
         """
         Upload minimal su to the Agent.
         """
@@ -67,7 +67,7 @@ class SuperUser(file_system.FileSystem):
         else:
             return False
 
-    def uploadMinimalSuInstallScript(self):
+    def uploadMinimalSuInstallScript(self) -> bool:
         """
         Upload minimal su install script to the Agent.
         """

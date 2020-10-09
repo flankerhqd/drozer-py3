@@ -7,7 +7,7 @@ class Shell(file_system.FileSystem, loader.ClassLoader):
     Wrapper around the Android Shell, that allows commands to be executed.
     """
 
-    def shellExec(self, command):
+    def shellExec(self, command: str) -> str:
         """
         Execute a single Shell command on the Agent.
         """
@@ -52,7 +52,7 @@ class Shell(file_system.FileSystem, loader.ClassLoader):
             
         shell.close()
             
-    def __get_variables(self):
+    def __get_variables(self) -> str:
         return "; ".join(["export %s=\"%s\"" % (k, self.variables[k]) for k in self.variables])
         
     def __send_variables(self, shell):

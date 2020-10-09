@@ -5,7 +5,7 @@ class ZipFile(loader.ClassLoader):
     Utility methods for interacting with zipped archive files.
     """
 
-    def extractFromZip(self, target, source, destination):
+    def extractFromZip(self, target: str, source: str, destination: str):
         """
         Extract a file (target) from a zipped archive (source) and save it to
         the file system (destination).

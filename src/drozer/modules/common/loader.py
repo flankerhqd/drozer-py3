@@ -11,7 +11,7 @@ class ClassLoader(object):
     the Dalvik VM on the Agent.
     """
 
-    def loadClass(self, source, klass, relative_to=None):
+    def loadClass(self, source: str, klass: str, relative_to=None):
         """
         Load a Class from a local apk file (source) on the running Dalvik VM.
         """
@@ -34,7 +34,7 @@ class ClassLoader(object):
             Module.cache_klass(".".join([source, klass]), classloader.loadClass(klass))
         return Module.get_cached_klass(".".join([source, klass]))
 
-    def __get_cache_path(self):
+    def __get_cache_path(self) -> str:
         """
         Get a working path, to which the compiled will be unpacked.
         """

@@ -172,7 +172,7 @@ class Console(cli.Base):
         else:
             return arguments.device
 
-    def __getServerConnector(self, arguments):
+    def __getServerConnector(self, arguments) -> ServerConnector:
         """
         Get a Server object which provides a connection to the selected server.
         """
@@ -206,7 +206,7 @@ class Console(cli.Base):
                 print("WARNING: this host has previously used a certificate with the fingerprint:")
                 print("%s\n" % provider.trusted_certificate_for(peer))
             
-            while(True):
+            while True:
                 print("Do you want to accept this certificate? [yna] ", end=' ')
                 
                 selection = input().strip().lower()

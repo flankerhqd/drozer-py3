@@ -34,7 +34,7 @@ class Base(object):
         Ask the user to select from a list of options. 
         """
         
-        while(True):
+        while True:
             selection = self.ask("%s [%s] " % (prompt, "".join(options)))
             
             if selection in options:

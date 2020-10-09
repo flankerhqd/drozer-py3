@@ -11,14 +11,14 @@ class FileSystem(object):
     Utility methods for interacting with the Agent's file system.
     """
 
-    def cacheDir(self):
+    def cacheDir(self) -> str:
         """
         Get the full path to the Agent's cache directory.
         """
 
         return str(self.getContext().getCacheDir().toString())
 
-    def deleteFile(self, source):
+    def deleteFile(self, source: str) -> Optional[bool]:
         """
         Delete a file from the Agent's file system.
         """
@@ -30,7 +30,7 @@ class FileSystem(object):
         else:
             return None
 
-    def downloadFile(self, source, destination, block_size=65536):
+    def downloadFile(self, source: str, destination, block_size=65536) -> Optional[int]:
         """
         Copy a file from the Agent's file system to the local one.
         """
@@ -49,7 +49,7 @@ class FileSystem(object):
         else:
             return None
 
-    def ensureDirectory(self, target):
+    def ensureDirectory(self, target: str) -> bool:
         """
         Tests whether a directory exists, on the Agent's file system, and creates
         it if it does not.
@@ -62,7 +62,7 @@ class FileSystem(object):
         else:
             return True
 
-    def exists(self, target):
+    def exists(self, target: str) -> bool:
         """
         Test whether or not a file exists on the Agent's file system.
         """
@@ -71,7 +71,7 @@ class FileSystem(object):
 
         return file_io.exists()
 
-    def fileSize(self, source):
+    def fileSize(self, source: str) -> Optional[int]:
         """
         Get the size of a file on the Agent's file system.
         """
@@ -83,7 +83,7 @@ class FileSystem(object):
         else:
             return None
 
-    def format_file_size(self, size):
+    def format_file_size(self, size: int) -> str:
         """
         Return the size of a file in human-readable form (i.e., x KiB).
         """
@@ -99,7 +99,7 @@ class FileSystem(object):
 
         return "%3.1f%s" % (size, 'TiB')
 
-    def isDirectory(self, target):
+    def isDirectory(self, target: str) -> bool:
         """
         Test whether a target exists, and is a directory.
         """
@@ -108,7 +108,7 @@ class FileSystem(object):
 
         return file_io.exists() and file_io.isDirectory()
 
-    def isFile(self, target):
+    def isFile(self, target: str) -> bool:
         """
         Test whether a target exists, and is a normal file.
         """
@@ -117,7 +117,7 @@ class FileSystem(object):
 
         return file_io.exists() and file_io.isFile()
 
-    def listFiles(self, target):
+    def listFiles(self, target: str) -> bool:
         """
         Gets a list of all files in the folder target.
         """
@@ -126,7 +126,7 @@ class FileSystem(object):
 
         return ["%s%s" % (s, '/') if file_io.isDirectory() else s for s in file_io.list()]
 
-    def md5sum(self, source):
+    def md5sum(self, source: str) -> Optional[str]:
         """
         Calculate the MD5 checksum of a file on the Agent's file system.
         """
@@ -149,7 +149,7 @@ class FileSystem(object):
         except FtpException:
             return None
 
-    def uploadFile(self, source: str, destination, block_size=65536):
+    def uploadFile(self, source: str, destination, block_size=65536) -> Optional[int]:
         """
         Copy a file from the local file system to the Agent's.
         """
@@ -159,7 +159,7 @@ class FileSystem(object):
 
         return self.writeFile(destination, open(source, 'rb').read(), block_size=block_size)
 
-    def workingDir(self):
+    def workingDir(self) -> str:
         """
         Get the full path to the Agent's working directory.
         """

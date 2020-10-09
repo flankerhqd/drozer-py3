@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 from . import file_system, shell
 
@@ -7,14 +8,14 @@ class BusyBox(shell.Shell):
     Utility methods for installing and using Busybox on the Agent.
     """
 
-    def busyboxPath(self):
+    def busyboxPath(self) -> str:
         """
         Get the path to which Busybox is installed on the Agent.
         """
 
         return self.workingDir() + "/bin/busybox"
 
-    def _localPath(self,arch,pie):
+    def _localPath(self, arch: str, pie: bool) -> Optional[str]:
         """
         Get the path to the Busybox binary on the local system.
         """
@@ -28,21 +29,21 @@ class BusyBox(shell.Shell):
         else:
             return None
 
-    def busyBoxExec(self, command):
+    def busyBoxExec(self, command: str) -> str:
         """
         Execute a command using Busybox.
         """
 
         return self.shellExec("%s %s" % (self.busyboxPath(), command))
 
-    def isBusyBoxInstalled(self):
+    def isBusyBoxInstalled(self) -> bool:
         """
         Test whether Busybox is installed on the Agent.
         """
 
         return self.exists(self.busyboxPath())
 
-    def installBusyBox(self,arch,pie):
+    def installBusyBox(self, arch: str, pie: bool) -> bool:
         """
         Install Busybox on the Agent.
         """

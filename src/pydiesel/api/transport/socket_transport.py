@@ -1,6 +1,6 @@
 import socket
 import ssl
-from typing import Optional, List
+from typing import Optional, List, Tuple
 
 from .. import Frame
 from .exceptions import ConnectionError
@@ -104,7 +104,7 @@ class SocketTransport(Transport):
 
         message_id = self.send(message)
 
-        while(True):
+        while True:
             response = self.receive()
 
             if response is None:
@@ -119,7 +119,7 @@ class SocketTransport(Transport):
         
         self.__socket.settimeout(timeout)
 
-    def __getEndpoint(self, arguments):
+    def __getEndpoint(self, arguments) -> Optional[Tuple[str, int]]:
         """
         Decode the Server endpoint parameters, from an ArgumentParser arguments
         object with a server member.
@@ -139,7 +139,7 @@ class SocketTransport(Transport):
             host = endpoint
             port = self.DefaultPort
         
-        return (host, int(port))
+        return host, int(port)
 
     def adb(self, s: str):
         return ('%04x' % len(s)).encode('ascii') + s.encode()

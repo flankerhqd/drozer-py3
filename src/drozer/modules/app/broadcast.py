@@ -188,7 +188,7 @@ class Sniff(Module, common.loader.ClassLoader):
             self.stdout.write("[-] No broadcast receiver registered. However, this will still receive intents from previously registered receivers.\n")
 
         self.stdout.write("[*] Output is updated once a second. Press Control+C to exit.\n\n") 
-        while (True):
+        while True:
             output = broadcast.getOutput()
             if str(output) == "":
                 time.sleep(1)

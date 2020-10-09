@@ -20,6 +20,7 @@ from .sequencer import Sequencer
 
 from .. import meta
 from ..configuration import Configuration
+from ..connector import ServerConnector
 from ..modules import collection, common, loader, Module
 from ..repoman import ModuleManager
 
@@ -30,7 +31,7 @@ class Session(cmd.Cmd):
     Type `help COMMAND` for more information on a particular command, or `help MODULE` for a particular module.
     """
 
-    def __init__(self, server, session_id, arguments):
+    def __init__(self, server: ServerConnector, session_id: str, arguments):
         cmd.Cmd.__init__(self)
         self.__base = ""
         self.__has_context = None
@@ -515,11 +516,11 @@ class Session(cmd.Cmd):
         
         self.stdout.write(wrap(textwrap.dedent(self.help_intents.__doc__).strip() + "\n\n", console.get_size()[0]))
     
-    def has_context(self):
+    def has_context(self) -> bool:
         if self.__has_context is None:
             self.__has_context = not self.reflector.resolve("com.mwr.dz.Agent").getContext() is None
             
-        return self.__has_context == True
+        return self.__has_context
     
     def permissions(self):
         """
@@ -538,7 +539,7 @@ class Session(cmd.Cmd):
                 
                 for permission in requestedPermissions:
                     #Check for PERMISSION_GRANTED
-                    if packageManager.checkPermission(str(permission), packageName) == pm.PERMISSION_GRANTED:
+                    if (packageManager.checkPermission(str(permission), packageName) == pm.PERMISSION_GRANTED):
                         self.__permissions.append(str(permission))
             
             self.__permissions.append("com.mwr.dz.permissions.GET_CONTEXT")
@@ -731,14 +732,15 @@ class Session(cmd.Cmd):
 
         return True
 
+
 class DebugSession(Session):
     """
     DebugSession is a subclass of Session, which rewrites the default error
     handlers to print stacktrace information.
     """
 
-    def __init__(self, server, session_id, arguments):
-        Session.__init__(self, server, session_id, arguments)
+    def __init__(self, server: ServerConnector, session_id: str, arguments):
+        super().__init__(server, session_id, arguments)
 
         self.intro = "drozer Console (v%s debug mode)" % meta.version
         self.prompt = "dz> "

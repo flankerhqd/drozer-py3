@@ -115,7 +115,7 @@ class ModuleManager(cli.Base):
                 print("  %5d  %s" % (i+1, repositories[i]))
             print()
             
-            while(True):
+            while True:
                 print("repo>", end=' ')
                 try:
                     idx = int(input().strip())
