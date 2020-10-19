@@ -52,6 +52,7 @@ def get_pwd():
 
 	return pwd
 
+PREBUILT_APKS = ['shrink.apk']
 def clear_apks():
 	pwd = get_pwd()
 
@@ -62,7 +63,7 @@ def clear_apks():
 
 	for root, dirnames, filenames in os.walk(pwd):
 		for filename in filenames:
-			if (fnmatch.fnmatch(filename, "*.class") or fnmatch.fnmatch(filename, "*.apk")):
+			if fnmatch.fnmatch(filename, "*.class") or fnmatch.fnmatch(filename, "*.apk") and filename not in PREBUILT_APKS:
 				#print os.path.join(root, filename)
 				os.remove(os.path.join(root, filename))
 
