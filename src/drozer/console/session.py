@@ -4,6 +4,7 @@ import shlex
 import sys
 import textwrap
 import traceback
+from typing import List
 
 from pydiesel.api.protobuf_pb2 import Message
 from pydiesel.api.transport.exceptions import ConnectionError
@@ -518,11 +519,10 @@ class Session(cmd.Cmd):
     
     def has_context(self) -> bool:
         if self.__has_context is None:
-            self.__has_context = not self.reflector.resolve("com.mwr.dz.Agent").getContext() is None
-            
+            self.__has_context = self.reflector.resolve("com.mwr.dz.Agent").getContext().__ne__(None)
         return self.__has_context
     
-    def permissions(self):
+    def permissions(self) -> List[str]:
         """
         Retrieves the set of permissions that we have in this session.
         """
@@ -534,7 +534,7 @@ class Session(cmd.Cmd):
             
             package = packageManager.getPackageInfo(packageName, pm.GET_PERMISSIONS)
             self.__permissions = []
-            if package.requestedPermissions is not None:
+            if package.requestedPermissions.__ne__(None):
                 requestedPermissions = [str(p) for p in package.requestedPermissions]
                 
                 for permission in requestedPermissions:

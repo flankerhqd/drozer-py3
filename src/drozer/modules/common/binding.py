@@ -23,7 +23,7 @@ class ServiceBinding(loader.ClassLoader):
             return self.binder.getMessage()
 
         def add_extra(self, extra):
-            if self.bundle is None:
+            if self.bundle.__eq__(None):
                 self.bundle = self.context.new("android.os.Bundle")
                 
             if extra[0] == "integer":
@@ -49,7 +49,7 @@ class ServiceBinding(loader.ClassLoader):
             self.bundle = bundle
 
         def obtain_binder(self):
-            if self.binder is None:
+            if self.binder.__eq__(None):
                 ServiceBinder = self.context.loadClass("common/ServiceBinder.apk", "ServiceBinder")
                 
                 self.binder = self.context.new(ServiceBinder)
@@ -66,7 +66,7 @@ class ServiceBinding(loader.ClassLoader):
             binder = self.obtain_binder()
             message = self.obtain_message(msg)
             
-            if self.bundle is not None:
+            if self.bundle.__ne__(None):
                 if self.objFormat.upper() == "SETDATA":
                     message.setData(self.bundle)
                 

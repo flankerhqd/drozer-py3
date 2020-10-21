@@ -102,12 +102,12 @@ class Info(Module, common.Filters, common.IntentFilter, common.PackageManager):
     def __print_activity(self, package, activity, prefix, include_intent_filters):
         self.stdout.write("%s%s\n" % (prefix, activity.name))
         
-        if activity._has_property("parentActivityName") and activity.parentActivityName is not None:
+        if activity._has_property("parentActivityName") and activity.parentActivityName.__ne__(None):
             self.stdout.write("%s  Parent Activity: %s\n" % (prefix, activity.parentActivityName))
 
         self.stdout.write("%s  Permission: %s\n" % (prefix, activity.permission))
         
-        if activity.targetActivity is not None:
+        if activity.targetActivity.__ne__(None):
             self.stdout.write("%s  Target Activity: %s\n" % (prefix, activity.targetActivity))
         if include_intent_filters:
             intent_filters = self.find_intent_filters(activity, 'activity')

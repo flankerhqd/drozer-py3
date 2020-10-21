@@ -61,6 +61,6 @@ class Traversal(Module, common.FileSystem, common.PackageManager, common.Provide
             else:
                 raise
     
-        if data is not None and len(data) > 0:
+        if data.__ne__(None) and len(data) > 0:
             vulnerable.add(uri)
             

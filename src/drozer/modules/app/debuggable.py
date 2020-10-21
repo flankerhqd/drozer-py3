@@ -28,7 +28,7 @@ class Debuggable(Module, common.Filters, common.PackageManager):
                     self.stdout.write("  Permissions:\n")
 
                     permissions = package.requestedPermissions
-                    if permissions is not None:
+                    if permissions.__ne__(None):
                         for permission in permissions:
                             self.stdout.write("   - %s\n"%permission)
                     else:

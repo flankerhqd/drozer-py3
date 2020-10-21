@@ -26,7 +26,7 @@ class FindUris(Module, common.FileSystem, common.PackageManager, common.Provider
             except ReflectionException:
                 response = None
             
-            if response is None:
+            if response.__eq__(None):
                 self.stdout.write("Unable to Query  %s\n" % uri)
             else:
                 self.stdout.write("Able to Query    %s\n" % uri)

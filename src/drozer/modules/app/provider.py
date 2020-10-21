@@ -23,9 +23,9 @@ class Columns(Module, common.Provider, common.TableFormatter):
     def execute(self, arguments):
         c = self.contentResolver().query(arguments.uri)
 
-        if c is not None:
+        if c.__ne__(None):
             columns = c.getColumnNames()
-            c.close();
+            c.close()
 
             self.print_table([columns])
         else:
@@ -231,12 +231,12 @@ Finding content providers that do not require permissions to read/write:
         self.stdout.write("%s  Content Provider: %s\n" % (prefix, provider.name))
         self.stdout.write("%s  Multiprocess Allowed: %s\n" % (prefix, provider.multiprocess))
         self.stdout.write("%s  Grant Uri Permissions: %s\n" % (prefix, provider.grantUriPermissions))
-        if provider.uriPermissionPatterns is not None:
+        if provider.uriPermissionPatterns.__ne__(None):
             self.stdout.write("%s  Uri Permission Patterns:\n" % prefix)
             for pattern in provider.uriPermissionPatterns:
                 self.stdout.write("%s    Path: %s\n" % (prefix, pattern.getPath()))
                 self.stdout.write("%s      Type: %s\n" % (prefix, Info.PatternMatcherTypes[int(pattern.getType())]))
-        if provider.pathPermissions is not None:
+        if provider.pathPermissions.__ne__(None):
             self.stdout.write("%s  Path Permissions:\n" % prefix)
             for permission in provider.pathPermissions:
                 self.stdout.write("%s    Path: %s\n" % (prefix, permission.getPath()))
@@ -338,7 +338,7 @@ Querying, with a WHERE clause in the SELECT statement:
     def execute(self, arguments):
         c = self.contentResolver().query(arguments.uri, arguments.projection, arguments.selection, arguments.selection_args, arguments.order)
 
-        if c is not None:
+        if c.__ne__(None):
             rows = self.getResultSet(c)
 
             self.print_table(rows, show_headers=True, vertical=arguments.vertical)

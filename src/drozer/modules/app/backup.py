@@ -30,7 +30,7 @@ class Backup(Module, common.Filters, common.PackageManager):
                 self.stdout.write("Package: %s\n"%package.packageName)
                 self.stdout.write("  UID: %s\n"%application.uid)
                 self.stdout.write("  Backup Agent: %s\n"%application.backupAgentName)
-                if application.metaData is not None and application.metaData.containsKey(Backup.API_KEY_HANDLE):
+                if application.metaData.__ne__(None) and application.metaData.containsKey(Backup.API_KEY_HANDLE):
                     self.stdout.write("  API Key: %s\n" % application.metaData.getString(Backup.API_KEY_HANDLE))
                 else:
                     self.stdout.write("  API Key: Unknown\n")

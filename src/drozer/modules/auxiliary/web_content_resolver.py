@@ -153,7 +153,7 @@ class Handler(BaseHTTPRequestHandler):
         cursor = self.module.contentResolver().query(uri, projection is not None and projection.split(",") or None, selection, selectionArgs is not None and selectionArgs.split(",") or None, sortOrder)
         output = "<table><thead><tr>"
 
-        if cursor is not None:
+        if cursor.__ne__(None):
             rows = self.module.getResultSet(cursor)
 
             for v in rows[0]:

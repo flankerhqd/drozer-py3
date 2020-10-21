@@ -43,7 +43,7 @@ class AttackSurface(Module, common.Filters, common.PackageManager):
             if (application.flags & application.FLAG_DEBUGGABLE) != 0:
                 self.stdout.write("    is debuggable\n")
 
-            if package.sharedUserId is not None:
+            if package.sharedUserId.__ne__(None):
                 self.stdout.write("    Shared UID (%s)\n" % package.sharedUserId)
         else:
             self.stdout.write("No package specified\n")
@@ -140,7 +140,7 @@ Finding all packages with the "INSTALL_PACKAGES" permission:
         intent_matches = not (arguments.show_intent_filters and arguments.filter)
 
         if not intent_matches and arguments.filter is not None:
-            if activities is not None:
+            if activities.__ne__(None):
                 for activity in activities:
                     if not intent_matches:
                         for intent_filter in self.find_intent_filters(activity, 'activity'):
@@ -164,7 +164,7 @@ Finding all packages with the "INSTALL_PACKAGES" permission:
                     else:
                         break
 
-            if services is not None:
+            if services.__ne__(None):
                 for service in services:
                     if not intent_matches:
                         for intent_filter in self.find_intent_filters(service, 'service'):
@@ -188,7 +188,14 @@ Finding all packages with the "INSTALL_PACKAGES" permission:
                     else:
                         break
 
-        if (arguments.defines_permission is None or package.permissions is not None and True in [p.name.upper().find(arguments.defines_permission.upper()) >= 0 for p in package.permissions]) and (arguments.filter is None or package.packageName.upper().find(arguments.filter.upper()) >= 0 or self.packageManager().getApplicationLabel(package.packageName).upper().find(arguments.filter.upper()) >= 0) and (arguments.gid is None or package.gids is not None and True in [g == int(arguments.gid) for g in package.gids]) and (arguments.permission is None or package.requestedPermissions is not None and True in [p.upper().find(arguments.permission.upper()) >= 0 for p in package.requestedPermissions]) and (arguments.uid is None or arguments.uid == str(package.applicationInfo.uid)) and intent_matches:
+        if (arguments.defines_permission is None or package.permissions.__ne__(None) and any(p.name.upper().find(arguments.defines_permission.upper()) >= 0 for p in package.permissions)) \
+                and (arguments.filter is None
+                     or package.packageName.upper().find(arguments.filter.upper()) >= 0
+                     or self.packageManager().getApplicationLabel(package.packageName).upper().find(arguments.filter.upper()) >= 0) \
+                and (arguments.gid is None or package.gids.__ne__(None) and any(g == int(arguments.gid) for g in package.gids)) \
+                and (arguments.permission is None or package.requestedPermissions.__ne__(None) and any(p.upper().find(arguments.permission.upper()) >= 0 for p in package.requestedPermissions)) \
+                and (arguments.uid is None or arguments.uid == str(package.applicationInfo.uid)) \
+                and intent_matches:
             self.stdout.write("Package: %s\n" % application.packageName)
             self.stdout.write("  Application Label: %s\n" % self.packageManager().getApplicationLabel(application.packageName))
             self.stdout.write("  Process Name: %s\n" % application.processName)
@@ -196,20 +203,20 @@ Finding all packages with the "INSTALL_PACKAGES" permission:
             self.stdout.write("  Data Directory: %s\n" % application.dataDir)
             self.stdout.write("  APK Path: %s\n" % application.publicSourceDir)
             self.stdout.write("  UID: %s\n" % application.uid)
-            if package.gids is not None:
+            if package.gids.__ne__(None):
                 self.stdout.write("  GID: %s\n" % package.gids)
             else:
                 self.stdout.write("  GID: None\n")
             self.stdout.write("  Shared Libraries: %s\n" % application.sharedLibraryFiles)
             self.stdout.write("  Shared User ID: %s\n" % package.sharedUserId)
             self.stdout.write("  Uses Permissions:\n")
-            if package.requestedPermissions is not None:
+            if package.requestedPermissions.__ne__(None):
                 for permission in package.requestedPermissions:
                     self.stdout.write("  - %s\n" % permission)
             else:
                 self.stdout.write("  - None\n")
             self.stdout.write("  Defines Permissions:\n")
-            if package.permissions is not None:
+            if package.permissions.__ne__(None):
                 for permission in package.permissions:
                     self.stdout.write("  - %s\n" % permission.name)
             else:
@@ -218,7 +225,7 @@ Finding all packages with the "INSTALL_PACKAGES" permission:
                 ifcount = 0
                 self.stdout.write("  Intent Filters:\n")
 
-                if activities is not None:
+                if activities.__ne__(None):
                     for activity in activities:
                        intent_filters = self.find_intent_filters(activity, 'activity')
                        if len(intent_filters) > 0:
@@ -227,7 +234,7 @@ Finding all packages with the "INSTALL_PACKAGES" permission:
                            self.stdout.write("  - %s\n" % activity.name)
                            self.__print_intent_filters(intent_filters)
 
-                if services is not None:
+                if services.__ne__(None):
                     for service in services:
                         intent_filters = self.find_intent_filters(service, 'service')
                         if len(intent_filters) > 0:
@@ -272,7 +279,7 @@ class LaunchIntent(Module, common.PackageManager):
     def execute(self, arguments):
         intent = self.packageManager().getLaunchIntentForPackage(arguments.package)
 
-        if intent is not None:
+        if intent.__ne__(None):
             if not arguments.raw:
                 self.processIntent(intent)
             else:
@@ -286,7 +293,7 @@ class LaunchIntent(Module, common.PackageManager):
         self.stdout.write("  Action: %s\n"%intent.getAction())
         self.stdout.write("  Component: %s\n"%intent.getComponent().toShortString())
         self.stdout.write("  Data: %s\n"%intent.getDataString())
-        if intent.getCategories() is None:
+        if intent.getCategories().__ne__(None):
             self.stdout.write("  Categories: null\n")
         else:
             self.stdout.write("  Categories: \n")
@@ -297,7 +304,7 @@ class LaunchIntent(Module, common.PackageManager):
         self.stdout.write("  Mime Type: %s\n"%intent.getType())
         
         extras = intent.getExtras()
-        if extras is not None:
+        if extras.__ne__(None):
             if not extras.isEmpty():
                 self.stdout.write("  Extras: \n")
                 for extra in extras.keySet():
@@ -351,7 +358,13 @@ class List(Module, common.PackageManager):
     def __get_package(self, arguments, package):
         application = package.applicationInfo
 
-        if (arguments.defines_permission is None or package.permissions is not None and True in [p.name.upper().find(arguments.defines_permission.upper()) >= 0 for p in package.permissions]) and (arguments.filter is None or package.packageName.upper().find(arguments.filter.upper()) >= 0 or self.packageManager().getApplicationLabel(application.packageName).upper().find(arguments.filter.upper()) >= 0) and (arguments.gid is None or package.gids is not None and True in [g == int(arguments.gid) for g in package.gids]) and (arguments.permission is None or package.requestedPermissions is not None and True in [p.upper().find(arguments.permission.upper()) >= 0 for p in package.requestedPermissions]) and (arguments.uid is None or arguments.uid == str(package.applicationInfo.uid)):
+        if (arguments.defines_permission is None or package.permissions.__ne__(None) and any(p.name.upper().find(arguments.defines_permission.upper()) >= 0 for p in package.permissions)) \
+                and (arguments.filter is None
+                     or package.packageName.upper().find(arguments.filter.upper()) >= 0
+                     or self.packageManager().getApplicationLabel(application.packageName).upper().find(arguments.filter.upper()) >= 0) \
+                and (arguments.gid is None or package.gids.__ne__(None) and any(g == int(arguments.gid) for g in package.gids)) \
+                and (arguments.permission is None or package.requestedPermissions.__ne__(None) and any(p.upper().find(arguments.permission.upper()) >= 0 for p in package.requestedPermissions)) \
+                and (arguments.uid is None or arguments.uid == str(package.applicationInfo.uid)):
             if arguments.no_app_name:
                 self.stdout.write("%s\n" % application.packageName)
             else:
@@ -471,7 +484,7 @@ class SharedUID(Module, common.PackageManager):
 
             packages = self.packageManager().getPackagesForUid(uid)
 
-            if packages is not None:
+            if packages.__ne__(None):
                 permissions = set([])
 
                 for packageName in packages:
@@ -481,7 +494,7 @@ class SharedUID(Module, common.PackageManager):
                         continue
                     self.stdout.write("  Package: %s\n"%packageName)
 
-                    if package.requestedPermissions is not None:
+                    if package.requestedPermissions.__ne__(None):
                         for permission in package.requestedPermissions:
                             permissions.add(permission)
 
