@@ -1,6 +1,6 @@
 from drozer.modules import common, Module
 
-class ARMEABI(Module, common.ShellCode):
+class ARMEABI(common.ShellCode, Module):
 
     name = "Establish a reverse TCP Shell (ARMEABI)"
     description = """

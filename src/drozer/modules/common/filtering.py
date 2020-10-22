@@ -1,4 +1,6 @@
-class Filters(object):
+from ..base import Module
+
+class Filters(Module):
     """
     Utility methods for filtering collections of ReflectedTypes.
     """

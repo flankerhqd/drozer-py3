@@ -1,6 +1,6 @@
 from drozer.modules import common, Module
 
-class SecretCodes(Module, common.ClassLoader, common.PackageManager):
+class SecretCodes(common.PackageManager, common.ClassLoader, Module):
     
     name = "Search for secret codes that can be used from the dialer"
     description = "Finds Secret Codes from all installed packages."

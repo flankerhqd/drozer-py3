@@ -1,6 +1,6 @@
 from drozer.modules import common, Module
 
-class BusyBox(Module, common.BusyBox, common.Shell):
+class BusyBox(common.BusyBox, common.Shell, Module):
 
     name = "Install Busybox."
     description = """Installs Busybox on the Agent.

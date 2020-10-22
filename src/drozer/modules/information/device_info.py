@@ -2,7 +2,7 @@ from drozer.modules import common, Module
 from pydiesel.reflection import ReflectionException
 
 
-class DeviceInfo(Module, common.Shell):
+class DeviceInfo(common.Shell, Module):
     
     name = "Get verbose device information"
     description = "Gets device information"

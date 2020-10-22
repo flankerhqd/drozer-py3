@@ -14,7 +14,7 @@ from .formatter import TableFormatter
 from .intent_filter import IntentFilter
 from .loader import ClassLoader
 from .package_manager import PackageManager
-from .import path_completion
+from . import path_completion
 from .provider import Provider
 from .shell import Shell
 from .shell_code import ShellCode

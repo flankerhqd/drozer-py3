@@ -1,9 +1,10 @@
 import os, tempfile
 from mwr.common import fs
 
-from . import file_system
+from . import Shell
 
-class SuperUser(file_system.FileSystem):
+
+class SuperUser(Shell):
     """
     Utility methods for aiding with superuser binary detection and installation
     of "minimal su" on the Agent.

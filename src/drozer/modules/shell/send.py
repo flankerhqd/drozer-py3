@@ -1,6 +1,6 @@
 from drozer.modules import common, Module
 
-class Send(Module, common.BusyBox, common.Shell):
+class Send(common.BusyBox, common.Shell, Module):
 
     name = "Send an ASH shell to a remote listener."
     description = """Send an ASH Shell to a remote listener.

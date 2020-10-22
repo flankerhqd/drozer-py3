@@ -2,7 +2,7 @@ from pydiesel.reflection import ReflectionException
 
 from drozer.modules import common, Module
 
-class Injection(Module, common.FileSystem, common.PackageManager, common.Provider, common.Strings, common.ZipFile):
+class Injection(common.FileSystem, common.PackageManager, common.Provider, common.Strings, common.ZipFile, Module):
 
     name = "Test content providers for SQL injection vulnerabilities."
     description = "Search for content providers with SQL Injection vulnerabilities."

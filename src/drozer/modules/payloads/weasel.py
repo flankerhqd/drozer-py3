@@ -5,7 +5,7 @@ from mwr.common import fs
 from drozer.configuration import Configuration
 from drozer.modules import common, Module
 
-class ARMEABI(Module, common.ShellCode):
+class ARMEABI(common.ShellCode, Module):
 
     name = "Deploy weasel, through a set of Shell commands (ARMEABI)"
     description = """

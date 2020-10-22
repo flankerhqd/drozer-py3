@@ -1,4 +1,6 @@
-class TableFormatter(object):
+from ..base import Module
+
+class TableFormatter(Module):
     """
     Utility methods for formatting tabular data.
     """

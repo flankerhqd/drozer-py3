@@ -2,7 +2,7 @@ from pydiesel.reflection import ReflectionException
 
 from drozer.modules import common, Module
 
-class FindUris(Module, common.FileSystem, common.PackageManager, common.Provider, common.Strings, common.ZipFile):
+class FindUris(common.FileSystem, common.PackageManager, common.Provider, common.Strings, common.ZipFile, Module):
 
     name = "Search for content providers that can be queried from our context."
     description = "Search for content providers that can be queried from our context."

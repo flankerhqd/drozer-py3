@@ -4,7 +4,7 @@ from drozer import android
 from drozer.modules import common, Module
 import time
 
-class Info(Module, common.Filters, common.IntentFilter, common.PackageManager, common.ClassLoader):
+class Info(common.Filters, common.IntentFilter, common.PackageManager, common.ClassLoader, Module):
 
     name = "Get information about broadcast receivers"
     description = "Get information about exported broadcast receivers."
@@ -140,7 +140,7 @@ For more information on how to formulate an Intent, type 'help intents'."""
                            "extras", "flags", "mimetype"]:
             return android.Intent.get_completion_suggestions(action, text, **kwargs)
 
-class Sniff(Module, common.loader.ClassLoader):
+class Sniff(common.loader.ClassLoader, Module):
 
     name = "Register a broadcast receiver that can sniff particular intents"
     description = "Register a broadcast receiver that can sniff particular intents"

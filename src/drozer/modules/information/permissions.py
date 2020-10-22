@@ -1,6 +1,7 @@
 from drozer.modules import common, Module
 
-class Permissions(Module, common.PackageManager):
+
+class Permissions(common.PackageManager, Module):
     
     name = "Get a list of all permissions used by packages on the device"
     description = "Get a list of all permissions used by packages on the device as well as their descriptions and protection levels"

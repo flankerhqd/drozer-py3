@@ -3,7 +3,7 @@ import re
 from drozer import android
 from drozer.modules import common, Module
 
-class AttackSurface(Module, common.Filters, common.PackageManager, common.ClassLoader):
+class AttackSurface(common.Filters, common.PackageManager, common.ClassLoader, Module):
 
     name = "Get attack surface of package"
     description = "Examine the attack surface of an installed package."
@@ -48,7 +48,7 @@ class AttackSurface(Module, common.Filters, common.PackageManager, common.ClassL
         else:
             self.stdout.write("No package specified\n")
 
-class Info(Module, common.Filters, common.PackageManager, common.IntentFilter, common.ClassLoader):
+class Info(common.Filters, common.PackageManager, common.IntentFilter, common.ClassLoader, Module):
 
     name = "Get information about installed packages"
     description = "List all installed packages on the device with optional filters. Specify optional keywords to search for in the package information, or granted permissions."
@@ -253,7 +253,7 @@ Finding all packages with the "INSTALL_PACKAGES" permission:
 
                 
                                                        
-class LaunchIntent(Module, common.PackageManager, common.ClassLoader):
+class LaunchIntent(common.PackageManager, common.ClassLoader, Module):
 
     name = "Get launch intent of package"
     description = "Get the launch intent of an installed package."
@@ -332,7 +332,7 @@ class LaunchIntent(Module, common.PackageManager, common.ClassLoader):
             
         
     
-class List(Module, common.PackageManager, common.ClassLoader):
+class List(common.PackageManager, common.ClassLoader, Module):
 
     name = "List Packages"
     description = "List all installed packages on the device. Specify optional keywords to search for in the package name."
@@ -375,7 +375,7 @@ class List(Module, common.PackageManager, common.ClassLoader):
                 self.stdout.write("%s (%s)\n" % (application.packageName, self.packageManager().getApplicationLabel(application.packageName)))
                 
 
-class Manifest(Module, common.Assets):
+class Manifest(common.Assets, Module):
 
     name = "Get AndroidManifest.xml of package"
     description = "Retrieves AndroidManifest.xml from an installed package."
@@ -407,7 +407,7 @@ class Manifest(Module, common.Assets):
             self.stdout.write(self.getAndroidManifest(arguments.package))
 
 
-class Native(Module, common.ClassLoader, common.PackageManager):
+class Native(common.PackageManager, common.ClassLoader, Module):
 
     name = "Find Native libraries embedded in the application."
     description = "Find Native libraries embedded in the application."
@@ -440,7 +440,7 @@ class Native(Module, common.ClassLoader, common.PackageManager):
             self.stdout.write("\n")
 
 
-class SharedUID(Module, common.PackageManager, common.ClassLoader):
+class SharedUID(common.PackageManager, common.ClassLoader, Module):
 
     name = "Look for packages with shared UIDs"
     description = "Finds packages that have shared UIDs and gives their accumulated permissions."

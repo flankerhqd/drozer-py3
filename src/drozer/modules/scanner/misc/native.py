@@ -1,6 +1,6 @@
 from drozer.modules import common, Module
 
-class Native(Module, common.ClassLoader, common.Filters, common.PackageManager):
+class Native(common.PackageManager, common.ClassLoader, common.Filters, Module):
 
     name = "Find native components included in packages"
     description = "Lists packages which use native code.\nNOTE: This only checks for libraries that are bundled inside the package APK. System packages often do not contain the libraries they use inside their APK and so this module will miss them."

@@ -2,7 +2,7 @@ from pydiesel.reflection import ReflectionException
 
 from drozer.modules import common, Module
 
-class Traversal(Module, common.FileSystem, common.PackageManager, common.Provider, common.Strings, common.ZipFile):
+class Traversal(common.FileSystem, common.PackageManager, common.Provider, common.Strings, common.ZipFile, Module):
 
     name = "Test content providers for basic directory traversal vulnerabilities."
     description = "Finds content providers with basic directory traversal vulnerabilities."

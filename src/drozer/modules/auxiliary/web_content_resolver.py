@@ -8,7 +8,7 @@ from pydiesel.reflection import ReflectionException
 
 from drozer.modules import common, Module
 
-class WebContentResolver(Module, common.PackageManager, common.Provider):
+class WebContentResolver(common.PackageManager, common.Provider, Module):
 
     name = "Start a web service interface to content providers."
     description = "Start a Web Service interface to Content Providers. This allows you to use web application testing capabilities and tools to test content providers."

@@ -1,6 +1,7 @@
 from drozer.modules import common, Module
 
-class Download(Module, common.ClassLoader, common.FileSystem):
+
+class Download(common.ClassLoader, common.FileSystem, Module):
 
     name = "Download a File"
     description = "Download a file from the Android device to your PC"
@@ -28,7 +29,8 @@ class Download(Module, common.ClassLoader, common.FileSystem):
         elif action.dest == "destination":
             return common.path_completion.on_console(text)
 
-class Size(Module, common.FileSystem):
+
+class Size(common.FileSystem, Module):
 
     name = "Get size of file"
     description = "Calculate the size of file on the Android device"
@@ -56,7 +58,8 @@ class Size(Module, common.FileSystem):
         if action.dest == "target":
             return common.path_completion.on_agent(text)
 
-class MD5Sum(Module, common.ClassLoader, common.FileSystem):
+
+class MD5Sum(common.ClassLoader, common.FileSystem, Module):
 
     name = "Get md5 Checksum of file"
     description = "md5 Checksum of File"
@@ -81,7 +84,8 @@ class MD5Sum(Module, common.ClassLoader, common.FileSystem):
         if action.dest == "target":
             return common.path_completion.on_agent(text)
 
-class Upload(Module, common.ClassLoader, common.FileSystem):
+
+class Upload(common.ClassLoader, common.FileSystem, Module):
 
     name = "Upload a File"
     description = "Upload a file from your PC to the Android device"

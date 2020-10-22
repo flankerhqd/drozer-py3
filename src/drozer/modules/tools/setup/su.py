@@ -1,6 +1,6 @@
 from drozer.modules import common, Module
 
-class MinimalSu(Module, common.SuperUser, common.Shell):
+class MinimalSu(common.SuperUser, common.Shell, Module):
 
     name = "Prepare 'minimal-su' binary installation on the device."
     description = """Prepares 'minimal-su' binary installation files on the device in order to provide access to a root shell on demand.

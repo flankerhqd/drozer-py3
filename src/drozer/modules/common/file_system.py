@@ -5,8 +5,10 @@ from typing import Optional
 from mwr.common.list import chunk
 from pydiesel.file import FtpException
 
+from ..base import Module
 
-class FileSystem(object):
+
+class FileSystem(Module):
     """
     Utility methods for interacting with the Agent's file system.
     """

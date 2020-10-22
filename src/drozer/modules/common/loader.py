@@ -5,7 +5,7 @@ from pydiesel.reflection import utils
 from ...configuration import Configuration
 from ..base import Module
 
-class ClassLoader(object):
+class ClassLoader(Module):
     """
     Utility methods for loading Java source code from the local system into
     the Dalvik VM on the Agent.

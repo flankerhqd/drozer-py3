@@ -3,7 +3,10 @@ from typing import List, Dict, Optional
 
 from pydiesel.reflection import ReflectionException
 
-class PackageManager(object):
+from . import ClassLoader
+
+
+class PackageManager(ClassLoader):
     """
     Utility methods for interacting with the Android Package Manager.
     """
@@ -167,7 +170,6 @@ class PackageManager(object):
         def queryPermissionsByGroup(self, permissionGroup: Optional[str] = None, flags: int = 0) -> List['PermissionInfo']:
             _dict_key = "NULL_GROUP" if permissionGroup is None else permissionGroup
             if permissionGroup not in self.__module.perm_cache:
-                # TODO: loadClass needs to extends common.ClassLoader
                 permissionHelper = self.__module.loadClass("common/PermissionHelper.apk", "PermissionHelper")
                 j_permissions = json.loads(str(permissionHelper.query(self.__package_manager, None, flags)))
                 py_permissions = list()

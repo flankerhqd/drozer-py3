@@ -1,4 +1,6 @@
-class Strings(object):
+from ..base import Module
+
+class Strings(Module):
     """
     An implementation of the *nix `strings` command, which searches for ASCII
     strings in a specified file.

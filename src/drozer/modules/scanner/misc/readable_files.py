@@ -1,6 +1,7 @@
 from drozer.modules import common, Module
 
-class ReadableFiles(Module, common.BusyBox, common.Shell, common.SuperUser):
+
+class ReadableFiles(common.BusyBox, common.SuperUser, common.Shell, Module):
 
     name = "Find world-readable files in the given folder"
     description = "Find world-readable files in the given folder"

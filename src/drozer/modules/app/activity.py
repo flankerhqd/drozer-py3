@@ -1,7 +1,7 @@
 from drozer import android
 from drozer.modules import common, Module
 
-class ForIntent(Module, common.PackageManager, common.ClassLoader):
+class ForIntent(common.PackageManager, common.ClassLoader, Module):
 
     name = "Find activities that can handle the given intent"
     description = "Find activities that can handle the formulated intent"
@@ -39,7 +39,7 @@ class ForIntent(Module, common.PackageManager, common.ClassLoader):
                            "extras", "flags", "mimetype"]:
             return android.Intent.get_completion_suggestions(action, text, **kwargs)
 
-class Info(Module, common.Filters, common.IntentFilter, common.PackageManager, common.ClassLoader):
+class Info(common.Filters, common.IntentFilter, common.PackageManager, common.ClassLoader, Module):
     
     name = "Gets information about exported activities."
     description = "Gets information about exported activities."

@@ -3,7 +3,7 @@ import os
 from drozer import android
 from drozer.modules import common, Module
 
-class Columns(Module, common.Provider, common.TableFormatter):
+class Columns(common.Provider, common.TableFormatter, Module):
 
     name = "List columns in content provider"
     description = "List the columns in the specified content provider URI."
@@ -31,7 +31,7 @@ class Columns(Module, common.Provider, common.TableFormatter):
         else:
             self.stderr.write("Unable to get columns from %s\n"%arguments.uri)
 
-class Delete(Module, common.Provider):
+class Delete(common.Provider, Module):
 
     name = "Delete from a content provider"
     description = "Delete from the specified content provider URI."
@@ -56,7 +56,7 @@ class Delete(Module, common.Provider):
 
         self.stdout.write("Done.\n\n")
 
-class Download(Module, common.Provider):
+class Download(common.Provider, Module):
 
     name = "Download a file from a content provider that supports files"
     description = "Read from the specified content uri using openInputStream, and download to the local file system"
@@ -90,7 +90,7 @@ class Download(Module, common.Provider):
         if action.dest == "destination":
             return common.path_completion.on_console(text)
         
-class FindUri(Module, common.FileSystem, common.PackageManager, common.Provider, common.Strings, common.ZipFile):
+class FindUri(common.FileSystem, common.PackageManager, common.Provider, common.Strings, common.ZipFile, Module):
 
     name = "Find referenced content URIs in a package"
     description = """Finds Content URIs within a package.
@@ -129,7 +129,8 @@ This module uses a number of strategies to identify a content URI, including ins
         else:
             self.stdout.write("No Content URIs found.\n")
 
-class Info(Module, common.Filters, common.PackageManager):
+
+class Info(common.Filters, common.PackageManager, Module):
 
     name = "Get information about exported content providers"
     description = "List information about exported content providers, with optional filters."
@@ -208,15 +209,24 @@ Finding content providers that do not require permissions to read/write:
 
             if not arguments.unexported:
                 for provider in exported_providers:
+                    if provider.authority.__eq__(None):
+                        self.stdout.write("TODO: null here\n")
+                        continue
                     for authority in provider.authority.split(";"):
                         self.__print_provider(provider, authority, "  ")
             else:
                 self.stdout.write("  Exported Providers:\n")
                 for provider in exported_providers:
+                    if provider.authority.__eq__(None):
+                        self.stdout.write("TODO: null here\n")
+                        continue
                     for authority in provider.authority.split(";"):
                         self.__print_provider(provider, authority, "    ")
                 self.stdout.write("  Hidden Providers:\n")
                 for provider in hidden_providers:
+                    if provider.authority.__eq__(None):
+                        self.stdout.write("TODO: null here\n")
+                        continue
                     for authority in provider.authority.split(";"):
                         self.__print_provider(provider, authority, "    ")
             self.stdout.write("\n")
@@ -252,7 +262,7 @@ Finding content providers that do not require permissions to read/write:
                 self.stdout.write("%s      Read Permission: %s\n" % (prefix, permission.getReadPermission()))
                 self.stdout.write("%s      Write Permission: %s\n" % (prefix, permission.getWritePermission()))
 
-class Insert(Module, common.Provider):
+class Insert(common.Provider, Module):
 
     name = "Insert into a Content Provider"
     description = "Insert into a content provider."
@@ -307,7 +317,7 @@ class Insert(Module, common.Provider):
 
         self.stdout.write("Done.\n\n")
         
-class Query(Module, common.Provider, common.TableFormatter):
+class Query(common.Provider, common.TableFormatter, Module):
 
     name = "Query a content provider"
     description = "Query a content provider"
@@ -353,7 +363,7 @@ Querying, with a WHERE clause in the SELECT statement:
         else:
             self.stdout.write("Unknown Error.\n\n")
 
-class Read(Module, common.Provider):
+class Read(common.Provider, Module):
 
     name = "Read from a content provider that supports files"
     description = "Read from the specified content uri using openInputStream"
@@ -373,7 +383,7 @@ class Read(Module, common.Provider):
     def execute(self, arguments):
         self.stdout.write(self.contentResolver().read(arguments.uri) + "\n")
         
-class Update(Module, common.Provider):
+class Update(common.Provider, Module):
 
     name = "Update a record in a content provider"
     description = "Update the specified content provider URI"

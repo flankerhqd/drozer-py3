@@ -1,6 +1,7 @@
 from drozer.modules import common, Module
 
-class WritableFiles(Module, common.BusyBox, common.Shell, common.SuperUser):
+
+class WritableFiles(common.BusyBox, common.SuperUser, common.Shell, Module):
 
     name = "Find world-writable files in the given folder"
     description = "Find world-writable files in the given folder"

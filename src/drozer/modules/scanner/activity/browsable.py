@@ -1,7 +1,7 @@
 from drozer.modules import common, Module
 import xml.etree.ElementTree as ET
 
-class Browsable(Module, common.PackageManager, common.Assets):
+class Browsable(common.PackageManager, common.Assets, Module):
     name = "Get all BROWSABLE activities that can be invoked from the web browser"
     description = "Get all BROWSABLE activities that can be invoked from the web browser through the use of a custom data handler. This can indicate the presence of an entry point into application code from a web browser."
     examples = """

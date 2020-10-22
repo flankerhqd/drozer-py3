@@ -2,7 +2,7 @@ import os
 
 from drozer.modules import common, Module
 
-class Start(Module, common.Shell):
+class Start(common.Shell, Module):
 
     name = "Enter into an interactive Linux shell."
     description = "Execute Linux commands in a shell in the context of drozer."
@@ -20,7 +20,7 @@ class Start(Module, common.Shell):
         self.shellStart()
         self.pop_completer()
 
-class Exec(Module, common.Shell):
+class Exec(common.Shell, Module):
 
     name = "Execute a single Linux command."
     description = "Execute a single Linux command from the context of drozer."

@@ -2,7 +2,7 @@ from pydiesel.reflection import ReflectionException
 
 from drozer.modules import common, Module
 
-class SqlTables(Module, common.FileSystem, common.PackageManager, common.Provider, common.Strings, common.ZipFile):
+class SqlTables(common.FileSystem, common.PackageManager, common.Provider, common.Strings, common.ZipFile, Module):
 
     name = "Find tables accessible through SQL injection vulnerabilities."
     description = "Enumerate SQL tables accessible through SQL (projection) Injection vulnerabilities."

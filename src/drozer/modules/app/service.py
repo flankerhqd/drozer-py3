@@ -1,7 +1,7 @@
 from drozer import android
 from drozer.modules import common, Module
 
-class Info(Module, common.Filters, common.IntentFilter, common.PackageManager):
+class Info(common.Filters, common.IntentFilter, common.PackageManager, Module):
 
     name = "Get information about exported services"
     description = "Gets information about exported services."
@@ -104,7 +104,7 @@ List exported services with no permissions required to interact with it:
         else:
             self.stdout.write("%s    %s\n" % (prefix, permissionInfo))
 
-class Send(Module, common.ServiceBinding):
+class Send(common.ServiceBinding, Module):
     
     name = "Send a Message to a service, and display the reply"
     description = """Binds to an exported service, and sends a Message to it. If the service sends a reply, display the message received and any data it contains.
