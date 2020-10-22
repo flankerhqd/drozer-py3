@@ -1,6 +1,6 @@
 from drozer.modules import common, Module
 
-class Debuggable(Module, common.Filters, common.PackageManager):
+class Debuggable(Module, common.Filters, common.PackageManager, common.ClassLoader):
 
     name = "Find debuggable packages"
     description = "Lists packages which are debuggable."

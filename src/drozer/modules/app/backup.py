@@ -1,6 +1,6 @@
 from drozer.modules import common, Module
 
-class Backup(Module, common.Filters, common.PackageManager):
+class Backup(Module, common.Filters, common.PackageManager, common.ClassLoader):
 
     name = "Lists packages that use the backup API (returns true on FLAG_ALLOW_BACKUP)"
     description = "Lists packages that use the backup API (retruns true on FLAG_ALLOW_BACKUP)"

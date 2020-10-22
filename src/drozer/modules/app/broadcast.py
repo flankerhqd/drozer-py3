@@ -4,7 +4,7 @@ from drozer import android
 from drozer.modules import common, Module
 import time
 
-class Info(Module, common.Filters, common.IntentFilter, common.PackageManager):
+class Info(Module, common.Filters, common.IntentFilter, common.PackageManager, common.ClassLoader):
 
     name = "Get information about broadcast receivers"
     description = "Get information about exported broadcast receivers."
@@ -101,7 +101,11 @@ class Info(Module, common.Filters, common.IntentFilter, common.PackageManager):
                         self.stdout.write("%s    Data:\n" % (prefix))
                         for data in intent_filter.datas:
                             self.stdout.write("%s      - %s\n" % (prefix, data))
-        self.stdout.write("%s  Permission: %s\n" % (prefix, receiver.permission))
+        permissionInfo = self.singlePermissionInfo(str(receiver.permission))
+        if permissionInfo is None:
+            self.stdout.write("%s  Permission: %s [Non-existent]\n" % (prefix, receiver.permission))
+        else:
+            self.stdout.write("%s    %s\n" % (prefix, permissionInfo))
 
 class Send(Module):
 

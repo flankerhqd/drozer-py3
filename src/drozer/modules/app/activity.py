@@ -1,7 +1,7 @@
 from drozer import android
 from drozer.modules import common, Module
 
-class ForIntent(Module, common.PackageManager):
+class ForIntent(Module, common.PackageManager, common.ClassLoader):
 
     name = "Find activities that can handle the given intent"
     description = "Find activities that can handle the formulated intent"
@@ -39,7 +39,7 @@ class ForIntent(Module, common.PackageManager):
                            "extras", "flags", "mimetype"]:
             return android.Intent.get_completion_suggestions(action, text, **kwargs)
 
-class Info(Module, common.Filters, common.IntentFilter, common.PackageManager):
+class Info(Module, common.Filters, common.IntentFilter, common.PackageManager, common.ClassLoader):
     
     name = "Gets information about exported activities."
     description = "Gets information about exported activities."
@@ -105,7 +105,11 @@ class Info(Module, common.Filters, common.IntentFilter, common.PackageManager):
         if activity._has_property("parentActivityName") and activity.parentActivityName.__ne__(None):
             self.stdout.write("%s  Parent Activity: %s\n" % (prefix, activity.parentActivityName))
 
-        self.stdout.write("%s  Permission: %s\n" % (prefix, activity.permission))
+        permissionInfo = self.singlePermissionInfo(str(activity.permission))
+        if permissionInfo is None:
+            self.stdout.write("%s  Permission: %s [Non-existent]\n" % (prefix, activity.permission))
+        else:
+            self.stdout.write("%s    %s\n" % (prefix, permissionInfo))
         
         if activity.targetActivity.__ne__(None):
             self.stdout.write("%s  Target Activity: %s\n" % (prefix, activity.targetActivity))

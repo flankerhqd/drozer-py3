@@ -1,3 +1,6 @@
+import json
+from typing import List, Dict, Optional
+
 from pydiesel.reflection import ReflectionException
 
 class PackageManager(object):
@@ -22,8 +25,32 @@ class PackageManager(object):
     GET_SIGNATURES = 0x00000040
     GET_URI_PERMISSION_PATTERNS = 0x00000800
 
+    PROTECTION_NORMAL = 0
+    PROTECTION_DANGEROUS = 1
+    PROTECTION_SIGNATURE = 2
+    PROTECTION_SIGNATURE_OR_SYSTEM = 3
+    PROTECTION_FLAG_SYSTEM = 0x10
+    PROTECTION_FLAG_DEVELOPMENT = 0x20
+    PROTECTION_FLAG_APPOP = 0x40
+    PROTECTION_FLAG_PRE23 = 0x80
+    PROTECTION_FLAG_INSTALLER = 0x100
+    PROTECTION_FLAG_VERIFIER = 0x200
+    PROTECTION_FLAG_PREINSTALLED = 0x400
+    PROTECTION_FLAG_SETUP = 0x800
+    PROTECTION_FLAG_INSTANT = 0x1000
+    PROTECTION_FLAG_RUNTIME_ONLY = 0x2000
+    PROTECTION_FLAG_OEM = 0x4000
+    PROTECTION_FLAG_VENDOR_PRIVILEGED = 0x8000
+    PROTECTION_FLAG_SYSTEM_TEXT_CLASSIFIER = 0x10000
+    PROTECTION_FLAG_WELLBEING = 0x20000
+    PROTECTION_FLAG_DOCUMENTER = 0x40000
+    PROTECTION_FLAG_CONFIGURATOR = 0x80000
+    PROTECTION_FLAG_INCIDENT_REPORT_APPROVER = 0x100000
+    PROTECTION_FLAG_APP_PREDICTOR = 0x200000
+
     __package_manager_proxy = None
-    
+    perm_cache: Dict[str, List['PermissionInfo']] = dict()
+
     class NoSuchPackageException(ReflectionException):
         
         def __str__(self):
@@ -137,6 +164,21 @@ class PackageManager(object):
             for i in range(activities.size()):
                 yield activities.get(i)
 
+        def queryPermissionsByGroup(self, permissionGroup: Optional[str] = None, flags: int = 0) -> List['PermissionInfo']:
+            _dict_key = "NULL_GROUP" if permissionGroup is None else permissionGroup
+            if permissionGroup not in self.__module.perm_cache:
+                # TODO: loadClass needs to extends common.ClassLoader
+                permissionHelper = self.__module.loadClass("common/PermissionHelper.apk", "PermissionHelper")
+                j_permissions = json.loads(str(permissionHelper.query(self.__package_manager, None, flags)))
+                py_permissions = list()
+                for j_permission in j_permissions:
+                    py_permissions.append(
+                        PermissionInfo(protectionLevel=j_permission['protectionLevel'],
+                                       name=j_permission['name'],
+                                       packageName=j_permission['packageName'],))
+                self.__module.perm_cache[_dict_key] = py_permissions
+            return self.__module.perm_cache[_dict_key]
+
     def packageManager(self):
         """
         Get the Android PackageManager.
@@ -146,4 +188,36 @@ class PackageManager(object):
             self.__package_manager_proxy = PackageManager.PackageManagerProxy(self)
 
         return self.__package_manager_proxy
-        
+
+    def getAllPermissions(self) -> List['PermissionInfo']:
+        return self.__package_manager_proxy.queryPermissionsByGroup()
+
+    def singlePermissionInfo(self, permission: str) -> Optional['PermissionInfo']:
+        ret = list(filter(lambda x: x.name == permission, self.getAllPermissions()))
+        if len(ret) != 1:
+            return None
+        else:
+            return ret[0]
+
+
+class PackageItemInfo(object):
+    def __init__(self, name: str, packageName: str):
+        self.name: str = name
+        self.packageName: str = packageName
+
+    def __repr__(self):
+        return "<PackageItemInfo name=%s,packageName=%s>" % (self.name, self.packageName)
+
+    def __eq__(self, other):
+        if not isinstance(other, PackageItemInfo):
+            return False
+        return self.name == other.name and self.packageName == other.packageName
+
+
+class PermissionInfo(PackageItemInfo):
+    def __init__(self, *, protectionLevel: int, name: str, packageName: str):
+        super().__init__(name, packageName)
+        self.protectionLevel: int = protectionLevel
+
+    def __repr__(self):
+        return "<PermissionInfo protectionLevel=%d,name=%s,packageName=%s>" % (self.protectionLevel, self.name, self.packageName)

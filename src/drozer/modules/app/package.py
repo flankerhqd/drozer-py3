@@ -3,7 +3,7 @@ import re
 from drozer import android
 from drozer.modules import common, Module
 
-class AttackSurface(Module, common.Filters, common.PackageManager):
+class AttackSurface(Module, common.Filters, common.PackageManager, common.ClassLoader):
 
     name = "Get attack surface of package"
     description = "Examine the attack surface of an installed package."
@@ -48,7 +48,7 @@ class AttackSurface(Module, common.Filters, common.PackageManager):
         else:
             self.stdout.write("No package specified\n")
 
-class Info(Module, common.Filters, common.PackageManager, common.IntentFilter):
+class Info(Module, common.Filters, common.PackageManager, common.IntentFilter, common.ClassLoader):
 
     name = "Get information about installed packages"
     description = "List all installed packages on the device with optional filters. Specify optional keywords to search for in the package information, or granted permissions."
@@ -218,7 +218,11 @@ Finding all packages with the "INSTALL_PACKAGES" permission:
             self.stdout.write("  Defines Permissions:\n")
             if package.permissions.__ne__(None):
                 for permission in package.permissions:
-                    self.stdout.write("  - %s\n" % permission.name)
+                    permissionInfo = self.singlePermissionInfo(str(permission.name))
+                    if permissionInfo is None:
+                        self.stdout.write("  - %s\n" % (permission.name))
+                    else:
+                        self.stdout.write("  - %s\n" % (permissionInfo))
             else:
                 self.stdout.write("  - None\n")
             if arguments.show_intent_filters:
@@ -249,7 +253,7 @@ Finding all packages with the "INSTALL_PACKAGES" permission:
 
                 
                                                        
-class LaunchIntent(Module, common.PackageManager):
+class LaunchIntent(Module, common.PackageManager, common.ClassLoader):
 
     name = "Get launch intent of package"
     description = "Get the launch intent of an installed package."
@@ -328,7 +332,7 @@ class LaunchIntent(Module, common.PackageManager):
             
         
     
-class List(Module, common.PackageManager):
+class List(Module, common.PackageManager, common.ClassLoader):
 
     name = "List Packages"
     description = "List all installed packages on the device. Specify optional keywords to search for in the package name."
@@ -436,7 +440,7 @@ class Native(Module, common.ClassLoader, common.PackageManager):
             self.stdout.write("\n")
 
 
-class SharedUID(Module, common.PackageManager):
+class SharedUID(Module, common.PackageManager, common.ClassLoader):
 
     name = "Look for packages with shared UIDs"
     description = "Finds packages that have shared UIDs and gives their accumulated permissions."
