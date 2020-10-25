@@ -92,14 +92,15 @@ class Info(common.Filters, common.IntentFilter, common.PackageManager, common.As
     def __get_activities(self, arguments, manifest: Manifest):
         activities = manifest.application.activities
 
-        # FIXME: exported flag is not complete, we should check intent-filter also
-        exported_activities = self.match_filter(activities, 'exported', True)
-        hidden_activities = self.match_filter(activities, 'exported', False)
+        exported_activities = []
+        hidden_activities = []
+        for e in activities:
+            if e.is_exported():
+                exported_activities.append(e)
+            else:
+                hidden_activities.append(e)
 
         self.stdout.write("Package: %s\n" % manifest.package)
-
-        for activity in activities:
-            self.__print_activity(None, activity, "  ", arguments.show_intent_filters)
 
         if len(activities) == 0:
             self.stdout.write("  No matching activities.\n\n")

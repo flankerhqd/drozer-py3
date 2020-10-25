@@ -228,6 +228,13 @@ class Activity(XmlCompact):
         for _ in self.xmlET.findall("intent-filter"):
             self.intent_filters.append(IntentFilter(_))
 
+    def is_exported(self):
+        if str(self.exported).lower() == 'false':
+            return False
+        if len(self.intent_filters) > 0:
+            return True
+        return False
+
 
 class Service(XmlCompact):
     def __init__(self, xml: Union[str, ET.Element]):
