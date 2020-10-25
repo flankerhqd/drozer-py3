@@ -1,5 +1,9 @@
+import xml.etree.ElementTree as ET
+
 from drozer import android
 from drozer.modules import common, Module
+from drozer.manifest_parser import Activity, Manifest
+
 
 class ForIntent(common.PackageManager, common.ClassLoader, Module):
 
@@ -39,7 +43,8 @@ class ForIntent(common.PackageManager, common.ClassLoader, Module):
                            "extras", "flags", "mimetype"]:
             return android.Intent.get_completion_suggestions(action, text, **kwargs)
 
-class Info(common.Filters, common.IntentFilter, common.PackageManager, common.ClassLoader, Module):
+
+class Info(common.Filters, common.IntentFilter, common.PackageManager, common.Assets, common.ClassLoader, Module):
     
     name = "Gets information about exported activities."
     description = "Gets information about exported activities."
@@ -67,42 +72,54 @@ class Info(common.Filters, common.IntentFilter, common.PackageManager, common.Cl
         parser.add_argument("-v", "--verbose", action="store_true", default=False, help="be verbose")
 
     def execute(self, arguments):
+        # FIXME: apk-analyzer escape double quote, which causes xml parse error
         if arguments.package is None:
-            for package in self.packageManager().getPackages(common.PackageManager.GET_ACTIVITIES):
-                self.__get_activities(arguments, package)
+            for j_package in self.packageManager().getPackages():
+                package = str(j_package.packageName)
+                try:
+                    m = Manifest(self.getAndroidManifest(package), False, has_activity=True)
+                    self.__get_activities(arguments, m)
+                except ET.ParseError as e:
+                    self.stderr.write("%s cannot parse manifest. %s" % (package, e))
         else:
-            package = self.packageManager().getPackageInfo(arguments.package, common.PackageManager.GET_ACTIVITIES)
+            package = arguments.package
+            try:
+                m = Manifest(self.getAndroidManifest(package), False, has_activity=True)
+                self.__get_activities(arguments, m)
+            except ET.ParseError as e:
+                self.stderr.write("%s cannot parse manifest. %s" % (package, e))
 
-            self.__get_activities(arguments, package)
+    def __get_activities(self, arguments, manifest: Manifest):
+        activities = manifest.application.activities
 
-    def __get_activities(self, arguments, package):
-        activities = self.match_filter(package.activities, 'name', arguments.filter)
-
+        # FIXME: exported flag is not complete, we should check intent-filter also
         exported_activities = self.match_filter(activities, 'exported', True)
         hidden_activities = self.match_filter(activities, 'exported', False)
 
-        if len(exported_activities) > 0 or arguments.unexported and len(activities) > 0:
-            self.stdout.write("Package: %s\n" % package.packageName)
+        self.stdout.write("Package: %s\n" % manifest.package)
 
+        for activity in activities:
+            self.__print_activity(None, activity, "  ", arguments.show_intent_filters)
+
+        if len(activities) == 0:
+            self.stdout.write("  No matching activities.\n\n")
+        else:
             if not arguments.unexported:
                 for activity in exported_activities:
-                    self.__print_activity(package, activity, "  ", arguments.show_intent_filters)
+                    self.__print_activity(None, activity, "  ", arguments.show_intent_filters)
             else:
                 self.stdout.write("  Exported Activities:\n")
                 for activity in exported_activities:
-                    self.__print_activity(package, activity, "    ", arguments.show_intent_filters)
+                    self.__print_activity(None, activity, "    ", arguments.show_intent_filters)
                 self.stdout.write("  Hidden Activities:\n")
                 for activity in hidden_activities:
-                    self.__print_activity(package, activity, "    ", arguments.show_intent_filters)
+                    self.__print_activity(None, activity, "    ", arguments.show_intent_filters)
             self.stdout.write("\n")
-        elif arguments.package or arguments.verbose:
-            self.stdout.write("Package: %s\n" % package.packageName)
-            self.stdout.write("  No matching activities.\n\n")
-    
-    def __print_activity(self, package, activity, prefix, include_intent_filters):
+
+    def __print_activity(self, package, activity: Activity, prefix, include_intent_filters):
         self.stdout.write("%s%s\n" % (prefix, activity.name))
-        
-        if activity._has_property("parentActivityName") and activity.parentActivityName.__ne__(None):
+
+        if activity.parentActivityName is not None:
             self.stdout.write("%s  Parent Activity: %s\n" % (prefix, activity.parentActivityName))
 
         permissionInfo = self.singlePermissionInfo(str(activity.permission))
@@ -110,27 +127,24 @@ class Info(common.Filters, common.IntentFilter, common.PackageManager, common.Cl
             self.stdout.write("%s  Permission: %s [Non-existent]\n" % (prefix, activity.permission))
         else:
             self.stdout.write("%s    %s\n" % (prefix, permissionInfo))
-        
-        if activity.targetActivity.__ne__(None):
+
+        if activity.targetActivity is not None:
             self.stdout.write("%s  Target Activity: %s\n" % (prefix, activity.targetActivity))
         if include_intent_filters:
-            intent_filters = self.find_intent_filters(activity, 'activity')
-            
-            if len(intent_filters) > 0:
-                for intent_filter in intent_filters:
-                    self.stdout.write("%s  Intent Filter:\n" % (prefix))
-                    if len(intent_filter.actions) > 0:
-                        self.stdout.write("%s    Actions:\n" % (prefix))
-                        for action in intent_filter.actions:
-                            self.stdout.write("%s      - %s\n" % (prefix, action))
-                    if len(intent_filter.categories) > 0:
-                        self.stdout.write("%s    Categories:\n" % (prefix))
-                        for category in intent_filter.categories:
-                            self.stdout.write("%s      - %s\n" % (prefix, category))
-                    if len(intent_filter.datas) > 0:
-                        self.stdout.write("%s    Data:\n" % (prefix))
-                        for data in intent_filter.datas:
-                            self.stdout.write("%s      - %s\n" % (prefix, data))
+            for intent_filter in activity.intent_filters:
+                self.stdout.write("%s  Intent Filter:\n" % (prefix))
+                if len(intent_filter.actions) > 0:
+                    self.stdout.write("%s    Actions:\n" % (prefix))
+                    for action in intent_filter.actions:
+                        self.stdout.write("%s      - %s\n" % (prefix, action))
+                if len(intent_filter.categories) > 0:
+                    self.stdout.write("%s    Categories:\n" % (prefix))
+                    for category in intent_filter.categories:
+                        self.stdout.write("%s      - %s\n" % (prefix, category))
+                if len(intent_filter.datas) > 0:
+                    self.stdout.write("%s    Data:\n" % (prefix))
+                    for data in intent_filter.datas:
+                        self.stdout.write("%s      - %s\n" % (prefix, data))
                 
 class Start(Module):
 
@@ -182,4 +196,3 @@ For more information on how to formulate an Intent, type 'help intents'."""
         if action.dest in ["action", "category", "component", "data_uri",
                            "extras", "flags", "mimetype"]:
             return android.Intent.get_completion_suggestions(action, text, **kwargs)
-            

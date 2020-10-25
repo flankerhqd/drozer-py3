@@ -167,32 +167,30 @@ class PackageManager(ClassLoader):
             for i in range(activities.size()):
                 yield activities.get(i)
 
-        def queryPermissionsByGroup(self, permissionGroup: Optional[str] = None, flags: int = 0) -> List['PermissionInfo']:
-            _dict_key = "NULL_GROUP" if permissionGroup is None else permissionGroup
-            if permissionGroup not in self.__module.perm_cache:
-                permissionHelper = self.__module.loadClass("common/PermissionHelper.apk", "PermissionHelper")
-                j_permissions = json.loads(str(permissionHelper.query(self.__package_manager, None, flags)))
-                py_permissions = list()
-                for j_permission in j_permissions:
-                    py_permissions.append(
-                        PermissionInfo(protectionLevel=j_permission['protectionLevel'],
-                                       name=j_permission['name'],
-                                       packageName=j_permission['packageName'],))
-                self.__module.perm_cache[_dict_key] = py_permissions
-            return self.__module.perm_cache[_dict_key]
 
     def packageManager(self):
         """
         Get the Android PackageManager.
         """
 
-        if self.__package_manager_proxy.__eq__(None):
+        if self.__package_manager_proxy is None:
             self.__package_manager_proxy = PackageManager.PackageManagerProxy(self)
 
         return self.__package_manager_proxy
 
-    def getAllPermissions(self) -> List['PermissionInfo']:
-        return self.__package_manager_proxy.queryPermissionsByGroup()
+    def getAllPermissions(self, permissionGroup: Optional[str] = None, flags: int = 0) -> List['PermissionInfo']:
+        _dict_key = "NULL_GROUP" if permissionGroup is None else permissionGroup
+        if _dict_key not in self.perm_cache:
+            permissionHelper = self.loadClass("common/PermissionHelper.apk", "PermissionHelper")
+            j_permissions = json.loads(str(permissionHelper.query(self.getContext().getPackageManager(), None, flags)))
+            py_permissions = list()
+            for j_permission in j_permissions:
+                py_permissions.append(
+                    PermissionInfo(protectionLevel=j_permission['protectionLevel'],
+                                   name=j_permission['name'],
+                                   packageName=j_permission['packageName'], ))
+            self.perm_cache[_dict_key] = py_permissions
+        return self.perm_cache[_dict_key]
 
     def singlePermissionInfo(self, permission: str) -> Optional['PermissionInfo']:
         ret = list(filter(lambda x: x.name == permission, self.getAllPermissions()))

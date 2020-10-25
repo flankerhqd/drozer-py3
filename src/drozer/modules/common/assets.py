@@ -31,7 +31,7 @@ class Assets(loader.ClassLoader):
         ret = baos.toByteArray().data().decode('utf-8')
         ps.close()
         baos.close()
-        if "ERROR" in ret:
+        if ret.strip().startswith("ERROR"):
             self.stderr.write(ret)
             raise RuntimeError("Cannot get manifest: " + package)
         return ret
