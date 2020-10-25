@@ -67,6 +67,8 @@ class ModuleLoader(object):
         self.__import_modules(self.__locate())
 
         for klass in self.__subclasses_of(base):
+            if klass.__module__.startswith("drozer.modules.common"):
+                continue
             if klass != base:
                 if not klass.fqmn() in self.__modules: 
                     self.__modules[klass.fqmn()] = klass
@@ -80,14 +82,19 @@ class ModuleLoader(object):
         """
 
         modules = {}
-        
+
+        excl_dirs = ["__pycache__"]
+        excl_files = ["__init__.py"]
         for path in self.__paths():
             for dirpath, _dirnames, filenames in os.walk(path):
+                _dirnames[:] = [d for d in _dirnames if d not in excl_dirs]
                 for filename in filenames:
-                    module_path = os.path.join(dirpath[len(path) + len(os.path.sep):], filename)
-                    module_name, ext = os.path.splitext(module_path)
-
+                    if filename in excl_files:
+                        continue
+                    _, ext = os.path.splitext(filename)
                     if ext == ".py":
+                        module_path = os.path.join(dirpath[len(path) + len(os.path.sep):], filename)
+                        module_name, _ = os.path.splitext(module_path)
                         namespace = ".".join(module_name.split(os.path.sep))
                         filepath = os.path.join(path, module_path)
 
