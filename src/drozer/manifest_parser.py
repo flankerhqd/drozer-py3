@@ -1,6 +1,8 @@
 from typing import Union, List
 import xml.etree.ElementTree as ET
 
+ANDROID_PREFIX = '{http://schemas.android.com/apk/res/android}'
+
 
 class XmlCompact:
     def __init__(self, xml: Union[str, ET.Element]):
@@ -9,8 +11,10 @@ class XmlCompact:
         self.xmlET: ET.Element = xml
 
     def __getattr__(self, item: str):
+        if item in ['xmlET'] or item.startswith("__") and item.endswith("__"):
+            return None
         try:
-            return self.xmlET.attrib['{http://schemas.android.com/apk/res/android}' + item]
+            return self.xmlET.attrib[ANDROID_PREFIX + item]
         except KeyError:
             try:
                 return self.xmlET.attrib[item]
@@ -59,6 +63,16 @@ class Application(XmlCompact):
     def __init__(self, xml: Union[str, ET.Element], all_node=True, *,
                  has_activity=False, has_service=False, has_receiver=False, has_provider=False, has_permission=False):
         super().__init__(xml)
+
+        self.activities: List[Activity] = []
+        self.services: List[Service] = []
+        self.receivers: List[Receiver] = []
+        self.providers: List[Provider] = []
+        self.permissions: List[Permission] = []
+
+        if xml is None:
+            # some manifest doesn't contain Application
+            return
 
         self.name: str = super().__getattr__("name")
         self.theme: str = super().__getattr__("theme")
@@ -124,12 +138,6 @@ class Application(XmlCompact):
         self.gwpAsanMode: str = super().__getattr__("gwpAsanMode")
         self.allowAutoRevokePermissionsExemption: str = super().__getattr__("allowAutoRevokePermissionsExemption")
         self.autoRevokePermissions: str = super().__getattr__("autoRevokePermissions")
-
-        self.activities: List[Activity] = []
-        self.services: List[Service] = []
-        self.receivers: List[Receiver] = []
-        self.providers: List[Provider] = []
-        self.permissions: List[Permission] = []
 
         if all_node or has_activity:
             for activityET in self.xmlET.findall("activity"):
@@ -213,6 +221,9 @@ class Activity(XmlCompact):
         self.colorMode: str = super().__getattr__("colorMode")
         self.forceQueryable: str = super().__getattr__("forceQueryable")
         self.preferMinimalPostProcessing: str = super().__getattr__("preferMinimalPostProcessing")
+
+        self.targetActivity: str = super().__getattr__("targetActivity")
+        self.parentActivityName: str = super().__getattr__("parentActivityName")
 
         for _ in self.xmlET.findall("intent-filter"):
             self.intent_filters.append(IntentFilter(_))
@@ -352,6 +363,8 @@ class IntentFilter(XmlCompact):
         super().__init__(xml)
 
         self.actions: List[Action] = []
+        self.categories: List[Category] = []
+        self.datas: List[Data] = []
 
         self.label: str = super().__getattr__("label")
         self.icon: str = super().__getattr__("icon")
@@ -364,6 +377,10 @@ class IntentFilter(XmlCompact):
 
         for _ in self.xmlET.findall("action"):
             self.actions.append(Action(_))
+        for _ in self.xmlET.findall("data"):
+            self.datas.append(Data(_))
+        for _ in self.xmlET.findall("category"):
+            self.categories.append(Category(_))
 
     def __repr__(self):
         return f"<IntentFilter {len(self.actions)} actions>"
@@ -374,6 +391,29 @@ class Action(XmlCompact):
         super().__init__(xml)
 
         self.name: str = super().__getattr__("name")
+
+
+class Category(XmlCompact):
+    def __init__(self, xml: Union[str, ET.Element]):
+        super().__init__(xml)
+
+        self.name: str = super().__getattr__("name")
+
+
+class Data(XmlCompact):
+    def __init__(self, xml: Union[str, ET.Element]):
+        super().__init__(xml)
+
+        self.scheme: str = super().__getattr__("scheme")
+        self.host: str = super().__getattr__("host")
+        self.port: str = super().__getattr__("port")
+        self.path: str = super().__getattr__("path")
+        self.pathPattern: str = super().__getattr__("pathPattern")
+        self.pathPrefix: str = super().__getattr__("pathPrefix")
+        self.mimeType: str = super().__getattr__("mimeType")
+
+    def __repr__(self):
+        return f"<Data {self.scheme}://{self.host}:{self.port}/{self.path}>"
 
 
 class GrantUriPermission(XmlCompact):
