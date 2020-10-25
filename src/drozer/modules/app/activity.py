@@ -44,7 +44,7 @@ class ForIntent(common.PackageManager, common.ClassLoader, Module):
             return android.Intent.get_completion_suggestions(action, text, **kwargs)
 
 
-class Info(common.Filters, common.IntentFilter, common.PackageManager, common.Assets, common.ClassLoader, Module):
+class Info(common.IntentFilter, common.PackageManager, common.Assets, common.ClassLoader, Module):
     
     name = "Gets information about exported activities."
     description = "Gets information about exported activities."
@@ -72,7 +72,6 @@ class Info(common.Filters, common.IntentFilter, common.PackageManager, common.As
         parser.add_argument("-v", "--verbose", action="store_true", default=False, help="be verbose")
 
     def execute(self, arguments):
-        # FIXME: apk-analyzer escape double quote, which causes xml parse error
         if arguments.package is None:
             for j_package in self.packageManager().getPackages():
                 package = str(j_package.packageName)

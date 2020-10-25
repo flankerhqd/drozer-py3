@@ -28,6 +28,7 @@ class XmlCompact:
 class Manifest(XmlCompact):
     # https://github.com/aosp-mirror/platform_frameworks_base/blob/master/core/res/res/values/attrs_manifest.xml
     # TODO: It's not very complete, some attributes are missing here
+    # FIXME: apk-analyzer escape double quote, which causes xml parse error
     def __init__(self, xml: Union[str, ET.Element], all_node=True, *,
                  has_activity=False, has_service=False, has_receiver=False, has_provider=False, has_permission=False):
         super().__init__(xml)
@@ -48,6 +49,7 @@ class Manifest(XmlCompact):
         self.isSplitRequired: str = super().__getattr__("isSplitRequired")
 
         self.application: Application = Application(self.xmlET.find("application"),
+                                                    all_node=all_node,
                                                     has_activity=has_activity,
                                                     has_service=has_service,
                                                     has_receiver=has_receiver,
@@ -326,6 +328,11 @@ class Receiver(XmlCompact):
 
         for _ in self.xmlET.findall("intent-filter"):
             self.intent_filters.append(IntentFilter(_))
+
+    def is_exported(self):
+        if str(self.exported).lower() == 'false':
+            return False
+        return True
 
 
 class Permission(XmlCompact):
