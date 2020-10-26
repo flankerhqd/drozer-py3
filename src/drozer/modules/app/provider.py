@@ -208,7 +208,8 @@ Finding content providers that do not require permissions to read/write:
 
         if arguments.permission:
             providers = filter(lambda _r:
-                               _r.readPermission is not None and arguments.permission.lower() in _r.readPermission.lower()
+                               _r.permission is not None and arguments.permission.lower() in _r.permission.lower()
+                               or _r.readPermission is not None and arguments.permission.lower() in _r.readPermission.lower()
                                or _r.writePermission is not None and arguments.permission.lower() in _r.writePermission.lower(),
                                providers)
 
@@ -250,6 +251,11 @@ Finding content providers that do not require permissions to read/write:
 
     def __print_provider(self, provider: Provider, authority: str, prefix):
         self.stdout.write("%sAuthority: %s\n" % (prefix, authority))
+        permissionInfo = self.singlePermissionInfo(str(provider.permission))
+        if permissionInfo is None:
+            self.stdout.write("%s  Permission: %s [Non-existent]\n" % (prefix, permissionInfo))
+        else:
+            self.stdout.write("%s  Permission: %s\n" % (prefix, permissionInfo))
         permissionInfo = self.singlePermissionInfo(str(provider.readPermission))
         if permissionInfo is None:
             self.stdout.write("%s  Read Permission: %s [Non-existent]\n" % (prefix, permissionInfo))
