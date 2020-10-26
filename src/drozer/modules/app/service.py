@@ -5,7 +5,7 @@ from drozer.modules import common, Module
 from drozer.manifest_parser import Service, Manifest
 
 
-class Info(common.Filters, common.IntentFilter, common.PackageManager, Module):
+class Info(common.IntentFilter, common.PackageManager, Module):
     name = "Get information about exported services"
     description = "Gets information about exported services."
     examples = """List services exported by the Browser:

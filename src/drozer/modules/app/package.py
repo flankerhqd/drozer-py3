@@ -1,10 +1,10 @@
-import re
+import xml.etree.ElementTree as ET
 
 from drozer import android
 from drozer.modules import common, Module
+from drozer.manifest_parser import Manifest as _ManifestParser
 
-class AttackSurface(common.Filters, common.PackageManager, common.ClassLoader, Module):
-
+class AttackSurface(common.Assets, common.PackageManager, common.ClassLoader, Module):
     name = "Get attack surface of package"
     description = "Examine the attack surface of an installed package."
     examples = """Finding the attack surface of the built-in browser
@@ -26,29 +26,27 @@ class AttackSurface(common.Filters, common.PackageManager, common.ClassLoader, M
 
     def execute(self, arguments):
         if arguments.package is not None:
-            package = self.packageManager().getPackageInfo(arguments.package, common.PackageManager.GET_ACTIVITIES | common.PackageManager.GET_RECEIVERS | common.PackageManager.GET_PROVIDERS | common.PackageManager.GET_SERVICES)
-            application = package.applicationInfo
+            j_packageInfo = self.packageManager().getPackageInfo(arguments.package, common.PackageManager.GET_ACTIVITIES | common.PackageManager.GET_RECEIVERS | common.PackageManager.GET_PROVIDERS | common.PackageManager.GET_SERVICES)
+            j_applicationInfo = j_packageInfo.applicationInfo
+            try:
+                m = _ManifestParser(self.getAndroidManifest(arguments.package), True)
+                self.stdout.write("Attack Surface:\n")
+                self.stdout.write("  %d activities exported\n" % sum(e.is_exported() for e in m.application.activities))
+                self.stdout.write("  %d broadcast receivers exported\n" % sum(e.is_exported() for e in m.application.receivers))
+                self.stdout.write("  %d content providers exported\n" % sum(e.is_exported() for e in m.application.providers))
+                self.stdout.write("  %d services exported\n" % sum(e.is_exported() for e in m.application.services))
+            except ET.ParseError as e:
+                self.stderr.write("%s cannot parse manifest. %s" % (arguments.package, e))
 
-            activities = self.match_filter(package.activities, 'exported', True)
-            receivers = self.match_filter(package.receivers, 'exported', True)
-            providers = self.match_filter(package.providers, 'exported', True)
-            services = self.match_filter(package.services, 'exported', True)
-            
-            self.stdout.write("Attack Surface:\n")
-            self.stdout.write("  %d activities exported\n" % len(activities))
-            self.stdout.write("  %d broadcast receivers exported\n" % len(receivers))
-            self.stdout.write("  %d content providers exported\n" % len(providers))
-            self.stdout.write("  %d services exported\n" % len(services))
-
-            if (application.flags & application.FLAG_DEBUGGABLE) != 0:
+            if (j_applicationInfo.flags & j_applicationInfo.FLAG_DEBUGGABLE) != 0:
                 self.stdout.write("    is debuggable\n")
 
-            if package.sharedUserId.__ne__(None):
-                self.stdout.write("    Shared UID (%s)\n" % package.sharedUserId)
+            if j_packageInfo.sharedUserId.__ne__(None):
+                self.stdout.write("    Shared UID (%s)\n" % j_packageInfo.sharedUserId)
         else:
             self.stdout.write("No package specified\n")
 
-class Info(common.Filters, common.PackageManager, common.IntentFilter, common.ClassLoader, Module):
+class Info(common.PackageManager, common.IntentFilter, common.ClassLoader, Module):
 
     name = "Get information about installed packages"
     description = "List all installed packages on the device with optional filters. Specify optional keywords to search for in the package information, or granted permissions."
