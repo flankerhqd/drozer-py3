@@ -1,10 +1,11 @@
 import os
+import xml.etree.ElementTree as ET
 
 from drozer import android
 from drozer.modules import common, Module
+from drozer.manifest_parser import Provider, Manifest
 
 class Columns(common.Provider, common.TableFormatter, Module):
-
     name = "List columns in content provider"
     description = "List the columns in the specified content provider URI."
     examples = """List the columns of content://settings/secure
@@ -32,7 +33,6 @@ class Columns(common.Provider, common.TableFormatter, Module):
             self.stderr.write("Unable to get columns from %s\n"%arguments.uri)
 
 class Delete(common.Provider, Module):
-
     name = "Delete from a content provider"
     description = "Delete from the specified content provider URI."
     examples = """Delete from content://settings/secure, with name condition:
@@ -56,8 +56,8 @@ class Delete(common.Provider, Module):
 
         self.stdout.write("Done.\n\n")
 
-class Download(common.Provider, Module):
 
+class Download(common.Provider, Module):
     name = "Download a file from a content provider that supports files"
     description = "Read from the specified content uri using openInputStream, and download to the local file system"
     examples = """Download, using directory traversal on a content provider:
@@ -89,9 +89,9 @@ class Download(common.Provider, Module):
     def get_completion_suggestions(self, action, text, **kwargs):
         if action.dest == "destination":
             return common.path_completion.on_console(text)
-        
-class FindUri(common.FileSystem, common.PackageManager, common.Provider, common.Strings, common.ZipFile, Module):
 
+
+class FindUri(common.FileSystem, common.PackageManager, common.Provider, common.Strings, common.ZipFile, Module):
     name = "Find referenced content URIs in a package"
     description = """Finds Content URIs within a package.
     
@@ -130,8 +130,7 @@ This module uses a number of strategies to identify a content URI, including ins
             self.stdout.write("No Content URIs found.\n")
 
 
-class Info(common.Filters, common.PackageManager, Module):
-
+class Info(common.Assets, common.PackageManager, Module):
     name = "Get information about exported content providers"
     description = "List information about exported content providers, with optional filters."
     examples = """Find content provider with the keyword "settings" in them:
@@ -181,86 +180,116 @@ Finding content providers that do not require permissions to read/write:
 
     def execute(self, arguments):
         if arguments.package is None:
-            for package in self.packageManager().getPackages(common.PackageManager.GET_PROVIDERS | common.PackageManager.GET_URI_PERMISSION_PATTERNS):
-                self.__get_providers(arguments, package)
+            for j_package in self.packageManager().getPackages():
+                package = str(j_package.packageName)
+                try:
+                    m = Manifest(self.getAndroidManifest(package), False, has_provider=True)
+                    self.__get_providers(arguments, m)
+                except ET.ParseError as e:
+                    self.stderr.write("%s cannot parse manifest. %s" % (package, e))
         else:
-            package = self.packageManager().getPackageInfo(arguments.package, common.PackageManager.GET_PROVIDERS | common.PackageManager.GET_URI_PERMISSION_PATTERNS)
+            package = arguments.package
+            try:
+                m = Manifest(self.getAndroidManifest(package), False, has_provider=True)
+                self.__get_providers(arguments, m)
+            except ET.ParseError as e:
+                self.stderr.write("%s cannot parse manifest. %s" % (package, e))
 
-            self.__get_providers(arguments, package)
-            
     def get_completion_suggestions(self, action, text, **kwargs):
         if action.dest == "permission":
             return ["null"] + android.permissions
 
-    def __get_providers(self, arguments, package):
-        providers = self.match_filter(package.providers, 'authority', arguments.filter)        
-        
-        if arguments.permission is not None:
-            r_providers = self.match_filter(providers, 'readPermission', arguments.permission)
-            w_providers = self.match_filter(providers, 'writePermission', arguments.permission)
+    def __get_providers(self, arguments, manifest: Manifest):
+        providers = manifest.application.providers
+        if arguments.filter:
+            providers = filter(lambda _r:
+                               arguments.filter.lower() in _r.authority.lower(),
+                               providers)
 
-            providers = set(r_providers + w_providers)
-            
-        exported_providers = self.match_filter(providers, 'exported', True)
-        hidden_providers = self.match_filter(providers, 'exported', False)
+        if arguments.permission:
+            providers = filter(lambda _r:
+                               _r.readPermission is not None and arguments.permission.lower() in _r.readPermission.lower()
+                               or _r.writePermission is not None and arguments.permission.lower() in _r.writePermission.lower(),
+                               providers)
 
-        if len(exported_providers) > 0 or arguments.unexported and len(providers) > 0:
-            self.stdout.write("Package: %s\n" % package.packageName)
+        exported_providers = []
+        hidden_providers = []
+        for e in providers:
+            if e.is_exported():
+                exported_providers.append(e)
+            else:
+                hidden_providers.append(e)
 
+        self.stdout.write("Package: %s\n" % manifest.package)
+        if len(exported_providers) > 0 or arguments.unexported and len(hidden_providers) > 0:
             if not arguments.unexported:
                 for provider in exported_providers:
-                    if provider.authority.__eq__(None):
-                        self.stdout.write("TODO: null here\n")
+                    if provider.authorities is None or provider.authorities == "":
+                        self.stdout.write("provider.authorities NULL\n")
                         continue
-                    for authority in provider.authority.split(";"):
+                    for authority in provider.authorities.split(";"):
                         self.__print_provider(provider, authority, "  ")
             else:
                 self.stdout.write("  Exported Providers:\n")
                 for provider in exported_providers:
-                    if provider.authority.__eq__(None):
-                        self.stdout.write("TODO: null here\n")
+                    if provider.authorities is None or provider.authorities == "":
+                        self.stdout.write("provider.authorities NULL\n")
                         continue
-                    for authority in provider.authority.split(";"):
-                        self.__print_provider(provider, authority, "    ")
+                    for authority in provider.authorities.split(";"):
+                        self.__print_provider(provider, authority, "  ")
                 self.stdout.write("  Hidden Providers:\n")
                 for provider in hidden_providers:
-                    if provider.authority.__eq__(None):
-                        self.stdout.write("TODO: null here\n")
+                    if provider.authorities is None or provider.authorities == "":
+                        self.stdout.write("provider.authorities NULL\n")
                         continue
-                    for authority in provider.authority.split(";"):
-                        self.__print_provider(provider, authority, "    ")
+                    for authority in provider.authorities.split(";"):
+                        self.__print_provider(provider, authority, "  ")
             self.stdout.write("\n")
-        elif arguments.package or arguments.verbose:
-            self.stdout.write("Package: %s\n" % package.packageName)
+        else:
             self.stdout.write("  No matching providers.\n\n")
 
-    def __print_provider(self, provider, authority, prefix):
+    def __print_provider(self, provider: Provider, authority: str, prefix):
         self.stdout.write("%sAuthority: %s\n" % (prefix, authority))
         permissionInfo = self.singlePermissionInfo(str(provider.readPermission))
         if permissionInfo is None:
-            self.stdout.write("%s  Read Permission: [Non-existent]%s\n" % (prefix, provider.readPermission))
+            self.stdout.write("%s  Read Permission: [Non-existent]\n" % (prefix))
         else:
             self.stdout.write("%s  Read Permission: %s\n" % (prefix, permissionInfo))
         permissionInfo = self.singlePermissionInfo(str(provider.writePermission))
         if permissionInfo is None:
-            self.stdout.write("%s  Write Permission: [Non-existent]%s\n" % (prefix, provider.writePermission))
+            self.stdout.write("%s  Write Permission: [Non-existent]\n" % (prefix))
         else:
             self.stdout.write("%s  Write Permission: %s\n" % (prefix, permissionInfo))
         self.stdout.write("%s  Content Provider: %s\n" % (prefix, provider.name))
         self.stdout.write("%s  Multiprocess Allowed: %s\n" % (prefix, provider.multiprocess))
         self.stdout.write("%s  Grant Uri Permissions: %s\n" % (prefix, provider.grantUriPermissions))
-        if provider.uriPermissionPatterns.__ne__(None):
+        if len(provider.grant_uri_permissions) > 0:
             self.stdout.write("%s  Uri Permission Patterns:\n" % prefix)
-            for pattern in provider.uriPermissionPatterns:
-                self.stdout.write("%s    Path: %s\n" % (prefix, pattern.getPath()))
-                self.stdout.write("%s      Type: %s\n" % (prefix, Info.PatternMatcherTypes[int(pattern.getType())]))
-        if provider.pathPermissions.__ne__(None):
+            for grant_uri_permission in provider.grant_uri_permissions:
+                if grant_uri_permission.path is not None:
+                    self.stdout.write("%s    Path: %s\n" % (prefix, grant_uri_permission.path))
+                    self.stdout.write("%s      Type: %s\n" % (prefix, Info.PatternMatcherTypes[0]))
+                elif grant_uri_permission.pathPrefix is not None:
+                    self.stdout.write("%s    Path: %s\n" % (prefix, grant_uri_permission.pathPrefix))
+                    self.stdout.write("%s      Type: %s\n" % (prefix, Info.PatternMatcherTypes[0]))
+                elif grant_uri_permission.pathPattern is not None:
+                    self.stdout.write("%s    Path: %s\n" % (prefix, grant_uri_permission.pathPattern))
+                    self.stdout.write("%s      Type: %s\n" % (prefix, Info.PatternMatcherTypes[0]))
+        if len(provider.path_permissions) > 0:
             self.stdout.write("%s  Path Permissions:\n" % prefix)
-            for permission in provider.pathPermissions:
-                self.stdout.write("%s    Path: %s\n" % (prefix, permission.getPath()))
-                self.stdout.write("%s      Type: %s\n" % (prefix, Info.PatternMatcherTypes[int(permission.getType())]))
-                self.stdout.write("%s      Read Permission: %s\n" % (prefix, permission.getReadPermission()))
-                self.stdout.write("%s      Write Permission: %s\n" % (prefix, permission.getWritePermission()))
+            for pathPermission in provider.path_permissions:
+                if pathPermission.path is not None:
+                    self.stdout.write("%s    Path: %s\n" % (prefix, pathPermission.path))
+                    self.stdout.write("%s      Type: %s\n" % (prefix, Info.PatternMatcherTypes[0]))
+                elif pathPermission.pathPrefix is not None:
+                    self.stdout.write("%s    Path: %s\n" % (prefix, pathPermission.pathPrefix))
+                    self.stdout.write("%s      Type: %s\n" % (prefix, Info.PatternMatcherTypes[0]))
+                elif pathPermission.pathPattern is not None:
+                    self.stdout.write("%s    Path: %s\n" % (prefix, pathPermission.pathPattern))
+                    self.stdout.write("%s      Type: %s\n" % (prefix, Info.PatternMatcherTypes[0]))
+                self.stdout.write("%s      Read Permission: %s\n" % (prefix, pathPermission.readPermission))
+                self.stdout.write("%s      Write Permission: %s\n" % (prefix, pathPermission.writePermission))
+
 
 class Insert(common.Provider, Module):
 

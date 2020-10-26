@@ -6,7 +6,7 @@ from drozer.manifest_parser import Receiver, Manifest
 import time
 
 
-class Info(common.Filters, common.IntentFilter, common.PackageManager, common.ClassLoader, Module):
+class Info(common.IntentFilter, common.PackageManager, common.ClassLoader, Module):
     name = "Get information about broadcast receivers"
     description = "Get information about exported broadcast receivers."
     examples = """Get receivers exported by the platform:

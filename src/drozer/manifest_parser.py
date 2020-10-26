@@ -300,10 +300,17 @@ class Provider(XmlCompact):
         self.visibleToInstantApps: str = super().__getattr__("visibleToInstantApps")
         self.splitName: str = super().__getattr__("splitName")
 
+        self.authorities: str = super().__getattr__("authorities")
+
         for _ in self.xmlET.findall("grant-uri-permission"):
             self.grant_uri_permissions.append(GrantUriPermission(_))
         for _ in self.xmlET.findall("path-permission"):
             self.path_permissions.append(PathPermission(_))
+
+    def is_exported(self):
+        if str(self.exported).lower() == 'true':
+            return True
+        return False
 
 
 class Receiver(XmlCompact):
@@ -436,10 +443,10 @@ class GrantUriPermission(XmlCompact):
 
         self.path: str = super().__getattr__("path")
         self.pathPrefix: str = super().__getattr__("pathPrefix")
-        self.pathPattern: str = super().__getattr__("pathPattern¬")
+        self.pathPattern: str = super().__getattr__("pathPattern")
 
     def __repr__(self):
-        return f"<GrantUriPermission {self.path}>"
+        return f"<GrantUriPermission {'%s/%s/%s' % (self.path, self.pathPrefix, self.pathPattern)}>"
 
 
 class PathPermission(XmlCompact):
