@@ -252,12 +252,12 @@ Finding content providers that do not require permissions to read/write:
         self.stdout.write("%sAuthority: %s\n" % (prefix, authority))
         permissionInfo = self.singlePermissionInfo(str(provider.readPermission))
         if permissionInfo is None:
-            self.stdout.write("%s  Read Permission: [Non-existent]\n" % (prefix))
+            self.stdout.write("%s  Read Permission: %s [Non-existent]\n" % (prefix, permissionInfo))
         else:
             self.stdout.write("%s  Read Permission: %s\n" % (prefix, permissionInfo))
         permissionInfo = self.singlePermissionInfo(str(provider.writePermission))
         if permissionInfo is None:
-            self.stdout.write("%s  Write Permission: [Non-existent]\n" % (prefix))
+            self.stdout.write("%s  Write Permission: %s [Non-existent]\n" % (prefix, permissionInfo))
         else:
             self.stdout.write("%s  Write Permission: %s\n" % (prefix, permissionInfo))
         self.stdout.write("%s  Content Provider: %s\n" % (prefix, provider.name))

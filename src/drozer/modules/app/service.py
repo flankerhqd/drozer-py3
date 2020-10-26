@@ -1,8 +1,11 @@
+import xml.etree.ElementTree as ET
+
 from drozer import android
 from drozer.modules import common, Module
+from drozer.manifest_parser import Service, Manifest
+
 
 class Info(common.Filters, common.IntentFilter, common.PackageManager, Module):
-
     name = "Get information about exported services"
     description = "Gets information about exported services."
     examples = """List services exported by the Browser:
@@ -41,71 +44,86 @@ List exported services with no permissions required to interact with it:
 
     def execute(self, arguments):
         if arguments.package is None:
-            for package in self.packageManager().getPackages(common.PackageManager.GET_SERVICES | common.PackageManager.GET_PERMISSIONS):
-                self.__get_services(arguments, package)
+            for j_package in self.packageManager().getPackages():
+                package = str(j_package.packageName)
+                try:
+                    m = Manifest(self.getAndroidManifest(package), False, has_service=True)
+                    self.__get_services(arguments, m)
+                except ET.ParseError as e:
+                    self.stderr.write("%s cannot parse manifest. %s" % (package, e))
         else:
-            package = self.packageManager().getPackageInfo(arguments.package, common.PackageManager.GET_SERVICES | common.PackageManager.GET_PERMISSIONS)
+            package = arguments.package
+            try:
+                m = Manifest(self.getAndroidManifest(package), False, has_service=True)
+                self.__get_services(arguments, m)
+            except ET.ParseError as e:
+                self.stderr.write("%s cannot parse manifest. %s" % (package, e))
 
-            self.__get_services(arguments, package)
-            
     def get_completion_suggestions(self, action, text, **kwargs):
         if action.dest == "permission":
             return ["null"] + android.permissions
 
-    def __get_services(self, arguments, package):
-        services = self.match_filter(package.services, "name", arguments.filter)
-        services = self.match_filter(services, "permission", arguments.permission)
+    def __get_services(self, arguments, manifest: Manifest):
+        services = manifest.application.services
+        if arguments.filter:
+            services = filter(lambda _r:
+                              arguments.filter.lower() in _r.name.lower(),
+                              services)
+        if arguments.permission:
+            services = filter(lambda _r:
+                              _r.permission is not None
+                              and arguments.permission.lower() in _r.permission.lower(),
+                              services)
+        exported_services = []
+        hidden_services = []
+        for e in services:
+            if e.is_exported():
+                exported_services.append(e)
+            else:
+                hidden_services.append(e)
 
-        exported_services = self.match_filter(services, "exported", True)
-        hidden_services = self.match_filter(services, "exported", False)
-
+        self.stdout.write("Package: %s\n" % manifest.package)
         if len(exported_services) > 0 or arguments.unexported and len(services) > 0:
-            self.stdout.write("Package: %s\n"%package.packageName)
-
             if not arguments.unexported:
                 for service in exported_services:
-                    self.__print_service(package, service, "  ", arguments.show_intent_filters)
+                    self.__print_service(None, service, "  ", arguments.show_intent_filters)
             else:
                 self.stdout.write("  Exported Services:\n")
                 for service in exported_services:
-                    self.__print_service(package, service, "    ", arguments.show_intent_filters)
+                    self.__print_service(None, service, "    ", arguments.show_intent_filters)
                 self.stdout.write("  Hidden Services:\n")
                 for service in hidden_services:
-                    self.__print_service(package, service, "    ", arguments.show_intent_filters)
+                    self.__print_service(None, service, "    ", arguments.show_intent_filters)
             self.stdout.write("\n")
-        elif arguments.package or arguments.verbose:
-            self.stdout.write("Package: %s\n" % package.packageName)
+        else:
             self.stdout.write("  No exported services.\n\n")
 
-    def __print_service(self, package, service, prefix, include_intent_filters=False):
+    def __print_service(self, package, service: Service, prefix, include_intent_filters=False):
         self.stdout.write("%s%s\n" % (prefix, service.name))
-            
+
         if include_intent_filters:
-            intent_filters = self.find_intent_filters(service, 'service')
-            
-            if len(intent_filters) > 0:
-                for intent_filter in intent_filters:
-                    self.stdout.write("%s  Intent Filter:\n" % (prefix))
-                    if len(intent_filter.actions) > 0:
-                        self.stdout.write("%s    Actions:\n" % (prefix))
-                        for action in intent_filter.actions:
-                            self.stdout.write("%s      - %s\n" % (prefix, action))
-                    if len(intent_filter.categories) > 0:
-                        self.stdout.write("%s    Categories:\n" % (prefix))
-                        for category in intent_filter.categories:
-                            self.stdout.write("%s      - %s\n" % (prefix, category))
-                    if len(intent_filter.datas) > 0:
-                        self.stdout.write("%s    Data:\n" % (prefix))
-                        for data in intent_filter.datas:
-                            self.stdout.write("%s      - %s\n" % (prefix, data))
+            for intent_filter in service.intent_filters:
+                self.stdout.write("%s  Intent Filter:\n" % (prefix))
+                if len(intent_filter.actions) > 0:
+                    self.stdout.write("%s    Actions:\n" % (prefix))
+                    for action in intent_filter.actions:
+                        self.stdout.write("%s      - %s\n" % (prefix, action))
+                if len(intent_filter.categories) > 0:
+                    self.stdout.write("%s    Categories:\n" % (prefix))
+                    for category in intent_filter.categories:
+                        self.stdout.write("%s      - %s\n" % (prefix, category))
+                if len(intent_filter.datas) > 0:
+                    self.stdout.write("%s    Data:\n" % (prefix))
+                    for data in intent_filter.datas:
+                        self.stdout.write("%s      - %s\n" % (prefix, data))
         permissionInfo = self.singlePermissionInfo(str(service.permission))
         if permissionInfo is None:
             self.stdout.write("%s  Permission: %s [Non-existent]\n" % (prefix, service.permission))
         else:
             self.stdout.write("%s    %s\n" % (prefix, permissionInfo))
 
+
 class Send(common.ServiceBinding, Module):
-    
     name = "Send a Message to a service, and display the reply"
     description = """Binds to an exported service, and sends a Message to it. If the service sends a reply, display the message received and any data it contains.
 
@@ -174,7 +192,6 @@ NB: by default, this module will wait 20 seconds for a reply."""
 
 
 class Start(Module):
-
     name = "Start Service"
     description = """Formulate an Intent to start a service, and deliver it to another application.
 
