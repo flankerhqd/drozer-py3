@@ -55,7 +55,7 @@ class Session(cmd.Cmd):
         else:
             self.stdout = DecolouredStream(self.stdout)
             self.stderr = DecolouredStream(self.stderr)
-
+        self.agent_version: int = int(self.reflector.resolve("com.mwr.dz.BuildConfig").VERSION_CODE)
 
         m = Module(self)
 
@@ -400,6 +400,9 @@ class Session(cmd.Cmd):
             except KeyboardInterrupt:
                 self.stderr.write("\nCaught SIGINT. Interrupt again to terminate you session.\n")
             except Exception as e:
+                print(e)
+                import traceback
+                traceback.print_stack()
                 self.handleException(e)
             
             while self.__module_pushed_completers > 0:

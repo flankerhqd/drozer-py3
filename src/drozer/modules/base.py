@@ -2,9 +2,9 @@ import argparse
 import textwrap
 
 from pydiesel.reflection.types.reflected_type import ReflectedType
-
 from mwr.common import argparse_completer, console
 from mwr.common.text import wrap
+
 
 class Module(object):
     """
@@ -23,6 +23,7 @@ class Module(object):
     path = []
     permissions = []
     module_type = "drozer"
+    minimum_agent_version = 20405
     
     push_completer = None
     pop_completer = None
@@ -38,8 +39,16 @@ class Module(object):
             self.stdout = session.stdout
             self.stderr = session.stderr
             self.variables = session.variables
-        
+            self.agent_version = session.agent_version
+            self.check_compatibility()
+
         self.usage = Usage(self)
+
+    def check_compatibility(self):
+        if self.agent_version < self.minimum_agent_version:
+            self.stderr.write("Your drozer-agent version is %d, required %d\n" % (self.agent_version, self.minimum_agent_version))
+            self.stderr.write("If you use drozer-py3, please download from https://github.com/LeadroyaL/drozer-agent/releases/\n")
+            raise RuntimeError("drozer-agent incompatibility")
 
     def add_arguments(self, parser):
         """

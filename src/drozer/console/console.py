@@ -59,6 +59,7 @@ class Console(cli.Base):
             response.system_response.status == Message.SystemResponse.SUCCESS:
             session_id = response.system_response.session_id
 
+            session = None
             try:
                 if arguments.debug:
                     session = DebugSession(server, session_id, arguments)
@@ -77,7 +78,8 @@ class Console(cli.Base):
                 print()
                 print("Caught SIGINT, terminating your session.")
             finally:
-                session.do_exit("")
+                if session is not None:
+                    session.do_exit("")
                 
             self.__getServerConnector(arguments).close()
         else:
