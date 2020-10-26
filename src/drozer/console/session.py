@@ -55,7 +55,11 @@ class Session(cmd.Cmd):
         else:
             self.stdout = DecolouredStream(self.stdout)
             self.stderr = DecolouredStream(self.stderr)
-        self.agent_version: int = int(self.reflector.resolve("com.mwr.dz.BuildConfig").VERSION_CODE)
+        self.agent_version: int = 0
+        try:
+            self.agent_version: int = int(self.reflector.resolve("com.mwr.dz.BuildConfig").VERSION_CODE)
+        except:
+            pass
 
         m = Module(self)
 
