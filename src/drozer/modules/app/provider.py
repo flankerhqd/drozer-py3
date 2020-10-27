@@ -293,8 +293,16 @@ Finding content providers that do not require permissions to read/write:
                 elif pathPermission.pathPattern is not None:
                     self.stdout.write("%s    Path: %s\n" % (prefix, pathPermission.pathPattern))
                     self.stdout.write("%s      Type: %s\n" % (prefix, Info.PatternMatcherTypes[0]))
-                self.stdout.write("%s      Read Permission: %s\n" % (prefix, pathPermission.readPermission))
-                self.stdout.write("%s      Write Permission: %s\n" % (prefix, pathPermission.writePermission))
+                permissionInfo = self.singlePermissionInfo(str(provider.readPermission))
+                if permissionInfo is None:
+                    self.stdout.write("%s  Read Permission: %s [Non-existent]\n" % (prefix, permissionInfo))
+                else:
+                    self.stdout.write("%s  Read Permission: %s\n" % (prefix, permissionInfo))
+                permissionInfo = self.singlePermissionInfo(str(provider.writePermission))
+                if permissionInfo is None:
+                    self.stdout.write("%s  Write Permission: %s [Non-existent]\n" % (prefix, permissionInfo))
+                else:
+                    self.stdout.write("%s  Write Permission: %s\n" % (prefix, permissionInfo))
 
 
 class Insert(common.Provider, Module):
