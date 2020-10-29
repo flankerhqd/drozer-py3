@@ -29,8 +29,8 @@ class Info(common.IntentFilter, common.PackageManager, common.ClassLoader, Modul
         Permission: null
       com.android.server.MasterClearReceiver
         Permission: android.permission.MASTER_CLEAR"""
-    author = ["MWR InfoSecurity (@mwrlabs)", "Luander (luander.r@samsung.com)"]
-    date = "2012-11-06"
+    author = "LeadroyaL"
+    date = "2020-10-29"
     license = "BSD (3 clause)"
     path = ["app", "broadcast"]
     permissions = ["com.mwr.dz.permissions.GET_CONTEXT"]

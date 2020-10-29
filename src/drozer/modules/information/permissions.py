@@ -9,8 +9,8 @@ class Permissions(common.PackageManager, Module):
     Allows the app to install new or updated Android packages. Malicious apps may use this to add new apps with arbitrarily powerful permissions.
     18 - signature|system
     '''
-    author = "Tyrone (@mwrlabs)"
-    date = "2014-06-17"
+    author = "LeadroyaL"
+    date = "2020-10-29"
     license = "BSD (3 clause)"
     path = ["information"]
     permissions = ["com.mwr.dz.permissions.GET_CONTEXT"]

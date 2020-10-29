@@ -163,8 +163,8 @@ Finding content providers that do not require permissions to read/write:
     Multiprocess allowed: false
 
     ..."""
-    author = "MWR InfoSecurity (@mwrlabs)"
-    date = "2012-11-06"
+    author = "LeadroyaL"
+    date = "2020-10-29"
     license = "BSD (3 clause)"
     path = ["app", "provider"]
     permissions = ["com.mwr.dz.permissions.GET_CONTEXT"]

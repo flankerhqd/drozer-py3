@@ -28,8 +28,8 @@ List exported services with no permissions required to interact with it:
         Permission: null
       com.android.email.service.EasAuthenticatorService
         Permission: null"""
-    author = "MWR InfoSecurity (@mwrlabs)"
-    date = "2012-11-06"
+    author = "LeadroyaL"
+    date = "2020-10-29"
     license = "BSD (3 clause)"
     path = ["app", "service"]
     permissions = ["com.mwr.dz.permissions.GET_CONTEXT"]

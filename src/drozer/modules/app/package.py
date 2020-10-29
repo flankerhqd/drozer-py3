@@ -15,8 +15,8 @@ class AttackSurface(common.Assets, common.PackageManager, common.ClassLoader, Mo
     4 broadcast receivers exported
     1 content providers exported
     0 services exported"""
-    author = "MWR InfoSecurity (@mwrlabs)"
-    date = "2012-11-06"
+    author = "LeadroyaL"
+    date = "2020-10-29"
     license = "BSD (3 clause)"
     path = ["app", "package"]
     permissions = ["com.mwr.dz.permissions.GET_CONTEXT"]

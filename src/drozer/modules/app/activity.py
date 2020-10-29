@@ -58,8 +58,8 @@ class Info(common.IntentFilter, common.PackageManager, common.Assets, common.Cla
       com.android.browser.BookmarkSearch
       com.android.browser.AddBookmarkPage
       com.android.browser.widget.BookmarkWidgetConfigure"""
-    author = "MWR InfoSecurity (@mwrlabs)"
-    date = "2012-11-06"
+    author = "LeadroyaL"
+    date = "2020-10-29"
     license = "BSD (3 clause)"
     path = ["app", "activity"]
     permissions = ["com.mwr.dz.permissions.GET_CONTEXT"]
