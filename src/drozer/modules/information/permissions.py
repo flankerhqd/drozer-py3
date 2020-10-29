@@ -2,7 +2,6 @@ from drozer.modules import common, Module
 
 
 class Permissions(common.PackageManager, Module):
-    
     name = "Get a list of all permissions used by packages on the device"
     description = "Get a list of all permissions used by packages on the device as well as their descriptions and protection levels"
     examples = '''
@@ -16,86 +15,43 @@ class Permissions(common.PackageManager, Module):
     path = ["information"]
     permissions = ["com.mwr.dz.permissions.GET_CONTEXT"]
 
+    __protectionLevels = {
+        'normal': 0x00,
+        'dangerous': 0x01,
+        'signature': 0x02,
+        'system': 0x10,
+        'development': 0x20,
+    }
+
     def add_arguments(self, parser):
         parser.add_argument("--permission", help="filter by specific permission")
-        parser.add_argument("--protectionlevel", help="filter by protection level")
+        parser.add_argument("--level", help="filter by protection level")
 
     def execute(self, arguments):
-
-        con = self.getContext() 
-        pm = con.getPackageManager()
-        res = con.getResources()
-
         if arguments.permission:
-            prot = self.__getProtLevel(pm, arguments.permission)
-            if prot != "":
-                self.stdout.write(self.__getDescription(pm, res, arguments.permission) + "\n")
-                self.stdout.write(prot + "\n")
+            perm = self.singlePermissionInfo(arguments.permission)
+            if perm is not None:
+                self.stdout.write(str(perm) + "\n")
             else:
                 self.stdout.write("No such permission defined\n")
         else:
-
-            permissionList = []
-            
-            # Iterate through each package and get unique permissions
-            for package in self.packageManager().getPackages(common.PackageManager.GET_PERMISSIONS):
-                    if package.requestedPermissions.__ne__(None):
-                        for permission in package.requestedPermissions:
-                            if permission not in permissionList:
-                                permissionList.append(str(permission))
-            
-            # Print sorted
-            for permission in sorted(permissionList):
-
-                prot = self.__getProtLevel(pm, permission)
-                display = False
-
-                if arguments.protectionlevel:
-                    if arguments.protectionlevel.upper() in prot.upper():
-                        display = True
-                else:
-                    display = True
-
-                if display:
-                    self.stdout.write(permission + "\n")
-                    self.stdout.write(self.__getDescription(pm, res, permission) + "\n")
-                    self.stdout.write(prot + "\n\n")
-
-    __protectionLevels = {
-        0x01 : 'dangerous',        
-        0x02 : 'signature',        
-        0x03 : 'signatureOrSystem',        
-        0x10 : 'system',
-        0x20 : 'development'
-    }
-
-    def __getProtLevel(self, pm, permission):
-
-        try:
-
-            pl = pm.getPermissionInfo(permission, 0).protectionLevel
-            plHumanReadable = ""
-
-            if pl == 0:
-                plHumanReadable = "normal"
+            if arguments.level is not None:
+                if arguments.level not in self.__protectionLevels.keys():
+                    self.stderr.write("protection level not in list\n")
+                    self.stderr.write(f"{','.join(self.__protectionLevels.keys())}")
+                    return
+                level = self.__protectionLevels[arguments.level]
             else:
-                for k, v in sorted(self.__protectionLevels.items()):
-                    if pl & k == k:
-                        plHumanReadable += v + "|"
-                    
-                plHumanReadable = plHumanReadable.strip("|")
-
-            return str(pl) + " - " + plHumanReadable
-
-        except:
-            return "Unable to retrieve protectionLevel"
-
-    def __getDescription(self, pm, res, permission):
-
-        try:
-
-            descriptionRes = pm.getPermissionInfo(permission, 0).descriptionRes
-            return res.getString(descriptionRes)
-
-        except:
-            return "No description"
+                level = None
+            permissionList = self.getAllPermissions()
+            for permission in permissionList:
+                if level is None:
+                    show = True
+                elif level == 0 and permission.protectionLevel == 0:
+                    show = True
+                elif level & permission.protectionLevel != 0:
+                    show = True
+                else:
+                    show = False
+                if show:
+                    self.stdout.write(str(permission) + "\n")
