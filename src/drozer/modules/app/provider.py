@@ -253,17 +253,17 @@ Finding content providers that do not require permissions to read/write:
         self.stdout.write("%sAuthority: %s\n" % (prefix, authority))
         permissionInfo = self.singlePermissionInfo(str(provider.permission))
         if permissionInfo is None:
-            self.stdout.write("%s  Permission: %s [Non-existent]\n" % (prefix, permissionInfo))
+            self.stdout.write("%s  Permission: %s [Non-existent]\n" % (prefix, provider.permission))
         else:
             self.stdout.write("%s  Permission: %s\n" % (prefix, permissionInfo))
         permissionInfo = self.singlePermissionInfo(str(provider.readPermission))
         if permissionInfo is None:
-            self.stdout.write("%s  Read Permission: %s [Non-existent]\n" % (prefix, permissionInfo))
+            self.stdout.write("%s  Read Permission: %s [Non-existent]\n" % (prefix, provider.readPermission))
         else:
             self.stdout.write("%s  Read Permission: %s\n" % (prefix, permissionInfo))
         permissionInfo = self.singlePermissionInfo(str(provider.writePermission))
         if permissionInfo is None:
-            self.stdout.write("%s  Write Permission: %s [Non-existent]\n" % (prefix, permissionInfo))
+            self.stdout.write("%s  Write Permission: %s [Non-existent]\n" % (prefix, provider.writePermission))
         else:
             self.stdout.write("%s  Write Permission: %s\n" % (prefix, permissionInfo))
         self.stdout.write("%s  Content Provider: %s\n" % (prefix, provider.name))
@@ -295,12 +295,12 @@ Finding content providers that do not require permissions to read/write:
                     self.stdout.write("%s      Type: %s\n" % (prefix, Info.PatternMatcherTypes[0]))
                 permissionInfo = self.singlePermissionInfo(str(pathPermission.readPermission))
                 if permissionInfo is None:
-                    self.stdout.write("%s  Read Permission: %s [Non-existent]\n" % (prefix, permissionInfo))
+                    self.stdout.write("%s  Read Permission: %s [Non-existent]\n" % (prefix, pathPermission.readPermission))
                 else:
                     self.stdout.write("%s  Read Permission: %s\n" % (prefix, permissionInfo))
                 permissionInfo = self.singlePermissionInfo(str(pathPermission.writePermission))
                 if permissionInfo is None:
-                    self.stdout.write("%s  Write Permission: %s [Non-existent]\n" % (prefix, permissionInfo))
+                    self.stdout.write("%s  Write Permission: %s [Non-existent]\n" % (prefix, pathPermission.writePermission))
                 else:
                     self.stdout.write("%s  Write Permission: %s\n" % (prefix, permissionInfo))
 
