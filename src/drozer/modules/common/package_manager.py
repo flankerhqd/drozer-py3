@@ -1,5 +1,5 @@
 import json
-from typing import List, Dict, Optional
+from typing import Set, Optional
 
 from pydiesel.reflection import ReflectionException
 
@@ -52,7 +52,7 @@ class PackageManager(ClassLoader):
     PROTECTION_FLAG_APP_PREDICTOR = 0x200000
 
     __package_manager_proxy = None
-    perm_cache: Dict[str, List['PermissionInfo']] = dict()
+    perm_cache: Set['PermissionInfo'] = set()
 
     class NoSuchPackageException(ReflectionException):
         
@@ -178,24 +178,35 @@ class PackageManager(ClassLoader):
 
         return self.__package_manager_proxy
 
-    def getAllPermissions(self, permissionGroup: Optional[str] = None, flags: int = 0) -> List['PermissionInfo']:
-        _dict_key = "NULL_GROUP" if permissionGroup is None else permissionGroup
-        if _dict_key not in self.perm_cache:
+    def getAllPermissions(self) -> Set['PermissionInfo']:
+        if len(self.perm_cache) == 0:
             permissionHelper = self.loadClass("common/PermissionHelper.apk", "PermissionHelper")
-            j_permissions = json.loads(str(permissionHelper.query(self.getContext().getPackageManager(), None, flags)))
-            py_permissions = list()
+            j_permissions = json.loads(str(permissionHelper.all(self.getContext().getPackageManager())))
             for j_permission in j_permissions:
-                py_permissions.append(
+                self.perm_cache.add(
                     PermissionInfo(protectionLevel=j_permission['protectionLevel'],
                                    name=j_permission['name'],
                                    packageName=j_permission['packageName'], ))
-            self.perm_cache[_dict_key] = py_permissions
-        return self.perm_cache[_dict_key]
+        return self.perm_cache
 
     def singlePermissionInfo(self, permission: str) -> Optional['PermissionInfo']:
         ret = list(filter(lambda x: x.name == permission, self.getAllPermissions()))
-        if len(ret) != 1:
-            return None
+        if len(ret) == 0:
+            # If one permission is declared in custom-group, and the custom-group is not declared.
+            # 1. That permission is not in `null` group.
+            # 2. And custom-group cannot be accessed by PackageManager.getAllPermissionGroups.
+            # So, that permission is not in `self.perm_cache`.
+            # But we can use PackageManager.getPermissionInfo instead.
+            permissionHelper = self.loadClass("common/PermissionHelper.apk", "PermissionHelper")
+            str_ret = str(permissionHelper.single(self.getContext().getPackageManager(), permission))
+            if str_ret == "":
+                return None
+            json_ret = json.loads(str_ret)
+            _pi = PermissionInfo(protectionLevel=json_ret['protectionLevel'],
+                                 name=json_ret['name'],
+                                 packageName=json_ret['packageName'], )
+            self.perm_cache.add(_pi)
+            return _pi
         else:
             return ret[0]
 
@@ -221,3 +232,6 @@ class PermissionInfo(PackageItemInfo):
 
     def __repr__(self):
         return "<PermissionInfo protectionLevel=%d,name=%s,packageName=%s>" % (self.protectionLevel, self.name, self.packageName)
+
+    def __hash__(self) -> int:
+        return self.packageName.__hash__()

@@ -3,7 +3,8 @@ from drozer.modules import common, Module
 
 class Permissions(common.PackageManager, Module):
     name = "Get a list of all permissions used by packages on the device"
-    description = "Get a list of all permissions used by packages on the device as well as their descriptions and protection levels"
+    description = "Get a list of all permissions used by packages on the device as well as their descriptions and protection levels.\n" \
+                  "Attention, all-permission is not very complete. But the missing permission can be printed by `--permission`."
     examples = '''
     dz> run information.permissions --permission android.permission.INSTALL_PACKAGES
     Allows the app to install new or updated Android packages. Malicious apps may use this to add new apps with arbitrarily powerful permissions.
