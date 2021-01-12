@@ -174,6 +174,7 @@ Finding content providers that do not require permissions to read/write:
     def add_arguments(self, parser):
         parser.add_argument("-a", "--package", default=None, help="specify the package to inspect")
         parser.add_argument("-f", "--filter", default=None, help="specify filter conditions")
+        parser.add_argument("-d", "--uid", default=None, help="specify the package uid")
         parser.add_argument("-p", "--permission", default=None, help="specify permission conditions")
         parser.add_argument("-u", "--unexported", action="store_true", default=False, help="include providers that are not exported")
         parser.add_argument("-v", "--verbose", action="store_true", default=False, help="be verbose")
@@ -184,7 +185,11 @@ Finding content providers that do not require permissions to read/write:
                 package = str(j_package.packageName)
                 try:
                     m = Manifest(self.getAndroidManifest(package), False, has_provider=True)
-                    self.__get_providers(arguments, m)
+                    if arguments.uid:
+                        if m.sharedUserId == arguments.uid:
+                            self.__get_providers(arguments, m)
+                    else:
+                        self.__get_providers(arguments, m)
                 except ET.ParseError as e:
                     self.stderr.write("%s cannot parse manifest. %s" % (package, e))
         else:
